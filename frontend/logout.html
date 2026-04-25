@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Logging out…</title>
+<style>
+body{background:#050a0f;color:#00d4ff;font-family:'Share Tech Mono',monospace;
+  display:flex;align-items:center;justify-content:center;height:100vh;letter-spacing:2px;font-size:13px}
+</style>
+</head>
+<body>
+<div>LOGGING OUT…</div>
+<script>
+(async () => {
+  const token = localStorage.getItem('kyber_token');
+  if (token) {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        credentials: 'include',
+        body: JSON.stringify({})
+      });
+    } catch(e) {}
+  }
+  // Clear all auth + score state
+  localStorage.removeItem('kyber_token');
+  localStorage.removeItem('kyber_username');
+  localStorage.removeItem('kyber_total_score');
+  // Clear score cookie
+  document.cookie = 'kyber_score=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; samesite=lax';
+  window.location.replace('/login.html');
+})();
+</script>
+</body>
+</html>

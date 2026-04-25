@@ -1,0 +1,30 @@
+# Environment — NEVER commit secrets
+.env
+
+# TLS certificates — NEVER commit private keys
+nginx/certs/*.pem
+nginx/certs/*.key
+nginx/certs/*.crt
+nginx/certs/*.p12
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Docker volumes (local dev)
+mysql_data/
+redis_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo

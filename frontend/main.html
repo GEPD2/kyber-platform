@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRYSTALS-Kyber Training Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050a0f;--panel:#0a1520;--border:#0e2a3a;
+  --accent:#00d4ff;--accent2:#00ff88;--warn:#ffd166;--danger:#ef233c;
+  --text:#c8d8e8;--dim:#4a6070;
+  --glow:0 0 20px rgba(0,212,255,.35);
+  --mono:'Share Tech Mono',monospace;--head:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --c0:#7ecfff;--c1:#00ff88;--c2:#ffd166;--c3:#ff6b35;--c4:#ef233c;--c5:#c792ea;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.015) 2px,rgba(0,212,255,.015) 4px);pointer-events:none;z-index:9999}
+
+header{padding:20px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(0,212,255,.05) 0%,transparent 100%);position:relative}
+header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.logo-title{font-family:var(--head);font-size:17px;font-weight:900;letter-spacing:3px;color:var(--accent);text-shadow:var(--glow)}
+.logo-sub{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px;margin-top:2px}
+.header-stats{display:flex;gap:16px;align-items:center}
+.stat-box{text-align:center;padding:6px 14px;border:1px solid var(--border);background:rgba(0,212,255,.03)}
+.stat-val{font-family:var(--head);font-size:20px;font-weight:700;color:var(--accent)}
+.stat-label{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:1px;margin-top:1px}
+
+.app{max-width:1300px;margin:0 auto;padding:28px 20px}
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* SELECT */
+.sel-header{text-align:center;margin-bottom:40px}
+.sel-header h1{font-family:var(--head);font-size:24px;font-weight:900;letter-spacing:4px;color:var(--accent);text-shadow:var(--glow);margin-bottom:6px}
+.sel-header p{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:1px}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1100px;margin:0 auto}
+.diff-card{border:1px solid var(--border);background:var(--panel);padding:28px 24px;cursor:pointer;position:relative;overflow:hidden;transition:all .25s}
+.diff-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.diff-card:nth-child(1)::before{background:var(--c0)}.diff-card:nth-child(2)::before{background:var(--c1)}
+.diff-card:nth-child(3)::before{background:var(--c2)}.diff-card:nth-child(4)::before{background:var(--c3)}
+.diff-card:nth-child(5)::before{background:var(--c4)}.diff-card:nth-child(6)::before{background:var(--c5)}
+.diff-card:hover{transform:translateY(-3px)}
+.diff-card:nth-child(1):hover{box-shadow:0 8px 28px rgba(126,207,255,.2)}
+.diff-card:nth-child(2):hover{box-shadow:0 8px 28px rgba(0,255,136,.15)}
+.diff-card:nth-child(3):hover{box-shadow:0 8px 28px rgba(255,209,102,.15)}
+.diff-card:nth-child(4):hover{box-shadow:0 8px 28px rgba(255,107,53,.15)}
+.diff-card:nth-child(5):hover{box-shadow:0 8px 28px rgba(239,35,60,.15)}
+.diff-card:nth-child(6):hover{box-shadow:0 8px 28px rgba(199,146,234,.2)}
+.diff-lvl{font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 8px;border:1px solid;display:inline-block;margin-bottom:14px}
+.diff-card:nth-child(1) .diff-lvl{color:var(--c0);border-color:var(--c0)}
+.diff-card:nth-child(2) .diff-lvl{color:var(--c1);border-color:var(--c1)}
+.diff-card:nth-child(3) .diff-lvl{color:var(--c2);border-color:var(--c2)}
+.diff-card:nth-child(4) .diff-lvl{color:var(--c3);border-color:var(--c3)}
+.diff-card:nth-child(5) .diff-lvl{color:var(--c4);border-color:var(--c4)}
+.diff-card:nth-child(6) .diff-lvl{color:var(--c5);border-color:var(--c5)}
+.diff-name{font-family:var(--head);font-size:18px;font-weight:700;letter-spacing:2px;margin-bottom:8px}
+.diff-card:nth-child(1) .diff-name{color:var(--c0)}.diff-card:nth-child(2) .diff-name{color:var(--c1)}
+.diff-card:nth-child(3) .diff-name{color:var(--c2)}.diff-card:nth-child(4) .diff-name{color:var(--c3)}
+.diff-card:nth-child(5) .diff-name{color:var(--c4)}.diff-card:nth-child(6) .diff-name{color:var(--c5)}
+.diff-desc{color:var(--dim);font-size:12px;line-height:1.6;margin-bottom:16px}
+.diff-meta{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:18px;line-height:1.8}
+.diff-meta span{display:block}.diff-meta b{color:var(--text)}
+.btn-go{width:100%;padding:10px;border:1px solid;background:transparent;cursor:pointer;font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:2px;transition:all .2s}
+.diff-card:nth-child(1) .btn-go{color:var(--c0);border-color:var(--c0)}.diff-card:nth-child(1) .btn-go:hover{background:rgba(126,207,255,.1)}
+.diff-card:nth-child(2) .btn-go{color:var(--c1);border-color:var(--c1)}.diff-card:nth-child(2) .btn-go:hover{background:rgba(0,255,136,.1)}
+.diff-card:nth-child(3) .btn-go{color:var(--c2);border-color:var(--c2)}.diff-card:nth-child(3) .btn-go:hover{background:rgba(255,209,102,.1)}
+.diff-card:nth-child(4) .btn-go{color:var(--c3);border-color:var(--c3)}.diff-card:nth-child(4) .btn-go:hover{background:rgba(255,107,53,.1)}
+.diff-card:nth-child(5) .btn-go{color:var(--c4);border-color:var(--c4)}.diff-card:nth-child(5) .btn-go:hover{background:rgba(239,35,60,.1)}
+.diff-card:nth-child(6) .btn-go{color:var(--c5);border-color:var(--c5)}.diff-card:nth-child(6) .btn-go:hover{background:rgba(199,146,234,.1)}
+
+/* CHALLENGE */
+.ch-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.ch-back{background:transparent;border:1px solid var(--border);color:var(--dim);padding:7px 12px;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:1px;transition:all .2s}
+.ch-back:hover{color:var(--accent);border-color:var(--accent)}
+.ch-badge{font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 8px;border:1px solid}
+.ch-section{font-family:var(--mono);font-size:10px;color:var(--dim);padding:3px 8px;border:1px solid var(--border)}
+.ch-qtitle{font-family:var(--head);font-size:14px;font-weight:700;letter-spacing:2px;color:var(--accent);flex:1}
+.ch-prog{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;color:var(--dim)}
+.pbar{width:100px;height:3px;background:var(--border);position:relative}
+.pfill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);transition:width .4s}
+.ch-body{display:grid;grid-template-columns:1fr 1fr;gap:20px;min-height:520px}
+.panel{border:1px solid var(--border);background:var(--panel);display:flex;flex-direction:column}
+.panel-hdr{padding:12px 18px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--dim);display:flex;align-items:center;gap:8px}
+.pdot{width:5px;height:5px;border-radius:50%}
+.theory{padding:20px;flex:1;overflow-y:auto;font-size:13px;line-height:1.7;color:var(--text)}
+.theory h3{font-family:var(--head);font-size:12px;letter-spacing:2px;color:var(--accent);margin-bottom:10px;font-weight:600}
+.theory p{margin-bottom:10px}
+.theory code{font-family:var(--mono);font-size:11px;color:var(--accent2);background:rgba(0,255,136,.08);padding:1px 5px}
+.mblock{background:rgba(0,212,255,.05);border-left:2px solid var(--accent);padding:10px 14px;margin:10px 0;font-family:var(--mono);font-size:11px;color:var(--accent);white-space:pre-wrap}
+.theory ul{padding-left:18px;margin-bottom:10px}
+.theory li{margin-bottom:5px;color:var(--dim)}
+.theory li strong{color:var(--text)}
+.eg-box{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15);padding:12px 14px;margin:10px 0;font-family:var(--mono);font-size:11px;color:var(--accent2);white-space:pre-wrap}
+.eg-lbl{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--accent2);margin-bottom:6px;opacity:.7}
+.ch-content{padding:20px;flex:1;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.qtext{font-size:14px;line-height:1.6;color:var(--text);padding:14px;background:rgba(0,212,255,.03);border:1px solid var(--border)}
+.qtext strong{color:var(--accent)}
+
+/* DUO */
+.duo-wrap{display:flex;flex-direction:column;gap:10px}
+.duo-input-row{display:flex;align-items:center;gap:10px}
+.duo-prefix{font-family:var(--mono);font-size:12px;color:var(--dim);white-space:nowrap}
+.duo-input{flex:1;background:#060d14;border:2px solid var(--border);color:var(--accent2);font-family:var(--mono);font-size:15px;padding:10px 14px;outline:none;transition:border-color .2s;text-align:center;letter-spacing:2px}
+.duo-input:focus{border-color:var(--accent)}
+.duo-input.correct{border-color:var(--accent2);color:var(--accent2);background:rgba(0,255,136,.06)}
+.duo-input.wrong{border-color:var(--danger);color:var(--danger);animation:shake .3s}
+.duo-hint{font-family:var(--mono);font-size:10px;color:var(--dim);padding:8px 12px;border-left:2px solid var(--border)}
+
+/* BTNS */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt-btn{padding:12px 14px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;font-family:var(--mono);font-size:12px;text-align:left;transition:all .2s;line-height:1.4}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
+.opt-btn.correct{border-color:var(--accent2)!important;color:var(--accent2)!important;background:rgba(0,255,136,.08)!important}
+.opt-btn.wrong{border-color:var(--danger)!important;color:var(--danger)!important;background:rgba(239,35,60,.08)!important}
+.opt-btn:disabled{cursor:default}
+
+/* CODE EDITOR */
+.code-editor{background:#060d14;border:1px solid var(--border);flex:1;display:flex;flex-direction:column;min-height:280px}
+.ced-hdr{padding:7px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.edot{width:7px;height:7px;border-radius:50%}
+.edot.r{background:#ff5f56}.edot.y{background:#ffbd2e}.edot.g{background:#27c93f}
+.ced-lang{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-left:auto}
+.code-area{padding:14px;overflow-y:auto;flex:1;font-family:var(--mono);font-size:12px;line-height:1.75}
+.code-line{display:flex;align-items:baseline;gap:10px;min-height:22px}
+.lnum{color:var(--dim);font-size:10px;min-width:18px;text-align:right;user-select:none;flex-shrink:0}
+.ct{color:#7eb8d4;white-space:pre}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:var(--accent2)}.num{color:var(--warn)}.cm{color:#546e7a;font-style:italic}.op{color:#89ddff}.ty{color:#ffcb6b}.pp{color:#f78c6c}
+.gap-input{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.3);border-bottom:2px solid var(--accent);color:var(--accent2);font-family:var(--mono);font-size:12px;padding:1px 6px;outline:none;transition:all .2s;vertical-align:middle;display:inline-block}
+.gap-input:focus{border-color:var(--accent);background:rgba(0,212,255,.14);box-shadow:0 0 8px rgba(0,212,255,.2)}
+.gap-input.correct{border-color:var(--accent2);color:var(--accent2);background:rgba(0,255,136,.08)}
+.gap-input.wrong{border-color:var(--danger);color:var(--danger);animation:shake .3s}
+.gap-hint{font-family:var(--mono);font-size:11px;color:#546e7a;font-style:italic;padding-left:4px;white-space:pre;user-select:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* FEEDBACK */
+.feedback{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px}
+.fb-msg{font-family:var(--mono);font-size:11px;flex:1}
+.fb-msg.ok{color:var(--accent2)}.fb-msg.bad{color:var(--danger)}.fb-msg.neutral{color:var(--dim)}
+.act-btn{padding:9px 20px;border:1px solid;background:transparent;cursor:pointer;font-family:var(--head);font-size:10px;font-weight:700;letter-spacing:2px;transition:all .2s;white-space:nowrap}
+.act-btn.submit{color:var(--accent);border-color:var(--accent)}.act-btn.submit:hover{background:rgba(0,212,255,.1)}
+.act-btn.next{color:var(--accent2);border-color:var(--accent2)}.act-btn.next:hover{background:rgba(0,255,136,.1)}
+
+/* LIVES */
+.lives-row{display:flex;gap:6px;align-items:center}
+.life{width:14px;height:14px;border-radius:50%;background:var(--danger);box-shadow:0 0 6px var(--danger);transition:all .3s}
+.life.lost{background:var(--border);box-shadow:none}
+
+/* LEVEL COMPLETE BANNER */
+.lvl-complete-banner{position:fixed;top:0;left:0;right:0;z-index:10000;padding:18px 24px;background:linear-gradient(90deg,rgba(0,255,136,.18),rgba(0,212,255,.18));border-bottom:2px solid var(--accent2);text-align:center;font-family:var(--head);font-size:14px;letter-spacing:4px;color:var(--accent2);text-shadow:0 0 12px var(--accent2);transform:translateY(-100%);transition:transform .4s ease;pointer-events:none}
+.lvl-complete-banner.show{transform:translateY(0)}
+
+/* DIFF CARD COMPLETED BADGE */
+.diff-card.done::after{content:'✓ COMPLETED';position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--accent2);border:1px solid var(--accent2);padding:2px 6px;background:rgba(0,255,136,.08);pointer-events:none}
+
+/* RESULTS */
+.results{max-width:660px;margin:60px auto;text-align:center}
+.res-grade{font-family:var(--head);font-size:80px;font-weight:900;color:var(--accent);text-shadow:var(--glow);margin-bottom:12px}
+.res-title{font-family:var(--head);font-size:22px;letter-spacing:4px;color:var(--accent);margin-bottom:6px}
+.res-sub{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1px;margin-bottom:36px}
+.res-stats{display:flex;justify-content:center;gap:24px;margin-bottom:36px}
+.res-stat{padding:18px 28px;border:1px solid var(--border);background:var(--panel)}
+.rs-num{font-family:var(--head);font-size:32px;font-weight:900;color:var(--accent)}
+.rs-lbl{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
+.res-btns{display:flex;gap:14px;justify-content:center}
+.res-btn{padding:12px 28px;border:1px solid;background:transparent;cursor:pointer;font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:2px;transition:all .2s}
+.res-btn.p{color:var(--accent);border-color:var(--accent)}.res-btn.p:hover{background:rgba(0,212,255,.1)}
+.res-btn.s{color:var(--dim);border-color:var(--border)}.res-btn.s:hover{color:var(--text);border-color:var(--dim)}
+
+@media(max-width:880px){.ch-body{grid-template-columns:1fr}.diff-grid{grid-template-columns:1fr 1fr}}
+
+/* MENU BUTTON + DROPDOWN */
+.menu-wrap{position:relative}
+.menu-btn{padding:6px 16px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:var(--mono);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.menu-btn:hover,.menu-btn.open{color:var(--accent);border-color:var(--accent)}
+.menu-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;
+  background:var(--panel);border:1px solid var(--border);min-width:180px;z-index:5000;
+  box-shadow:0 8px 24px rgba(0,0,0,.6)}
+.menu-panel.open{display:block}
+.menu-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.menu-item{display:block;width:100%;padding:12px 18px;border:none;background:transparent;
+  color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:1px;
+  text-align:left;cursor:pointer;transition:all .15s;border-bottom:1px solid rgba(14,42,58,.6)}
+.menu-item:last-child{border-bottom:none}
+.menu-item:hover{color:var(--accent);background:rgba(0,212,255,.06);padding-left:22px}
+.menu-item-icon{margin-right:8px;opacity:.7}
+
+/* ABOUT OVERLAY */
+.about-overlay{display:none;position:fixed;inset:0;background:rgba(5,10,15,.92);
+  z-index:10000;align-items:center;justify-content:center}
+.about-overlay.open{display:flex}
+.about-box{background:var(--panel);border:1px solid var(--border);padding:40px 48px;
+  max-width:480px;width:90%;position:relative;text-align:center}
+.about-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.about-close{position:absolute;top:14px;right:16px;background:transparent;border:none;
+  color:var(--dim);font-size:16px;cursor:pointer;transition:color .2s}
+.about-close:hover{color:var(--accent)}
+.about-role{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--accent);
+  margin-bottom:20px;opacity:.8}
+.about-name{font-family:var(--head);font-size:22px;font-weight:900;letter-spacing:3px;
+  color:var(--accent);text-shadow:var(--glow);margin-bottom:6px}
+.about-title{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:2px;
+  margin-bottom:28px}
+.about-divider{width:60px;height:1px;background:var(--border);margin:0 auto 28px}
+.about-name-el{font-family:var(--head);font-size:18px;font-weight:700;letter-spacing:2px;
+  color:var(--dim);margin-bottom:6px}
+.about-title-el{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:1px}
+
+/* LEADERBOARD OVERLAY */
+.lb-overlay{display:none;position:fixed;inset:0;background:rgba(5,10,15,.92);
+  z-index:10000;align-items:center;justify-content:center}
+.lb-overlay.open{display:flex}
+.lb-box{background:var(--panel);border:1px solid var(--border);
+  padding:32px 36px;width:560px;max-width:95vw;max-height:80vh;
+  overflow-y:auto;position:relative}
+.lb-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.lb-close{position:absolute;top:12px;right:14px;background:none;border:none;
+  color:var(--dim);font-size:18px;cursor:pointer;line-height:1}
+.lb-close:hover{color:var(--accent)}
+.lb-heading{font-family:var(--head);font-size:13px;letter-spacing:3px;
+  color:var(--accent);margin-bottom:20px}
+.lb-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+.lb-table th{color:var(--dim);border-bottom:1px solid var(--border);
+  padding:6px 10px;text-align:left;font-weight:normal}
+.lb-table td{padding:9px 10px;border-bottom:1px solid rgba(14,42,58,.5)}
+
+/* LEADERBOARD ON SELECT SCREEN */
+#lbSection{max-width:1100px;margin:40px auto 0}
+
+/* OVERLAY FORM FIELDS (change password) */
+.overlay-input{width:100%;background:#060d14;border:1px solid var(--border);color:var(--text);
+  font-family:var(--mono);font-size:13px;padding:10px 14px;outline:none;margin-bottom:10px;
+  box-sizing:border-box;transition:border-color .2s}
+.overlay-input:focus{border-color:var(--accent)}
+.overlay-btn{width:100%;padding:11px;border:1px solid var(--accent);background:transparent;
+  color:var(--accent);font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:2px;
+  cursor:pointer;margin-top:4px;transition:all .2s}
+.overlay-btn:hover{background:rgba(0,212,255,.1)}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo-title">CRYSTALS-KYBER</div>
+    <div class="logo-sub">Post-Quantum Cryptography Training System</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-box"><div class="stat-val" id="hScore">0</div><div class="stat-label" id="lblScore">Score</div></div>
+    <div class="stat-box"><div class="stat-val" id="hStreak">0</div><div class="stat-label" id="lblStreak">Streak</div></div>
+    <div class="lives-row" id="livesRow"></div>
+    <span id="hUser" onclick="doLogout()" title="Click to logout"
+      style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:1px;padding:0 6px;cursor:pointer"></span>
+    <div class="menu-wrap" id="menuWrap">
+      <button class="menu-btn" id="menuBtn" onclick="toggleMenu(event)">☰ MENU</button>
+      <div class="menu-panel" id="menuPanel">
+        <button class="menu-item" id="menuLangBtn" onclick="menuSwitchLang()">
+          <span class="menu-item-icon">🌐</span><span id="menuLangLabel">ΕΛΛΗΝΙΚΑ</span>
+        </button>
+        <button class="menu-item" onclick="menuOpenLb()">
+          <span class="menu-item-icon">🏆</span><span id="menuLbLabel">LEADERBOARD</span>
+        </button>
+        <button class="menu-item" onclick="menuOpenChangePwd()">
+          <span class="menu-item-icon">🔑</span><span id="menuPwdLabel">CHANGE PASSWORD</span>
+        </button>
+        <button class="menu-item" onclick="menuOpenAbout()">
+          <span class="menu-item-icon">👤</span><span id="menuAboutLabel">ABOUT</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Leaderboard overlay (opened from MENU) -->
+<div class="lb-overlay" id="lbOverlay" onclick="closeLbOverlay(event)">
+  <div class="lb-box">
+    <button class="lb-close" onclick="closeLbOverlay()">✕</button>
+    <div class="lb-heading" id="lbOverlayTitle">LEADERBOARD</div>
+    <div id="lbOverlayContent"></div>
+  </div>
+</div>
+
+<!-- Change password overlay (opened from MENU) -->
+<div class="lb-overlay" id="pwdOverlay" onclick="closePwdOverlay(event)">
+  <div class="lb-box" style="width:380px">
+    <button class="lb-close" onclick="closePwdOverlay()">✕</button>
+    <div class="lb-heading" id="pwdOverlayTitle">CHANGE PASSWORD</div>
+    <div id="pwdMsg" style="font-family:var(--mono);font-size:11px;min-height:16px;margin-bottom:12px"></div>
+    <input id="pwdCurrent" class="overlay-input" type="password" placeholder="Current password" autocomplete="current-password">
+    <input id="pwdNew"     class="overlay-input" type="password" placeholder="New password (min 8 chars)" autocomplete="new-password">
+    <input id="pwdConfirm" class="overlay-input" type="password" placeholder="Confirm new password" autocomplete="new-password">
+    <button class="overlay-btn" id="pwdBtn" onclick="doChangePwd()">UPDATE PASSWORD</button>
+  </div>
+</div>
+
+<!-- About Programmer overlay -->
+<div class="about-overlay" id="aboutOverlay" onclick="closeAboutOverlay(event)">
+  <div class="about-box">
+    <button class="about-close" onclick="closeAboutOverlay()">✕</button>
+    <div class="about-role" id="aboutRole">YOUR FAVOURITE PROGRAMMER</div>
+    <div class="about-name">EFTHYMIOU GEORGIOS</div>
+    <div class="about-title" id="aboutTitle">YOUR PILOT</div>
+    <div class="about-divider"></div>
+    <div class="about-name-el">ΕΥΘΥΜΙΟΥ ΓΕΩΡΓΙΟΣ</div>
+    <div class="about-title-el" id="aboutTitleEl">Ο ΠΙΛΟΤΟΣ ΣΑΣ</div>
+  </div>
+</div>
+
+<div id="lvlCompleteBanner" class="lvl-complete-banner">⚡ LEVEL COMPLETE ⚡</div>
+
+<div class="app">
+
+<div class="screen active" id="screen-select">
+  <div class="sel-header">
+    <h1 id="selTitle">SELECT DIFFICULTY</h1>
+    <p id="selSub">six levels:from first principles to raw C implementation</p>
+  </div>
+  <div class="diff-grid" id="diffGrid"></div>
+  <div id="lbSection"></div>
+</div>
+
+<div class="screen" id="screen-challenge">
+  <div class="ch-header">
+    <button class="ch-back" onclick="goBack()">← BACK</button>
+    <div class="ch-badge" id="chBadge"></div>
+    <div class="ch-section" id="chSection"></div>
+    <div class="ch-qtitle" id="chTitle">Challenge</div>
+    <div class="ch-prog">
+      <span id="chProgText">1/10</span>
+      <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    </div>
+  </div>
+  <div class="ch-body">
+    <div class="panel" id="theoryPanel">
+      <div class="panel-hdr"><div class="pdot" style="background:var(--accent);box-shadow:0 0 6px var(--accent)"></div><span id="panelTheoryLabel">THEORY / EXAMPLE</span></div>
+      <div class="theory" id="theoryContent"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><div class="pdot" style="background:var(--accent2);box-shadow:0 0 6px var(--accent2)"></div><span id="panelLabel">CHALLENGE</span></div>
+      <div class="ch-content" id="chContent"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-msg neutral" id="fbMsg">Answer to continue.</div>
+        <button class="act-btn submit" id="submitBtn" style="display:none" onclick="submitAnswer()">SUBMIT</button>
+        <button class="act-btn next" id="nextBtn" style="display:none" onclick="nextQ()">NEXT →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-results">
+  <div class="results">
+    <div class="res-grade" id="resGrade">A</div>
+    <div class="res-title">TRAINING COMPLETE</div>
+    <div class="res-sub" id="resSub"></div>
+    <div class="res-stats">
+      <div class="res-stat"><div class="rs-num" id="resCorrect">0</div><div class="rs-lbl" id="lblCorrect">CORRECT</div></div>
+      <div class="res-stat"><div class="rs-num" id="resTotal">0</div><div class="rs-lbl" id="lblTotal">TOTAL</div></div>
+      <div class="res-stat"><div class="rs-num" id="resPct">0%</div><div class="rs-lbl" id="lblAccuracy">ACCURACY</div></div>
+    </div>
+    <div class="res-btns">
+      <button class="res-btn s" id="btnGoBack" onclick="goBack()">← GO BACK</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+// LEVEL 1:VERY EASY  (10 duo questions)
+const VE=[
+{type:'duo',section:'Ring Arithmetic',
+ theory:`<h3>Modular Reduction</h3><p>All Kyber coefficients live in Z_q = {0…q−1}. After every operation reduce mod q.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">q = 17\n19 mod 17  →  19 − 17 = 2\nAnswer: 2</div>`,
+ q:'Compute: <strong>25 mod 17</strong>',prefix:'25 mod 17 =',ans:'8',hint:'mod is the remainder of integer division. 25 = 1×17 + ? (what is the remainder?)'},
+{type:'duo',section:'Ring Arithmetic',
+ theory:`<h3>Negative Coefficients mod q</h3><p>Negative values are stored as positive representatives. Add q until in {0…q−1}.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">−1 mod 17  →  −1 + 17 = 16\nAnswer: 16</div>`,
+ q:'Compute: <strong>−2 mod 17</strong>',prefix:'−2 mod 17 =',ans:'15',hint:'Negative values: add q until in {0…q−1}. −2 + 17 = ?'},
+{type:'duo',section:'Ring Arithmetic',
+ theory:`<h3>Negacyclic Reduction:X⁸ ≡ −1</h3><p>In Z₁₇[X]/(X⁸+1) any X^k with k≥8 wraps: X⁸→−1.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">3·X⁹: X⁹=X⁸·X=(−1)·X=−X\n3·X⁹ → −3·X ≡ 14·X mod 17\nCoefficient of X: 14</div>`,
+ q:'Coefficient of X when <strong>2·X⁹</strong> is reduced in Z₁₇[X]/(X⁸+1)?',prefix:'coeff of X =',ans:'15',hint:'X⁸≡−1, so X⁹=X⁸·X=−X. Then 2·X⁹=−2·X. Coefficient is −2. Now −2 mod 17: −2 + 17 = ?'},
+{type:'duo',section:'CBD Sampling',
+ theory:`<h3>CBD Computation</h3><p>For bits b₀…b₃ read LSB-first:</p><div class="mblock">coeff = (b₀+b₁) − (b₂+b₃)</div><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">Byte 0x01 = 00000001 (LSB-first: 1,0,0,0,0,0,0,0)\ncoeff[0]: (1+0)−(0+0) = +1  → stored: 1\nAnswer: 1</div>`,
+ q:'Byte <code>0xF0</code>=<code>11110000</code>. LSB-first:[0,0,0,0,1,1,1,1].<br>What is <strong>coeff[0]</strong>? (bits 0–3: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[0] =',ans:'0',hint:'Formula: coeff=(b0+b1)−(b2+b3). Bits 0–3 are all 0: (0+0)−(0+0) = ?'},
+{type:'duo',section:'CBD Sampling',
+ theory:`<h3>CBD:Second Coefficient</h3><p>Each byte gives 2 coefficients. Second uses bits 4–7.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">Byte 0xF0 LSB-first:[0,0,0,0,1,1,1,1]\ncoeff[1]: bits4-7=(1,1,1,1)\n(b0+b1)−(b2+b3)=(1+1)−(1+1)=0\nAnswer: 0</div>`,
+ q:'Byte <code>0x0F</code>=<code>00001111</code>. LSB-first:[1,1,1,1,0,0,0,0].<br>What is <strong>coeff[1]</strong>? (bits 4–7: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[1] =',ans:'0',hint:'bits 4–7 are (0,0,0,0). Apply formula: (b0+b1)−(b2+b3) = ?'},
+{type:'duo',section:'NTT Roots',
+ theory:`<h3>Powers of ω mod 17</h3><p>ω=9 is the primitive 8th root of unity mod 17.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">ROOTS[2] = ω² = 9×9=81 mod 17\n81 = 4×17+13 → ROOTS[2]=13\nAnswer: 13</div>`,
+ q:'Compute <strong>ROOTS[3]</strong> = ω³ mod 17 = 9³ mod 17',prefix:'ROOTS[3] =',ans:'15',hint:'ω²=ROOTS[2]=13. ω³=ω²×ω=13×9=117. mod 17: 117 = 6×17 + ? (find the remainder)'},
+{type:'duo',section:'NTT Butterfly',
+ theory:`<h3>One NTT Butterfly Step</h3><div class="mblock">t     = v × w  mod q\nnew_u = (u + t) mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">u=1,v=2,w=9,q=17\nt=2×9=18≡1\nnew_u=(1+1)=2\nAnswer: new_u=2</div>`,
+ q:'Butterfly: <strong>u=3, v=1, w=9, q=17</strong>. What is <strong>new_u</strong>?',prefix:'new_u =',ans:'12',hint:'Step 1: t = v×w mod q = 1×9 = 9. Step 2: new_u = (u+t) mod q = (3+9) mod 17 = ?'},
+{type:'duo',section:'NTT Butterfly',
+ theory:`<h3>Butterfly:new_v</h3><div class="mblock">t     = v × w  mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">WORKED EXAMPLE (different values)</div><div class="eg-box">u=2, v=3, w=9, q=17\nt = 3×9 = 27. mod 17: 27 = 1×17 + 10 → t=10\nnew_v = (2−10) mod 17 = −8 mod 17\nSince −8 &lt; 0: −8 + 17 = 9\nAnswer: new_v = 9</div>`,
+ q:'Same butterfly: <strong>u=3, v=1, w=9, q=17</strong>. What is <strong>new_v</strong>?',prefix:'new_v =',ans:'11',hint:'Step 1: t = v×w mod q = 1×9 = 9. Step 2: new_v = (u−t) mod q = (3−9) mod 17 = −6 mod 17. Since −6 < 0: −6 + 17 = ?'},
+{type:'duo',section:'Public Key',
+ theory:`<h3>Pointwise Multiply mod q</h3><p>In NTT domain polynomial multiply becomes coefficient-by-coefficient.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">a[0]=2, b[0]=11, q=17\n2×11=22 mod 17=5\nAnswer: 5</div>`,
+ q:'Pointwise multiply: <strong>a[0]=11, b[0]=3, q=17</strong>',prefix:'11 × 3 mod 17 =',ans:'16',hint:'11×3 = 33. mod 17: 33 = 1×17 + ? (find the remainder)'},
+{type:'duo',section:'Decapsulation',
+ theory:`<h3>Message Decoding:Circular Distance</h3><p>Coefficient w → bit 1 if closer to q/2=8 than to 0 (circular).</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">w=10, q=17\nd0  = min(10,17−10)=min(10,7)=7\ndq2 = min(|10−8|,17−|10−8|)=min(2,15)=2\n2 < 7 → bit=1\nAnswer: 1</div>`,
+ q:'Decode coefficient <strong>w=3, q=17</strong>. Which bit?',prefix:'bit =',ans:'0',hint:'d0=min(w, q−w)=min(3, 17−3). dq2=min(|w−8|, 17−|w−8|)=min(|3−8|, 17−|3−8|). Compare d0 and dq2: bit=1 if dq2 < d0, else bit=0.'},
+];
+// LEVEL 2:EASY  (15 btns questions)
+const EZ=[
+{type:'btns',section:'Overview',
+ theory:`<h3>CRYSTALS-Kyber</h3><p>A <strong>Key Encapsulation Mechanism</strong> based on Module-LWE hardness, standardised as ML-KEM (FIPS 203).</p><div class="mblock">t = A·s + e\nA=public matrix  s=small secret  e=noise</div>`,
+ q:'Kyber is standardised by NIST under what name?',opts:['ML-KEM (FIPS 203)','CRYSTALS-DSA','FALCON-512','SPHINCS+'],cor:0},
+{type:'btns',section:'Parameters',
+ theory:`<h3>Toy Parameters</h3><ul><li><strong>q=17</strong> prime modulus</li><li><strong>n=8</strong> polynomial degree</li><li><strong>k=2</strong> module dimension</li><li><strong>η=2</strong> CBD noise bound</li></ul><div class="mblock">N_INV=15 because 8×15=120≡1 mod 17</div>`,
+ q:'What is n⁻¹ mod q in our toy parameters (q=17, n=8)?',opts:['13','15','9','2'],cor:1},
+{type:'btns',section:'Ring',
+ theory:`<h3>Negacyclic Ring</h3><div class="mblock">X⁸ ≡ −1 mod (X⁸+1)\nX⁹ → −X,  X¹⁰ → −X²,  X¹⁵ → −X⁷</div>`,
+ q:'In Z₁₇[X]/(X⁸+1), what does X⁸ reduce to?',opts:['0','+1','−1 (=16 mod 17)','X'],cor:2},
+{type:'btns',section:'CBD',
+ theory:`<h3>CBD Algorithm</h3><div class="mblock">bits = LSB-first from byte\ncoeff = (b₀+b₁)−(b₂+b₃)\nstored as coeff mod q</div>`,
+ q:'Byte 0x01 LSB-first:[1,0,0,0,0,0,0,0]. What is coeff[0]?',opts:['+1','0','16 (=−1)','−2'],cor:0},
+{type:'btns',section:'CBD',
+ theory:`<h3>Negative CBD Coefficients</h3><p>Negative values become positive representative mod q: −1→16, −2→15.</p>`,
+ q:'CBD gives raw value −2. What is the stored coefficient mod 17?',opts:['15','2','16','−2'],cor:0},
+{type:'btns',section:'Primitive Root',
+ theory:`<h3>Generator g mod 17</h3><div class="mblock">g=2: 2⁸ mod 17=1 → order=8 ✗\ng=3: 3⁸ mod 17=16≠1 → order=16 ✓</div>`,
+ q:'Why is g=2 rejected as a primitive root mod 17?',opts:['2 is not prime','2⁸ mod 17=1, order is only 8 not 16','2 only generates even numbers','2¹⁶ mod 17≠1'],cor:1},
+{type:'btns',section:'NTT Roots',
+ theory:`<h3>ψ, ω derived from g=3</h3><div class="mblock">ψ = 3^((17−1)/(2×8)) = 3¹ = 3\nω = ψ² = 9\nω⁻¹ = 2  (9×2=18≡1 mod 17)</div>`,
+ q:'What is ω⁻¹ mod 17 (inverse of ω=9)?',opts:['2','8','15','13'],cor:0},
+{type:'btns',section:'NTT',
+ theory:`<h3>NTT Butterfly Operation</h3><div class="mblock">t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div>`,
+ q:'u=1, v=2, w=1, q=17. What is new_v?',opts:['16 (=−1 mod 17)','3','0','2'],cor:0},
+{type:'btns',section:'NTT',
+ theory:`<h3>Bit-Reversal Permutation for n=8</h3><div class="mblock">index 1=001 → reversed 100=4\nindex 3=011 → reversed 110=6\n→ pairs (1,4) and (3,6) swap</div>`,
+ q:'Index 6 binary (3-bit) is 110. What is its bit-reversed index?',opts:['3','6','7','1'],cor:0},
+{type:'btns',section:'INTT',
+ theory:`<h3>Inverse NTT</h3><p>Same butterfly as NTT but uses inv_roots, then every coefficient is scaled by n⁻¹.</p><div class="mblock">intt = scale(butterfly(x, inv_roots), n_inv)</div>`,
+ q:'After INTT butterfly layers, every coefficient is multiplied by?',opts:['n⁻¹ = 15','ω = 9','q = 17','ψ = 3'],cor:0},
+{type:'btns',section:'Public Key',
+ theory:`<h3>t̂ = Â·ŝ + ê</h3><div class="mblock">t̂[0] = Â[0][0]⊙ŝ[0] + Â[0][1]⊙ŝ[1] + ê[0]</div><p>⊙ = pointwise (coefficient-by-coefficient) multiply.</p>`,
+ q:'In NTT domain, polynomial multiplication becomes?',opts:['Pointwise (element-by-element) multiply','Polynomial long multiply','Matrix inversion','Convolution'],cor:0},
+{type:'btns',section:'Encapsulation',
+ theory:`<h3>Why transpose Â^T in encapsulation?</h3><div class="mblock">u = INTT(Â^T·r̂) + e1\nv = INTT(t̂^T·r̂) + e2 + m̂</div><p>The transpose enables exact algebraic cancellation in decapsulation.</p>`,
+ q:'Why does Bob use Â^T (not Â) when computing u?',opts:['To enable algebraic cancellation in decapsulation','Because A is symmetric','To reduce ciphertext size','Random design choice'],cor:0},
+{type:'btns',section:'Message Encoding',
+ theory:`<h3>Encoding bits into Z_q</h3><div class="mblock">bit 0 → 0\nbit 1 → ⌊q/2⌋ = 8</div><p>Maximises circular distance between encodings.</p>`,
+ q:'What is the encoded value for bit=1 when q=17?',opts:['8','17','1','16'],cor:0},
+{type:'btns',section:'Decapsulation',
+ theory:`<h3>Noise Budget</h3><div class="mblock">w = v − INTT(ŝ^T·NTT(u))\nDecryption succeeds if |noise| < q/4 = 4.25</div>`,
+ q:'w[i]=10, m̂[i]=8. Does decryption succeed for this coefficient?',opts:['Yes:noise=+2, |2|<4.25','No:noise=+2 exceeds limit','Yes:noise=0','No:noise=10'],cor:0},
+{type:'btns',section:'Security',
+ theory:`<h3>Post-Quantum Security</h3><div class="mblock">RSA: f(x)=7^x mod 15 → periodic → QFT breaks it\nLWE: t=A·s+e → no periodicity → QFT finds nothing</div>`,
+ q:'What makes Kyber resistant to Shor\'s quantum algorithm?',opts:['LWE has no periodicity:fresh noise prevents periodic structure','Very large key sizes','Discrete logarithm assumption','Hash functions'],cor:0},
+];
+// LEVEL 3:MEDIUM  (5 duo + 5 btns + 8 gaps = 18)
+const MED=[
+// 5 duo (harder computations)
+{type:'duo',section:'CBD Hard',
+ theory:`<h3>CBD with negative result</h3><div class="mblock">Byte 0x03=00000011 LSB-first:[1,1,0,0,0,0,0,0]\ncoeff[0]=(1+1)−(0+0)=+2</div><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">Byte 0xC0=11000000 LSB-first:[0,0,0,0,0,0,1,1]\ncoeff[1]=(0+0)−(1+1)=−2 → −2 mod 17=15\nAnswer: 15</div>`,
+ q:'Byte <code>0x30</code>=<code>00110000</code>. LSB-first:[0,0,0,0,1,1,0,0].<br><strong>coeff[1]</strong> (bits 4–7: b0=1,b1=1,b2=0,b3=0)?',prefix:'coeff[1] =',ans:'2',hint:'bits 4–7 are b0=1,b1=1,b2=0,b3=0. Apply formula: (b0+b1)−(b2+b3) = (1+1)−(0+0) = ?'},
+{type:'duo',section:'CBD Hard',
+ theory:`<h3>CBD negative stored mod q</h3><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">raw coeff = −2\nstored = −2 + 17 = 15</div>`,
+ q:'Byte <code>0xC0</code>=<code>11000000</code>. LSB-first:[0,0,0,0,0,0,1,1].<br>coeff[1] raw = −2. What is <strong>stored</strong> (mod 17)?',prefix:'stored coeff[1] =',ans:'15',hint:'Raw value is −2. mod 17: add 17 to bring into {0…q−1}: −2 + 17 = ?'},
+{type:'duo',section:'NTT Layer',
+ theory:`<h3>NTT s[0] Layer 1 result</h3><p>After bit-reversal of s[0]=[1,0,0,1,0,0,0,1] → [1,0,0,0,0,0,1,1]. Layer 1 uses w=1 for all pairs.</p><div class="mblock">Formula: t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div><div class="eg-lbl">WORKED EXAMPLE:Pair [0,1]</div><div class="eg-box">u=r[0]=1, v=r[1]=0, w=1\nt = 0×1 = 0\nnew[0] = (1+0) mod 17 = 1\nnew[1] = (1−0) mod 17 = 1</div>`,
+ q:'After NTT Layer 1 on s[0], what is <strong>a[6]</strong>?',prefix:'a[6] after layer1 =',ans:'2',hint:'Pair [6,7]: u=r[6]=1, v=r[7]=1, w=1. Compute t = v×w mod q = 1×1 = 1. Then new[6] = (u+t) mod q = (1+1) mod 17 = ?'},
+{type:'duo',section:'Encapsulation',
+ theory:`<h3>t̂[0][0] computation</h3><div class="mblock">Â[0][0][0]=2, ŝ[0][0]=3 → 2×3=6\nÂ[0][1][0]=6, ŝ[1][0]=2 → 6×2=12\nê[0][0]=1\n(6+12+1) mod 17=2</div>`,
+ q:'Coefficient 1 of t̂[0]: Â[0][0][1]=11, ŝ[0][1]=1, Â[0][1][1]=6, ŝ[1][1]=8, ê[0][1]=1. Compute <strong>t̂[0][1]</strong>.',prefix:'t̂[0][1] =',ans:'9',hint:'Compute each product: 11×1=11, 6×8=48. Add ê: 11+48+1=60. mod 17: 60 = 3×17 + ? (find the remainder)'},
+{type:'duo',section:'Encapsulation',
+ theory:`<h3>Modular exponentiation:square-and-multiply</h3><div class="mblock">3¹=3, 3²=9, 3⁴=9²=81≡13, 3⁸=13²=169≡16</div>`,
+ q:'Compute <strong>3⁸ mod 17</strong> using repeated squaring',prefix:'3⁸ mod 17 =',ans:'16',hint:'3¹=3. 3²=3×3=9. 3⁴=9²=81: 81=4×17+? → find 3⁴. Then 3⁸=(3⁴)²: square that result mod 17.'},
+// 5 btns (harder theory)
+{type:'btns',section:'CBD Theory',
+ theory:`<h3>Why must coefficients be small?</h3><p>The noise budget for decapsulation: |noise| < q/4 = 4.25. CBD with η=2 guarantees coefficients in {−2,…,+2}.</p>`,
+ q:'CBD with η=2 produces coefficients in which range?',opts:['{−2,−1,0,+1,+2}','{0,1,…,16}','{−8,…,+8}','{0,1}'],cor:0},
+{type:'btns',section:'NTT Theory',
+ theory:`<h3>NTT complexity gain</h3><p>Naive polynomial multiply: O(n²). NTT-based: O(n log n). For n=8 there are exactly log₂8=3 butterfly layers.</p>`,
+ q:'How many butterfly layers does the NTT require for n=8?',opts:['3  (log₂8=3)','8','4','2'],cor:0},
+{type:'btns',section:'INTT Property',
+ theory:`<h3>Round-trip property</h3><div class="mblock">INTT(NTT(poly)) == poly\nfor all poly in R_q</div>`,
+ q:'After INTT butterfly (with inv_roots), what final scaling is applied?',opts:['Multiply every coefficient by n⁻¹=15','Divide by q=17','Add q to negatives','No scaling needed'],cor:0},
+{type:'btns',section:'Encapsulation',
+ theory:`<h3>Message encoding vector</h3><div class="mblock">MSG=[1,0,1,0,1,0,1,0]\nM_HAT=[8,0,8,0,8,0,8,0]\nbit 1→⌊q/2⌋=8,  bit 0→0</div>`,
+ q:'After encoding, MSG=[1,0,1,0,1,0,1,0] becomes M_HAT=?',opts:['[8,0,8,0,8,0,8,0]','[1,0,1,0,1,0,1,0]','[17,0,17,0,17,0,17,0]','[8,8,8,8,8,8,8,8]'],cor:0},
+{type:'btns',section:'Decapsulation',
+ theory:`<h3>Algebraic cancellation in decapsulation</h3><div class="mblock">v = t̂^T·r̂ + e2 + m̂  (after INTT)\nŝ^T·u ≈ Â^T·r̂ term cancels\nw = v − ŝ^T·u ≈ m̂ + small noise</div>`,
+ q:'What cancels exactly during decapsulation?',opts:['INTT(ŝ^T·Â^T·r̂) terms from both v and ŝ^T·u','The message m̂','The error term e2','The matrix A'],cor:0},
+// 8 gaps (Python)
+{type:'gaps',lang:'python',section:'modpow',
+ theory:`<h3>modpow:square-and-multiply</h3><div class="mblock">result=1, b=base%mod\nwhile exp>0:\n  if exp&1: result=result*b%mod\n  b=b*b%mod\n  exp>>=1</div>`,
+ q:'Complete modpow:',
+ tmpl:[
+  {t:'code',s:'def modpow(base, exp, mod):'},
+  {t:'code',s:'    result, b = 1, base % mod'},
+  {t:'code',s:'    while exp > 0:'},
+  {t:'gap', pre:'        if exp & 1: result = result * b % ',suf:'',ans:'mod',w:45,hc:'the modulus parameter'},
+  {t:'gap', pre:'        b = b * b % ',suf:'',ans:'mod',w:45,hc:'the modulus parameter'},
+  {t:'gap', pre:'        exp >>= ',suf:'',ans:'1',w:30,hc:'right-shift by this many bits each iteration'},
+  {t:'code',s:'    return result'},
+ ]},
+{type:'gaps',lang:'python',section:'cbd_sample',
+ theory:`<h3>CBD sampler</h3><div class="mblock">bits LSB-first\ncoeff=(b0+b1)−(b2+b3)\nappend coeff%q</div>`,
+ q:'Complete cbd_sample:',
+ tmpl:[
+  {t:'code',s:'def cbd_sample(byte_list, q):'},
+  {t:'code',s:'    out = []'},
+  {t:'code',s:'    for byte_val in byte_list:'},
+  {t:'gap', pre:'        bits = [(byte_val >> i) & 1 for i in range(',suf:')]',ans:'8',w:25,hc:'number of bits in a byte'},
+  {t:'code',s:'        for pair in range(2):'},
+  {t:'code',s:'            b0,b1,b2,b3 = bits[pair*4:pair*4+4]'},
+  {t:'gap', pre:'            coeff = (b0+b1) - ',suf:'',ans:'(b2+b3)',w:70,hc:'negative half of the η=2 formula'},
+  {t:'gap', pre:'            out.append(coeff % ',suf:')',ans:'q',w:25,hc:'the modulus parameter'},
+  {t:'code',s:'    return out'},
+ ]},
+{type:'gaps',lang:'python',section:'bit_reverse_permute',
+ theory:`<h3>Bit-reversal permutation</h3><div class="mblock">bits=int(log2(n))\nrev=int(f'{i:0{bits}b}'[::-1],2)\nif rev>i: swap r[i],r[rev]</div>`,
+ q:'Complete bit_reverse_permute:',
+ tmpl:[
+  {t:'code',s:'import math'},
+  {t:'code',s:'def bit_reverse_permute(a):'},
+  {t:'code',s:'    n = len(a); r = list(a)'},
+  {t:'gap', pre:'    bits = int(math.log2(',suf:'))',ans:'n',w:25,hc:'the array length variable'},
+  {t:'code',s:'    for i in range(n):'},
+  {t:'gap', pre:"        rev = int(f'{i:0{bits}b}'",suf:", 2)",ans:'[::-1]',w:65,hc:"Python reverse-slice notation (e.g. 'abc'[::-1] == 'cba')"},
+  {t:'gap', pre:'        if rev > ',suf:':',ans:'i',w:25,hc:'the outer loop counter variable'},
+  {t:'code',s:'            r[i], r[rev] = r[rev], r[i]'},
+  {t:'code',s:'    return r'},
+ ]},
+{type:'gaps',lang:'python',section:'NTT core',
+ theory:`<h3>NTT butterfly loop</h3><div class="mblock">step=n//length\nw=roots[j*step]\nt=a[s]*w%q\na[f]=(a[f]+t)%q\na[s]=(old_f−t)%q\nlength&lt;&lt;=1</div>`,
+ q:'Complete NTT butterfly loop:',
+ tmpl:[
+  {t:'code',s:'    length = 2'},
+  {t:'code',s:'    while length <= n:'},
+  {t:'gap', pre:'        step = n // ',suf:'',ans:'length',w:55,hc:'the current butterfly stride variable'},
+  {t:'code',s:'        for bs in range(0, n, length):'},
+  {t:'code',s:'            for j in range(length // 2):'},
+  {t:'code',s:'                f, s = bs+j, bs+j+length//2'},
+  {t:'gap', pre:'                w = roots[j * ',suf:']',ans:'step',w:45,hc:'the step variable computed above'},
+  {t:'code',s:'                t = a[s] * w % q'},
+  {t:'code',s:'                a[f], a[s] = (a[f]+t)%q, (a[f]-t)%q'},
+  {t:'gap', pre:'        length ',suf:'',ans:'<<= 1',w:55,hc:'double the stride: left-shift-assign by 1'},
+ ]},
+{type:'gaps',lang:'python',section:'INTT',
+ theory:`<h3>INTT = NTT(inv_roots) then scale by n⁻¹</h3>`,
+ q:'Complete intt:',
+ tmpl:[
+  {t:'code',s:'def intt(poly, inv_roots, q, n_inv):'},
+  {t:'gap', pre:'    result = ntt(poly, ',suf:', q)',ans:'inv_roots',w:75,hc:'2nd parameter to ntt: the inverse roots table'},
+  {t:'gap', pre:'    return [x * ',suf:' % q for x in result]',ans:'n_inv',w:50,hc:'n⁻¹ mod q scalar (last function parameter)'},
+ ]},
+{type:'gaps',lang:'python',section:'pointwise ops',
+ theory:`<h3>Pointwise operations</h3><div class="mblock">mul: a[i]*b[i]%q\nadd: (a[i]+b[i])%q</div>`,
+ q:'Complete pointwise_mul and pointwise_add:',
+ tmpl:[
+  {t:'code',s:'def pointwise_mul(a, b, q):'},
+  {t:'gap', pre:'    return [x*y%q for x,y in ',suf:'(a,b)]',ans:'zip',w:35,hc:'built-in that pairs two iterables element-by-element'},
+  {t:'code',s:'def pointwise_add(a, b, q):'},
+  {t:'gap', pre:'    return [(x+y)%q for x,y in zip(',suf:')]',ans:'a, b',w:50,hc:'the two input list parameters'},
+ ]},
+{type:'gaps',lang:'python',section:'keygen_t',
+ theory:`<h3>t̂ = Â·ŝ + ê (NTT domain pointwise)</h3>`,
+ q:'Complete keygen_t inner loop:',
+ tmpl:[
+  {t:'code',s:'def keygen_t(A_hat, s_ntt, e_ntt, q):'},
+  {t:'code',s:'    k,n = len(A_hat), len(A_hat[0][0])'},
+  {t:'code',s:'    t_hat = []'},
+  {t:'code',s:'    for row in range(k):'},
+  {t:'code',s:'        acc = [0]*n'},
+  {t:'code',s:'        for col in range(k):'},
+  {t:'gap', pre:'            prod = pointwise_mul(A_hat[row][col], ',suf:', q)',ans:'s_ntt[col]',w:85,hc:'column vector from s_ntt at index col'},
+  {t:'gap', pre:'            acc  = pointwise_add(acc, ',suf:', q)',ans:'prod',w:45,hc:'the product computed just above'},
+  {t:'gap', pre:'        t_hat.append(pointwise_add(acc, ',suf:', q))',ans:'e_ntt[row]',w:85,hc:'error vector for this row from e_ntt'},
+  {t:'code',s:'    return t_hat'},
+ ]},
+{type:'gaps',lang:'python',section:'decode_bit',
+ theory:`<h3>Decode bit by circular distance</h3><div class="mblock">d0  = min(c, q-c)\ndq2 = min(|c-q//2|, q-|c-q//2|)\nreturn 1 if dq2&lt;d0 else 0</div>`,
+ q:'Complete decode_bit:',
+ tmpl:[
+  {t:'code',s:'def decode_bit(c, q):'},
+  {t:'gap', pre:'    d0  = min(c, ',suf:')',ans:'q - c',w:50,hc:'circular distance from 0: min(c, q-c)'},
+  {t:'gap', pre:'    dq2 = min(abs(c-q//2), q - ',suf:')',ans:'abs(c-q//2)',w:90,hc:'circular distance from q/2: |c − q//2| (same form as first arg)'},
+  {t:'gap', pre:'    return 1 if dq2 < ',suf:' else 0',ans:'d0',w:35,hc:'distance-from-0 variable computed above'},
+ ]},
+];
+// LEVEL 4:HARD  (8 btns + 13 gaps = 21)
+const HARD=[
+// 8 hard theory btns
+{type:'btns',section:'Module-LWE',
+ theory:`<h3>Module-LWE Security Assumption</h3><p>The hardness of Kyber relies on distinguishing (A, As+e) from (A, uniform random), even with quantum resources.</p>`,
+ q:'What is the core security assumption of Kyber?',opts:['Module-LWE (MLWE) hardness','Integer factorisation','Discrete logarithm','Shortest vector problem only'],cor:0},
+{type:'btns',section:'Primitive Root',
+ theory:`<h3>Order of g mod p</h3><p>g has order d if g^d≡1 mod p and no smaller positive k satisfies g^k≡1. Since 16=2⁴, testing g^8≠1 is sufficient for order 16.</p>`,
+ q:'3⁸ mod 17=16. This means the order of 3 mod 17 is?',opts:['16 (3^16≡1 and 3^8≠1)','8','4','32'],cor:0},
+{type:'btns',section:'NTT Domain',
+ theory:`<h3>NTT domain multiplication</h3><p>Once in NTT domain, polynomial multiplication becomes O(n) pointwise:each coefficient pair multiplied independently.</p>`,
+ q:'In NTT domain, polynomial multiplication becomes what?',opts:['Pointwise (element-wise) multiplication','Matrix transpose','Convolution','Polynomial division'],cor:0},
+{type:'btns',section:'Encapsulation',
+ theory:`<h3>Algebraic cancellation</h3><div class="mblock">v = INTT(t̂^T·r̂)+e2+m̂\nŝ^T·u = INTT(ŝ^T·Â^T·r̂)+INTT(ŝ^T·ê1)\nw = v−ŝ^T·u = m̂ + small noise</div>`,
+ q:'Which term cancels exactly between v and ŝ^T·u?',opts:['INTT(ŝ^T·Â^T·r̂)','The message m̂','The noise e2','The public key t̂'],cor:0},
+{type:'btns',section:'Noise Budget',
+ theory:`<h3>Decryption threshold</h3><div class="mblock">bit 1 encoded as q/2=8\nbit 0 encoded as 0\nCorrect if |noise| &lt; q/4 = 4.25</div>`,
+ q:'Maximum tolerable noise magnitude for correct decryption (q=17)?',opts:['4 (strictly less than q/4=4.25)','8','17','2'],cor:0},
+{type:'btns',section:'Security Levels',
+ theory:`<h3>Kyber security levels</h3><ul><li><strong>Kyber-512</strong>: 2¹¹⁸ post-quantum ops</li><li><strong>Kyber-768</strong>: 2¹⁷⁸ post-quantum ops</li><li><strong>Kyber-1024</strong>: 2²⁵⁴ post-quantum ops</li></ul>`,
+ q:'Kyber-768 targets approximately how many bits of post-quantum security?',opts:['178 bits (2¹⁷⁸ quantum ops)','128 bits','254 bits','64 bits'],cor:0},
+{type:'btns',section:'Matrix Generation',
+ theory:`<h3>Generating matrix A</h3><p>A is generated from seed ρ via cSHAKE128 + rejection sampling to ensure coefficients are uniformly distributed in {0,…,q−1}.</p>`,
+ q:'Why is rejection sampling used when generating matrix A?',opts:['To ensure uniform distribution in {0,…,q−1}','To make A invertible','To reduce key size','To add noise'],cor:0},
+{type:'btns',section:'FO Transform',
+ theory:`<h3>Fujisaki-Okamoto Transform</h3><p>Applied to Kyber's CPA-secure encryption to produce a CCA-secure KEM. On decapsulation mismatch, a pseudo-random key is returned (implicit rejection):never a failure signal.</p>`,
+ q:'What security property does the FO transform provide?',opts:['CCA security (chosen-ciphertext attack resistance)','Larger key sizes','Faster decryption','Quantum acceleration'],cor:0},
+// 13 scaling Python gaps
+{type:'gaps',lang:'python',section:'modpow full',
+ theory:`<h3>modpow complete</h3>`,q:'Complete modpow entirely:',
+ tmpl:[
+  {t:'code',s:'def modpow(base, exp, mod):'},
+  {t:'gap', pre:'    result, b = ',suf:', base % mod',ans:'1',w:25,hc:'initial accumulator value'},
+  {t:'code',s:'    while exp > 0:'},
+  {t:'gap', pre:'        if exp & ',suf:': result = result * b % mod',ans:'1',w:25,hc:'bitmask to test the lowest bit'},
+  {t:'gap', pre:'        b = b * b % ',suf:'',ans:'mod',w:40,hc:'the modulus parameter'},
+  {t:'gap', pre:'        exp ',suf:'= 1',ans:'>>=',w:35,hc:'right-shift assignment operator'},
+  {t:'code',s:'    return result'},
+ ]},
+{type:'gaps',lang:'python',section:'cbd_sample full',
+ theory:`<h3>cbd_sample complete</h3>`,q:'Complete cbd_sample:',
+ tmpl:[
+  {t:'code',s:'def cbd_sample(byte_list, q):'},
+  {t:'code',s:'    out = []'},
+  {t:'code',s:'    for byte_val in byte_list:'},
+  {t:'gap', pre:'        bits = [(byte_val >> ',suf:') & 1 for i in range(8)]',ans:'i',w:25,hc:'the loop counter for bit position'},
+  {t:'code',s:'        for pair in range(2):'},
+  {t:'gap', pre:'            b0,b1,b2,b3 = bits[pair*',suf:':pair*4+4]',ans:'4',w:25,hc:'group size: 4 bits per η=2 sample'},
+  {t:'gap', pre:'            coeff = (b0+b1) - (b2+',suf:')',ans:'b3',w:25,hc:'4th bit variable in the group'},
+  {t:'gap', pre:'            out.append(coeff % ',suf:')',ans:'q',w:25,hc:'the modulus parameter'},
+  {t:'code',s:'    return out'},
+ ]},
+{type:'gaps',lang:'python',section:'NTT full',
+ theory:`<h3>NTT complete</h3>`,q:'Complete ntt function:',
+ tmpl:[
+  {t:'code',s:'def ntt(poly, roots, q):'},
+  {t:'code',s:'    n = len(poly)'},
+  {t:'gap', pre:'    a = bit_reverse_permute(',suf:')',ans:'poly',w:45,hc:'the input polynomial parameter'},
+  {t:'code',s:'    length = 2'},
+  {t:'code',s:'    while length <= n:'},
+  {t:'gap', pre:'        step = ',suf:' // length',ans:'n',w:25,hc:'total degree variable for stride'},
+  {t:'code',s:'        for bs in range(0, n, length):'},
+  {t:'code',s:'            for j in range(length // 2):'},
+  {t:'gap', pre:'                f,s = bs+j, bs+j+',suf:'//2',ans:'length',w:55,hc:'the butterfly stride variable'},
+  {t:'gap', pre:'                w = roots[',suf:' * step]',ans:'j',w:25,hc:'the inner loop counter variable'},
+  {t:'code',s:'                t = a[s] * w % q'},
+  {t:'gap', pre:'                a[f],a[s] = (a[f]+t)%q, (',suf:'-t)%q',ans:'a[f]',w:45,hc:'the top butterfly element (index f)'},
+  {t:'gap', pre:'        length ',suf:'',ans:'<<= 1',w:55,hc:'double the stride: left-shift-assign by 1'},
+  {t:'code',s:'    return a'},
+ ]},
+{type:'gaps',lang:'python',section:'INTT full',
+ theory:`<h3>INTT:same butterfly + n⁻¹ scaling</h3>`,q:'Complete intt:',
+ tmpl:[
+  {t:'code',s:'def intt(poly, inv_roots, q, n_inv):'},
+  {t:'gap', pre:'    result = ntt(poly, ',suf:', q)',ans:'inv_roots',w:75,hc:'2nd parameter to ntt: inverse roots table'},
+  {t:'gap', pre:'    return [x * n_inv % ',suf:' for x in result]',ans:'q',w:25,hc:'the modulus variable'},
+ ]},
+{type:'gaps',lang:'python',section:'keygen_t full',
+ theory:`<h3>keygen_t full</h3>`,q:'Complete keygen_t:',
+ tmpl:[
+  {t:'code',s:'def keygen_t(A_hat, s_ntt, e_ntt, q):'},
+  {t:'code',s:'    k = len(A_hat); n = len(A_hat[0][0])'},
+  {t:'code',s:'    t_hat = []'},
+  {t:'code',s:'    for row in range(k):'},
+  {t:'gap', pre:'        acc = [',suf:'] * n',ans:'0',w:25,hc:'initial zero value for accumulator'},
+  {t:'code',s:'        for col in range(k):'},
+  {t:'gap', pre:'            prod = pointwise_mul(A_hat[',suf:'][col], s_ntt[col], q)',ans:'row',w:35,hc:'the outer loop row index'},
+  {t:'gap', pre:'            acc = pointwise_add(',suf:', prod, q)',ans:'acc',w:35,hc:'the running accumulator variable'},
+  {t:'gap', pre:'        t_hat.append(pointwise_add(acc, e_ntt[',suf:'], q))',ans:'row',w:35,hc:'row index to pick the error vector'},
+  {t:'code',s:'    return t_hat'},
+ ]},
+{type:'gaps',lang:'python',section:'matvec_ntt',
+ theory:`<h3>Matrix-vector multiply in NTT domain</h3>`,q:'Complete matvec_ntt:',
+ tmpl:[
+  {t:'code',s:'def matvec_ntt(M, v_ntt, q):'},
+  {t:'code',s:'    k,n = len(M),len(M[0][0]); res=[]'},
+  {t:'code',s:'    for row in range(k):'},
+  {t:'gap', pre:'        acc = [',suf:']*n',ans:'0',w:25,hc:'initial zero value for accumulator'},
+  {t:'code',s:'        for col in range(k):'},
+  {t:'code',s:'            for i in range(n):'},
+  {t:'gap', pre:'                acc[i]=(acc[i]+M[row][col][',suf:']*v_ntt[col][i])%q',ans:'i',w:25,hc:'the coefficient index loop variable'},
+  {t:'code',s:'        res.append(acc)'},
+  {t:'code',s:'    return res'},
+ ]},
+{type:'gaps',lang:'python',section:'encapsulate transpose',
+ theory:`<h3>Encapsulation: A transpose and u</h3><div class="mblock">A_T[i][j] = A_hat[j][i]\nu = INTT(A_T·r̂) + e1</div>`,
+ q:'Complete transpose and u:',
+ tmpl:[
+  {t:'gap', pre:'A_T = [[A_hat[',suf:'][i] for j in range(k)] for i in range(k)]',ans:'j',w:25,hc:'transposed row index (swap i and j)'},
+  {t:'gap', pre:'r_ntt = [ntt(',suf:',roots,q) for rr in r]',ans:'rr',w:25,hc:'the loop variable from list r'},
+  {t:'code',s:'ATr = matvec_ntt(A_T, r_ntt, q)'},
+  {t:'code',s:'u = []'},
+  {t:'code',s:'for row in range(k):'},
+  {t:'gap', pre:'    ur = intt(ATr[',suf:'],inv_roots,q,n_inv)',ans:'row',w:35,hc:'the outer loop index variable'},
+  {t:'code',s:'    u.append([(ur[i]+e1[row][i])%q for i in range(n)])'},
+ ]},
+{type:'gaps',lang:'python',section:'encapsulate v',
+ theory:`<h3>Encapsulation: compute v</h3><div class="mblock">v = INTT(t̂^T·r̂) + e2 + m̂</div>`,
+ q:'Complete v computation:',
+ tmpl:[
+  {t:'gap', pre:'tTr=[sum(th[c][i]*r_ntt[',suf:'][i] for c in range(k))%q for i in range(n)]',ans:'c',w:25,hc:'inner loop counter variable'},
+  {t:'gap', pre:'vp=intt(',suf:',inv_roots,q,n_inv)',ans:'tTr',w:35,hc:'the t̂^T·r̂ inner product computed above'},
+  {t:'code',s:'me=[b*(q//2) for b in msg]'},
+  {t:'gap', pre:'v=[(vp[i]+e2[i]+me[',suf:'])%q for i in range(n)]',ans:'i',w:25,hc:'the coefficient index variable'},
+ ]},
+{type:'gaps',lang:'python',section:'decapsulate',
+ theory:`<h3>Decapsulation</h3><div class="mblock">u_ntt=NTT(u)\nstu=ŝ^T·û (inner product)\nw=v−INTT(stu)</div>`,
+ q:'Complete decapsulate:',
+ tmpl:[
+  {t:'code',s:'def decapsulate(s_hat, u, v, roots, inv_roots, q, k, n_inv):'},
+  {t:'code',s:'    n = len(u[0])'},
+  {t:'gap', pre:'    u_ntt = [ntt(uu, ',suf:',q) for uu in u]',ans:'roots',w:55,hc:'forward NTT roots table parameter'},
+  {t:'gap', pre:'    stu=[sum(s_hat[j][i]*u_ntt[',suf:'][i] for j in range(k))%q for i in range(n)]',ans:'j',w:25,hc:'the inner loop counter variable'},
+  {t:'gap', pre:'    stu_n = intt(',suf:',inv_roots,q,n_inv)',ans:'stu',w:35,hc:'the ŝ^T·û inner product computed above'},
+  {t:'gap', pre:'    w = [(v[i]-',suf:')%q for i in range(n)]',ans:'stu_n[i]',w:65,hc:'index into stu_n with coefficient i'},
+  {t:'code',s:'    return [decode_bit(c,q) for c in w]'},
+ ]},
+{type:'gaps',lang:'python',section:'decode_bit full',
+ theory:`<h3>Decode by circular distance</h3>`,q:'Complete decode_bit:',
+ tmpl:[
+  {t:'code',s:'def decode_bit(c, q):'},
+  {t:'gap', pre:'    d0  = min(c, q - ',suf:')',ans:'c',w:25,hc:'the coefficient parameter itself'},
+  {t:'gap', pre:'    dq2 = min(abs(c-q//2), ',suf:'-abs(c-q//2))',ans:'q',w:25,hc:'the modulus variable'},
+  {t:'gap', pre:'    return 1 if ',suf:' < d0 else 0',ans:'dq2',w:35,hc:'distance-from-q/2 variable computed above'},
+ ]},
+{type:'gaps',lang:'python',section:'root derivation',
+ theory:`<h3>Derive ω from g=3</h3>`,q:'Complete root derivation:',
+ tmpl:[
+  {t:'gap', pre:'psi   = modpow(3,(Q-1)//(2*',suf:'),Q)',ans:'N',w:25,hc:'polynomial degree (length of poly)'},
+  {t:'gap', pre:'omega = modpow(',suf:',2,Q)',ans:'psi',w:35,hc:'ψ computed on the line above'},
+  {t:'gap', pre:'omega_inv = modpow(omega,Q-',suf:',Q)',ans:'2',w:25,hc:"Fermat's little theorem: a^(p-2) ≡ a^-1 mod p"},
+  {t:'gap', pre:'ROOTS=[modpow(omega,k,Q) for k in range(',suf:')]',ans:'N',w:25,hc:'number of roots to generate'},
+  {t:'gap', pre:'INV_ROOTS=[modpow(omega_inv,k,Q) for k in range(',suf:')]',ans:'N',w:25,hc:'same count as ROOTS'},
+ ]},
+{type:'gaps',lang:'python',section:'pipeline KeyGen',
+ theory:`<h3>Full KeyGen pipeline</h3>`,q:'Complete KeyGen:',
+ tmpl:[
+  {t:'gap', pre:'sn=[ntt(s,',suf:',Q) for s in [S0,S1]]',ans:'ROOTS',w:55,hc:'the global forward roots table'},
+  {t:'gap', pre:'en=[ntt(e,ROOTS,',suf:') for e in [E0,E1]]',ans:'Q',w:25,hc:'the modulus constant'},
+  {t:'gap', pre:'th=keygen_t(',suf:',sn,en,Q)',ans:'A',w:25,hc:'the public matrix A (first argument)'},
+ ]},
+{type:'gaps',lang:'python',section:'pipeline Decaps assert',
+ theory:`<h3>Full pipeline assertion</h3>`,q:'Complete decapsulation call and assertion:',
+ tmpl:[
+  {t:'code',s:'u,v=encapsulate(A,th,[R0,R1],[E1_0,E1_1],E2,MSG,ROOTS,INV_ROOTS,Q,K,N_INV)'},
+  {t:'gap', pre:'r=decapsulate(sn,u,v,ROOTS,INV_ROOTS,',suf:',K,N_INV)',ans:'Q',w:25,hc:'the modulus constant'},
+  {t:'gap', pre:'assert r==',suf:'',ans:'MSG',w:35,hc:'the original message variable'},
+ ]},
+];
+// LEVEL 5:VERY HARD  (27 Python gaps)
+const VH=[
+{type:'gaps',lang:'python',section:'modpow',theory:`<h3>Fast modular exponentiation</h3>`,q:'Complete modpow:',
+ tmpl:[{t:'code',s:'def modpow(base,exp,mod):'},{t:'gap',pre:'    result,b=1,base%',suf:'',ans:'mod',w:40,hc:'the modulus parameter'},
+  {t:'code',s:'    while exp>0:'},{t:'gap',pre:'        if ',suf:'&1: result=result*b%mod',ans:'exp',w:35,hc:'the exponent variable'},
+  {t:'gap',pre:'        b=b*',suf:'%mod',ans:'b',w:25,hc:'same variable being squared'},{t:'gap',pre:'        ',suf:'>>=1',ans:'exp',w:35,hc:'the exponent variable to right-shift'},
+  {t:'code',s:'    return result'}]},
+{type:'gaps',lang:'python',section:'cbd_sample',theory:`<h3>CBD η=2 sampler</h3>`,q:'Complete cbd_sample:',
+ tmpl:[{t:'code',s:'def cbd_sample(blist,q):'},{t:'code',s:'    out=[]'},
+  {t:'code',s:'    for bv in blist:'},{t:'gap',pre:'        bits=[(bv>>',suf:')&1 for i in range(8)]',ans:'i',w:25,hc:'loop counter for bit position'},
+  {t:'code',s:'        for p in range(2):'},{t:'gap',pre:'            b=bits[p*4:',suf:'*4+4]',ans:'p',w:25,hc:'the pair loop variable'},
+  {t:'gap',pre:'            c=(b[0]+b[1])-',suf:'',ans:'(b[2]+b[3])',w:80,hc:'subtract the second bit pair'},
+  {t:'gap',pre:'            out.append(c%',suf:')',ans:'q',w:25,hc:'the modulus parameter'},{t:'code',s:'    return out'}]},
+{type:'gaps',lang:'python',section:'bit_reverse_permute',theory:`<h3>Bit-reversal permutation</h3>`,q:'Complete bit_reverse_permute:',
+ tmpl:[{t:'code',s:'import math'},{t:'code',s:'def bit_reverse_permute(a):'},
+  {t:'gap',pre:'    n,r=',suf:',list(a)',ans:'len(a)',w:55,hc:'assign length and a copy of the input'},{t:'gap',pre:'    bits=int(math.log2(',suf:'))',ans:'n',w:25,hc:'the length variable'},
+  {t:'code',s:'    for i in range(n):'},
+  {t:'gap',pre:"        rev=int(f'{i:0{bits}b}'",suf:",2)",ans:'[::-1]',w:65,hc:"Python reverse-slice notation (e.g. 'abc'[::-1])"},
+  {t:'gap',pre:'        if rev>i: r[i],r[rev]=r[',suf:'],r[i]',ans:'rev',w:35,hc:'the bit-reversed index variable'},
+  {t:'code',s:'    return r'}]},
+{type:'gaps',lang:'python',section:'NTT core',theory:`<h3>NTT Cooley-Tukey core</h3>`,q:'Complete NTT body:',
+ tmpl:[{t:'code',s:'def ntt(poly,roots,q):'},{t:'code',s:'    n=len(poly)'},
+  {t:'gap',pre:'    a=bit_reverse_permute(',suf:')',ans:'poly',w:45,hc:'the input polynomial parameter'},{t:'gap',pre:'    length=',suf:'',ans:'2',w:25,hc:'initial stride: start at 2'},
+  {t:'code',s:'    while length<=n:'},{t:'gap',pre:'        step=n//',suf:'',ans:'length',w:55,hc:'the current butterfly stride variable'},
+  {t:'code',s:'        for bs in range(0,n,length):'},
+  {t:'gap',pre:'            for j in range(length//',suf:'):',ans:'2',w:25,hc:'half the stride for butterfly pairs'},
+  {t:'gap',pre:'                f,s=bs+j,bs+j+',suf:'//2',ans:'length',w:55,hc:'the butterfly stride variable'},
+  {t:'gap',pre:'                w=roots[j*',suf:']',ans:'step',w:45,hc:'the step value computed above'},
+  {t:'gap',pre:'                t=a[',suf:']*w%q',ans:'s',w:25,hc:'the second butterfly element index'},
+  {t:'code',s:'                a[f],a[s]=(a[f]+t)%q,(a[f]-t)%q'},
+  {t:'gap',pre:'        length',suf:'',ans:'<<=1',w:55,hc:'double the stride: left-shift-assign'},{t:'code',s:'    return a'}]},
+{type:'gaps',lang:'python',section:'INTT',theory:`<h3>INTT</h3>`,q:'Complete intt:',
+ tmpl:[{t:'code',s:'def intt(poly,inv_roots,q,n_inv):'},
+  {t:'gap',pre:'    r=ntt(poly,',suf:',q)',ans:'inv_roots',w:75,hc:'2nd parameter: inverse roots table'},
+  {t:'gap',pre:'    return [x*',suf:'%q for x in r]',ans:'n_inv',w:50,hc:'n⁻¹ mod q scalar (last parameter)'}]},
+{type:'gaps',lang:'python',section:'pointwise ops',theory:`<h3>Pointwise ops</h3>`,q:'Complete pointwise_mul and add:',
+ tmpl:[{t:'code',s:'def pointwise_mul(a,b,q):'},
+  {t:'gap',pre:'    return [',suf:'*y%q for x,y in zip(a,b)]',ans:'x',w:25,hc:'first element unpacked from zip'},
+  {t:'code',s:'def pointwise_add(a,b,q):'},
+  {t:'gap',pre:'    return [(x+y)%q for x,y in zip(',suf:',b)]',ans:'a',w:25,hc:'first input list parameter'}]},
+{type:'gaps',lang:'python',section:'keygen_t',theory:`<h3>t̂=Â·ŝ+ê</h3>`,q:'Complete keygen_t:',
+ tmpl:[{t:'code',s:'def keygen_t(A,sn,en,q):'},{t:'code',s:'    k,n=len(A),len(A[0][0]);th=[]'},
+  {t:'code',s:'    for row in range(k):'},{t:'gap',pre:'        acc=[0]*',suf:'',ans:'n',w:25,hc:'polynomial degree (list length)'},
+  {t:'code',s:'        for col in range(k):'},
+  {t:'gap',pre:'            p=pointwise_mul(A[row][',suf:'],sn[col],q)',ans:'col',w:35,hc:'inner loop column index'},
+  {t:'gap',pre:'            acc=pointwise_add(acc,',suf:',q)',ans:'p',w:25,hc:'the product just computed above'},
+  {t:'gap',pre:'        th.append(pointwise_add(acc,en[',suf:'],q))',ans:'row',w:35,hc:'outer loop row index for error vector'},
+  {t:'code',s:'    return th'}]},
+{type:'gaps',lang:'python',section:'matvec_ntt',theory:`<h3>Matrix-vector multiply NTT domain</h3>`,q:'Complete matvec_ntt:',
+ tmpl:[{t:'code',s:'def matvec_ntt(M,v,q):'},{t:'code',s:'    k,n=len(M),len(M[0][0]);res=[]'},
+  {t:'code',s:'    for row in range(k):'},{t:'gap',pre:'        acc=',suf:'',ans:'[0]*n',w:50,hc:'zero-initialised list of length n'},
+  {t:'code',s:'        for col in range(k):'},{t:'code',s:'            for i in range(n):'},
+  {t:'gap',pre:'                acc[i]=(acc[i]+M[row][col][',suf:']*v[col][i])%q',ans:'i',w:25,hc:'the coefficient index loop variable'},
+  {t:'code',s:'        res.append(acc)'},{t:'code',s:'    return res'}]},
+{type:'gaps',lang:'python',section:'encode_message',theory:`<h3>Message encoding bit→⌊q/2⌋</h3>`,q:'Complete encode_message:',
+ tmpl:[{t:'code',s:'def encode_message(msg,q):'},
+  {t:'gap',pre:'    return [bit*(q//',suf:') for bit in msg]',ans:'2',w:25,hc:'bit 1 maps to q//2, bit 0 maps to 0'}]},
+{type:'gaps',lang:'python',section:'encaps r_ntt+transpose',theory:`<h3>NTT the randomness r</h3>`,q:'Complete r_ntt and A transpose:',
+ tmpl:[
+  {t:'gap',pre:'r_ntt=[ntt(rr,',suf:',q) for rr in r]',ans:'roots',w:55,hc:'the NTT roots table parameter'},
+  {t:'gap',pre:'A_T=[[A[',suf:'][i] for j in range(k)] for i in range(k)]',ans:'j',w:25,hc:'transposed row index (swap i,j)'}]},
+{type:'gaps',lang:'python',section:'encaps u',theory:`<h3>u=INTT(Â^T·r̂)+e1</h3>`,q:'Complete u:',
+ tmpl:[{t:'code',s:'ATr=matvec_ntt(A_T,r_ntt,q);u=[]'},
+  {t:'code',s:'for row in range(k):'},
+  {t:'gap',pre:'    ur=intt(ATr[',suf:'],inv_roots,q,n_inv)',ans:'row',w:35,hc:'outer loop index variable'},
+  {t:'gap',pre:'    u.append([(ur[i]+e1[',suf:'][i])%q for i in range(n)])',ans:'row',w:35,hc:'same outer loop index for e1'}]},
+{type:'gaps',lang:'python',section:'encaps v',theory:`<h3>v=INTT(t̂^T·r̂)+e2+m̂</h3>`,q:'Complete v:',
+ tmpl:[
+  {t:'gap',pre:'tTr=[sum(th[c][i]*r_ntt[',suf:'][i] for c in range(k))%q for i in range(n)]',ans:'c',w:25,hc:'inner loop counter variable'},
+  {t:'gap',pre:'vp=intt(',suf:',inv_roots,q,n_inv)',ans:'tTr',w:35,hc:'t̂^T·r̂ inner product computed above'},
+  {t:'code',s:'me=[b*(q//2) for b in msg]'},
+  {t:'gap',pre:'v=[(vp[i]+e2[i]+me[',suf:'])%q for i in range(n)]',ans:'i',w:25,hc:'the coefficient index variable'}]},
+{type:'gaps',lang:'python',section:'decaps u_ntt+stu',theory:`<h3>NTT the ciphertext u</h3>`,q:'Complete u_ntt and stu:',
+ tmpl:[
+  {t:'gap',pre:'u_ntt=[ntt(uu,',suf:',q) for uu in u]',ans:'roots',w:55,hc:'the NTT roots table parameter'},
+  {t:'gap',pre:'stu=[sum(s_hat[j][i]*u_ntt[',suf:'][i] for j in range(k))%q for i in range(n)]',ans:'j',w:25,hc:'the inner loop counter variable'}]},
+{type:'gaps',lang:'python',section:'decaps w',theory:`<h3>w=v−INTT(ŝ^T·û)</h3>`,q:'Complete w recovery:',
+ tmpl:[
+  {t:'gap',pre:'stu_n=intt(',suf:',inv_roots,q,n_inv)',ans:'stu',w:35,hc:'the ŝ^T·û inner product computed above'},
+  {t:'gap',pre:'w=[(v[i]-stu_n[',suf:'])%q for i in range(n)]',ans:'i',w:25,hc:'the coefficient index variable'}]},
+{type:'gaps',lang:'python',section:'decode_bit',theory:`<h3>Decode by circular distance</h3>`,q:'Complete decode_bit:',
+ tmpl:[{t:'code',s:'def decode_bit(c,q):'},
+  {t:'gap',pre:'    d0=min(c,',suf:'-c)',ans:'q',w:25,hc:'the modulus used in circular distance'},
+  {t:'gap',pre:'    dq2=min(abs(c-q//2),',suf:'-abs(c-q//2))',ans:'q',w:25,hc:'the modulus variable (same as above)'},
+  {t:'gap',pre:'    return 1 if dq2<',suf:' else 0',ans:'d0',w:35,hc:'distance-from-0 variable'}]},
+{type:'gaps',lang:'python',section:'primitive roots',theory:`<h3>Derive ω,ω⁻¹ from g=3</h3>`,q:'Complete root derivation:',
+ tmpl:[
+  {t:'gap',pre:'psi=modpow(3,(Q-1)//(2*',suf:'),Q)',ans:'N',w:25,hc:'polynomial degree variable'},
+  {t:'gap',pre:'omega=modpow(',suf:',2,Q)',ans:'psi',w:35,hc:'ψ computed on the line above'},
+  {t:'gap',pre:'omega_inv=modpow(omega,',suf:'-2,Q)',ans:'Q',w:25,hc:"Fermat: a^(p-2) ≡ a⁻¹ mod p"},
+  {t:'gap',pre:'n_inv=modpow(N,Q-',suf:',Q)',ans:'2',w:25,hc:"same Fermat exponent pattern"}]},
+{type:'gaps',lang:'python',section:'roots tables',theory:`<h3>Build ROOTS and INV_ROOTS</h3>`,q:'Complete root table generation:',
+ tmpl:[
+  {t:'gap',pre:'ROOTS=[modpow(omega,k,Q) for k in range(',suf:')]',ans:'N',w:25,hc:'number of roots to generate'},
+  {t:'gap',pre:'INV_ROOTS=[modpow(',suf:',k,Q) for k in range(N)]',ans:'omega_inv',w:75,hc:'the inverse omega variable'}]},
+{type:'gaps',lang:'python',section:'verify roots',theory:`<h3>Verify roots×inv_roots=1</h3>`,q:'Complete verification:',
+ tmpl:[
+  {t:'gap',pre:'check=[ROOTS[k]*INV_ROOTS[',suf:']%Q for k in range(N)]',ans:'k',w:25,hc:'same index k to pair each root with its inverse'},
+  {t:'gap',pre:'assert all(x==',suf:' for x in check)',ans:'1',w:25,hc:'root × inv_root should equal 1'}]},
+{type:'gaps',lang:'python',section:'NTT trace loop',theory:`<h3>NTT trace print each layer</h3>`,q:'Complete trace loop:',
+ tmpl:[{t:'code',s:'a=bit_reverse_permute(S0); length=2'},
+  {t:'code',s:'while length<=N:'},{t:'gap',pre:'    step=N//',suf:'',ans:'length',w:55,hc:'the current butterfly stride variable'},
+  {t:'code',s:'    for bs in range(0,N,length):'},
+  {t:'code',s:'        for j in range(length//2):'},
+  {t:'gap',pre:'            f,s=bs+j,bs+j+',suf:'//2',ans:'length',w:55,hc:'the stride variable'},
+  {t:'gap',pre:'            w=ROOTS[j*',suf:']',ans:'step',w:45,hc:'the step value computed above'},
+  {t:'code',s:'            t=a[s]*w%Q'},
+  {t:'gap',pre:'            a[f],a[s]=(a[f]+t)%Q,(',suf:'-t)%Q',ans:'a[f]',w:45,hc:'the top butterfly element (index f)'},
+  {t:'gap',pre:'    length',suf:'=1',ans:'<<=',w:35,hc:'left-shift-assign to double the stride'}]},
+{type:'gaps',lang:'python',section:'INTT scale',theory:`<h3>INTT: scale after butterfly</h3>`,q:'Complete INTT scaling:',
+ tmpl:[{t:'code',s:'a2=bit_reverse_permute(S0_NTT)'},
+  {t:'code',s:'# ... butterfly layers with INV_ROOTS ...'},
+  {t:'gap',pre:'scaled=[x*',suf:'%Q for x in a2]',ans:'N_INV',w:55,hc:'the n⁻¹ mod q constant'},
+  {t:'gap',pre:'assert scaled==',suf:'',ans:'S0',w:35,hc:'the original poly before NTT (round-trip check)'}]},
+{type:'gaps',lang:'python',section:'keygen assertions',theory:`<h3>Assert t̂ matches</h3>`,q:'Complete assertions:',
+ tmpl:[{t:'code',s:'th=keygen_t(A,[S0_NTT,S1_NTT],[E0_NTT,E1_NTT],Q)'},
+  {t:'gap',pre:'assert th[0]==',suf:'',ans:'T0',w:25,hc:'expected first t̂ vector'},
+  {t:'gap',pre:'assert th[',suf:']==T1',ans:'1',w:25,hc:'second index'}]},
+{type:'gaps',lang:'python',section:'encaps assertions',theory:`<h3>Assert ciphertext matches</h3>`,q:'Complete assertions:',
+ tmpl:[{t:'code',s:'u,v=encapsulate(A,[T0,T1],[R0,R1],[E1_0,E1_1],E2,MSG,ROOTS,INV_ROOTS,Q,K,N_INV)'},
+  {t:'gap',pre:'assert u[0]==',suf:'',ans:'U0',w:25,hc:'expected first ciphertext poly'},
+  {t:'gap',pre:'assert u[1]==',suf:'',ans:'U1',w:25,hc:'expected second ciphertext poly'},
+  {t:'gap',pre:'assert v==',suf:'',ans:'V',w:25,hc:'expected v ciphertext polynomial'}]},
+{type:'gaps',lang:'python',section:'decaps assertion',theory:`<h3>Assert message recovered</h3>`,q:'Complete assertion:',
+ tmpl:[{t:'code',s:'m=decapsulate([S0_NTT,S1_NTT],[U0,U1],V,ROOTS,INV_ROOTS,Q,K,N_INV)'},
+  {t:'gap',pre:'assert m==',suf:'',ans:'DECODED',w:55,hc:'expected recovered message variable'}]},
+{type:'gaps',lang:'python',section:'noise budget',theory:`<h3>Noise budget analysis</h3>`,q:'Complete noise loop:',
+ tmpl:[{t:'code',s:'for i in range(N):'},
+  {t:'gap',pre:'    n=(W[i]-M_HAT[',suf:'])%Q',ans:'i',w:25,hc:'the coefficient index variable'},
+  {t:'gap',pre:'    if n>Q//2: ',suf:'-=Q',ans:'n',w:25,hc:'the noise variable being adjusted'},
+  {t:'gap',pre:'    ok=abs(n)<',suf:'/4',ans:'Q',w:25,hc:'the modulus: threshold is Q/4'}]},
+{type:'gaps',lang:'python',section:'CBD edge cases',theory:`<h3>CBD edge case verification</h3>`,q:'Complete edge case assertions:',
+ tmpl:[
+  {t:'gap',pre:'assert cbd_sample([0xFF],Q)==',suf:'',ans:'[0,0]',w:50,hc:'0xFF → all bits 1 → (2)-(2)=0 for each pair'},
+  {t:'gap',pre:'assert cbd_sample([0x0F],Q)==',suf:'',ans:'[2,0]',w:50,hc:'0x0F → first pair:(1+1)-(0+0)=2, second pair:0'}]},
+{type:'gaps',lang:'python',section:'full pipeline',theory:`<h3>Full pipeline one-liner verification</h3>`,q:'Complete full pipeline:',
+ tmpl:[{t:'code',s:'sn=[ntt(s,ROOTS,Q) for s in [S0,S1]]'},
+  {t:'code',s:'en=[ntt(e,ROOTS,Q) for e in [E0,E1]]'},
+  {t:'gap',pre:'th=keygen_t(A,',suf:',en,Q)',ans:'sn',w:25,hc:'NTT-transformed secret key list'},
+  {t:'gap',pre:'u,v=encapsulate(A,th,[R0,R1],[E1_0,E1_1],E2,MSG,',suf:',INV_ROOTS,Q,K,N_INV)',ans:'ROOTS',w:55,hc:'the global forward roots table'},
+  {t:'gap',pre:'r=decapsulate(sn,u,v,ROOTS,INV_ROOTS,Q,K,',suf:')',ans:'N_INV',w:55,hc:'n⁻¹ mod q constant (last param)'},
+  {t:'gap',pre:'assert r==',suf:'',ans:'MSG',w:35,hc:'the original message variable'}]},,
+{type:'gaps',lang:'python',section:'pointwise_add indexed',theory:`<h3>Pointwise add:indexed form</h3>`,q:'Complete using index loop:',
+ tmpl:[{t:'code',s:'def pointwise_add(a,b,q):'},
+  {t:'gap',pre:'    return [(a[',suf:']+b[i])%q for i in range(len(a))]',ans:'i',w:25,hc:'the loop counter variable'}]},
+];
+// LEVEL 6:INSANE  (32 C gaps)
+const INS=[
+{type:'gaps',lang:'c',section:'barrett_reduce',theory:`<h3>Barrett reduction</h3><div class="mblock">// reduce a mod KYBER_Q without division\nint16_t barrett_reduce(int16_t a);</div>`,q:'Complete barrett_reduce:',
+ tmpl:[{t:'code',s:'#define KYBER_Q 3329'},
+  {t:'code',s:'static int16_t barrett_reduce(int16_t a) {'},
+  {t:'gap',pre:'    int16_t t=((int32_t)a*',suf:'+(1<<25))>>26;',ans:'20159',w:55,hc:'Barrett magic constant ≈ 2^26 / KYBER_Q'},
+  {t:'gap',pre:'    return a-t*',suf:';',ans:'KYBER_Q',w:60,hc:'the modulus constant'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'montgomery_reduce',theory:`<h3>Montgomery reduction</h3><div class="mblock">// a*R^{-1} mod q\nQINV = q^{-1} mod 2^16</div>`,q:'Complete montgomery_reduce:',
+ tmpl:[{t:'code',s:'#define QINV 62209'},
+  {t:'code',s:'static int16_t montgomery_reduce(int32_t a) {'},
+  {t:'gap',pre:'    int16_t t=(int16_t)a*',suf:';',ans:'QINV',w:50,hc:'q⁻¹ mod 2^16 constant defined above'},
+  {t:'gap',pre:'    return (a-(int32_t)t*KYBER_Q)>>',suf:';',ans:'16',w:25,hc:'right-shift by word size (bits in int16_t)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly struct',theory:`<h3>Polynomial struct</h3>`,q:'Complete poly and polyvec typedefs:',
+ tmpl:[{t:'code',s:'#define KYBER_N 256'},
+  {t:'gap',pre:'typedef struct { int16_t ',suf:'[KYBER_N]; } poly;',ans:'coeffs',w:60,hc:'field name for the coefficient array'},
+  {t:'gap',pre:'typedef struct { poly ',suf:'[KYBER_K]; } polyvec;',ans:'vec',w:35,hc:'field name for the poly array'}]},
+{type:'gaps',lang:'c',section:'poly_add',theory:`<h3>Polynomial addition</h3>`,q:'Complete poly_add:',
+ tmpl:[{t:'code',s:'void poly_add(poly *r, const poly *a, const poly *b) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++)'},
+  {t:'gap',pre:'        r->coeffs[i]=a->coeffs[i]+',suf:';',ans:'b->coeffs[i]',w:100,hc:'same coefficient index i of the second poly'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_sub',theory:`<h3>Polynomial subtraction</h3>`,q:'Complete poly_sub:',
+ tmpl:[{t:'code',s:'void poly_sub(poly *r, const poly *a, const poly *b) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++)'},
+  {t:'gap',pre:'        r->coeffs[i]=a->coeffs[i]-',suf:';',ans:'b->coeffs[i]',w:100,hc:'same coefficient index i of the second poly'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'NTT zeta loop',theory:`<h3>NTT with zeta table</h3><div class="mblock">// zetas[k] = ψ^bitrev(k) mod q\n// Cooley-Tukey iterative</div>`,q:'Complete NTT zeta loop:',
+ tmpl:[{t:'code',s:'void ntt(int16_t r[256]) {'},
+  {t:'code',s:'    int len,start,j,k=1; int16_t t,zeta;'},
+  {t:'code',s:'    for (len=128; len>=2; len>>=1) {'},
+  {t:'code',s:'        for (start=0; start<256; start+=2*len) {'},
+  {t:'gap',pre:'            zeta=zetas[',suf:'];',ans:'k++',w:45,hc:'zeta table index, post-increment k'},
+  {t:'code',s:'            for (j=start; j<start+len; j++) {'},
+  {t:'gap',pre:'                t=montgomery_reduce((int32_t)zeta*r[',suf:']);',ans:'j+len',w:55,hc:'second butterfly element: j offset by len'},
+  {t:'gap',pre:'                r[j+len]=r[',suf:']-t;',ans:'j',w:25,hc:'first butterfly element index'},
+  {t:'code',s:'                r[j]=r[j]+t;'},
+  {t:'code',s:'            }'},'',{t:'code',s:'        }'},'',{t:'code',s:'    }'},'',{t:'code',s:'}'}].filter(x=>typeof x==='object')},
+{type:'gaps',lang:'c',section:'INTT scale',theory:`<h3>INTT:Gentleman-Sande + n⁻¹ scale</h3><div class="mblock">// F=KYBER_N^{-1} mod q in Montgomery form</div>`,q:'Complete INTT scaling:',
+ tmpl:[{t:'code',s:'#define F 1441  // mont(n^{-1} mod q)'},
+  {t:'code',s:'void intt(int16_t r[256]) {'},
+  {t:'code',s:'    /* ... butterfly layers (reverse) ... */'},
+  {t:'code',s:'    for (int j=0; j<256; j++)'},
+  {t:'gap',pre:'        r[j]=montgomery_reduce((int32_t)',suf:'*r[j]);',ans:'F',w:25,hc:'n⁻¹ Montgomery constant defined above'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'basemul',theory:`<h3>Basemul:NTT-domain poly multiply</h3><div class="mblock">// r[0]=a[0]*b[0]+a[1]*b[1]*zeta\n// r[1]=a[0]*b[1]+a[1]*b[0]</div>`,q:'Complete basemul:',
+ tmpl:[{t:'code',s:'void basemul(int16_t r[2],const int16_t a[2],const int16_t b[2],int16_t zeta){'},
+  {t:'gap',pre:'    r[0]=montgomery_reduce((int32_t)',suf:'[1]*b[1]);',ans:'a',w:25,hc:'first input array parameter'},
+  {t:'code',s:'    r[0]=montgomery_reduce((int32_t)r[0]*zeta);'},
+  {t:'gap',pre:'    r[0]+=montgomery_reduce((int32_t)a[0]*',suf:'[0]);',ans:'b',w:25,hc:'second input array parameter'},
+  {t:'gap',pre:'    r[1]=montgomery_reduce((int32_t)a[0]*',suf:'[1]);',ans:'b',w:25,hc:'second input array parameter'},
+  {t:'gap',pre:'    r[1]+=montgomery_reduce((int32_t)a[1]*',suf:'[0]);',ans:'b',w:25,hc:'second input array parameter'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_ntt wrapper',theory:`<h3>poly_ntt wrapper</h3>`,q:'Complete poly_ntt and poly_invntt_tomont:',
+ tmpl:[{t:'code',s:'void poly_ntt(poly *r) {'},
+  {t:'gap',pre:'    ntt(',suf:'->coeffs);',ans:'r',w:25,hc:'the poly pointer parameter'},
+  {t:'gap',pre:'    poly_reduce(',suf:');',ans:'r',w:25,hc:'the poly pointer parameter'},
+  {t:'code',s:'}'},
+  {t:'code',s:'void poly_invntt_tomont(poly *r) {'},
+  {t:'gap',pre:'    intt(',suf:'->coeffs);',ans:'r',w:25,hc:'the poly pointer parameter'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'polyvec_ntt',theory:`<h3>polyvec_ntt: apply NTT to each element</h3>`,q:'Complete polyvec_ntt:',
+ tmpl:[{t:'code',s:'void polyvec_ntt(polyvec *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_ntt(&r->',suf:'[i]);',ans:'vec',w:35,hc:'poly array field name (from struct typedef)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'polyvec_pointwise_acc',theory:`<h3>Inner product of two polyvecs</h3><div class="mblock">// r = Σ a[i] ⊙ b[i]</div>`,q:'Complete polyvec_pointwise_acc_montgomery:',
+ tmpl:[{t:'code',s:'void polyvec_pointwise_acc_montgomery(poly *r,const polyvec *a,const polyvec *b){'},
+  {t:'code',s:'    poly t;'},
+  {t:'gap',pre:'    poly_basemul_montgomery(r,&a->vec[',suf:'],&b->vec[0]);',ans:'0',w:25,hc:'first element index to initialise r'},
+  {t:'code',s:'    for (int i=1; i<KYBER_K; i++) {'},
+  {t:'gap',pre:'        poly_basemul_montgomery(&t,&a->vec[',suf:'],&b->vec[i]);',ans:'i',w:25,hc:'the loop counter variable'},
+  {t:'code',s:'        poly_add(r,r,&t);'},
+  {t:'code',s:'    }'},
+  {t:'gap',pre:'    poly_reduce(',suf:');',ans:'r',w:25,hc:'the result poly pointer'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_reduce',theory:`<h3>poly_reduce: Barrett reduce all coeffs</h3>`,q:'Complete poly_reduce:',
+ tmpl:[{t:'code',s:'void poly_reduce(poly *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++)'},
+  {t:'gap',pre:'        r->coeffs[i]=barrett_reduce(r->',suf:'[i]);',ans:'coeffs',w:60,hc:'coefficient array field name (from struct)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_compress',theory:`<h3>poly_compress: Compress(x,d)</h3><div class="mblock">// round(2^d/q * x) mod 2^d</div>`,q:'Complete poly_compress (d=4):',
+ tmpl:[{t:'code',s:'void poly_compress(uint8_t r[],const poly *a) {'},
+  {t:'code',s:'    uint16_t t[8]; int i,j=0;'},
+  {t:'code',s:'    for (i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        for (int k=0; k<8; k++) {'},
+  {t:'gap',pre:'            t[k]=((uint32_t)a->coeffs[8*i+k]<<4)+',suf:'/2;',ans:'KYBER_Q',w:60,hc:'modulus for rounding offset q/2'},
+  {t:'gap',pre:'            t[k]=(t[k]/KYBER_Q)&',suf:';',ans:'0xf',w:35,hc:'4-bit mask for d=4 compression'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'        r[j]=t[0]|(t[1]<<4); j++;'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_decompress',theory:`<h3>poly_decompress: Decompress(x,d)</h3><div class="mblock">// round(q/2^d * x)</div>`,q:'Complete poly_decompress (d=4):',
+ tmpl:[{t:'code',s:'void poly_decompress(poly *r,const uint8_t a[]) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N/2; i++) {'},
+  {t:'gap',pre:'        r->coeffs[2*i]=  (((a[i]&0xf)*KYBER_Q)+',suf:')>>4;',ans:'8',w:25,hc:'rounding offset = half the divisor (>>4 divides by 16, so add 16/2 = 8)'},
+  {t:'gap',pre:'        r->coeffs[2*i+1]=(((a[i]>>4)*KYBER_Q)+',suf:')>>4;',ans:'8',w:25,hc:'same rounding offset as the line above (8 = 16/2)'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'cbd_eta2',theory:`<h3>CBD η=2 in C (popcount trick)</h3><div class="mblock">// d=t&0x55... + (t>>1)&0x55...\n// a=(d>>(4j))&3  b=(d>>(4j+2))&3</div>`,q:'Complete cbd_eta2:',
+ tmpl:[{t:'code',s:'static void cbd_eta2(poly *r,const uint8_t buf[]) {'},
+  {t:'code',s:'    uint32_t t,d; int16_t a,b;'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        t=load32_littleendian(buf+4*i);'},
+  {t:'gap',pre:'        d =t&',suf:';',ans:'0x55555555',w:80,hc:'alternating-bit mask 0x55555555 = 0101…: isolates even-position bits for popcount'},
+  {t:'gap',pre:'        d+=(t>>1)&',suf:';',ans:'0x55555555',w:80,hc:'same alternating-bit mask applied to the right-shifted bits (odd positions)'},
+  {t:'code',s:'        for (int j=0; j<8; j++) {'},
+  {t:'gap',pre:'            a=(d>>(4*j+0))&',suf:';',ans:'0x3',w:35,hc:'2-bit mask 0x3 = 0b11: η=2 means each popcount fits in 2 bits'},
+  {t:'gap',pre:'            b=(d>>(4*j+',suf:'))&0x3;',ans:'2',w:25,hc:'bit offset for the second pair within each 4-bit group (bits 2–3)'},
+  {t:'gap',pre:'            r->coeffs[8*i+j]=a-',suf:';',ans:'b',w:25,hc:'the subtracted popcount variable b (declared just above)'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'gen_matrix',theory:`<h3>Matrix A from seed</h3>`,q:'Complete gen_matrix:',
+ tmpl:[{t:'code',s:'void gen_matrix(polyvec a[KYBER_K],const uint8_t seed[32]) {'},
+  {t:'code',s:'    uint8_t extseed[34];'},
+  {t:'gap',pre:'    memcpy(extseed,',suf:',32);',ans:'seed',w:35,hc:'the 32-byte seed parameter of gen_matrix (public matrix seed ρ)'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++) {'},
+  {t:'code',s:'        for (int j=0; j<KYBER_K; j++) {'},
+  {t:'gap',pre:'            extseed[32]=',suf:';',ans:'i',w:25,hc:'outer loop index i: byte 32 selects the matrix row'},
+  {t:'gap',pre:'            extseed[33]=',suf:';',ans:'j',w:25,hc:'inner loop index j: byte 33 selects the matrix column'},
+  {t:'code',s:'            poly_uniform(&a[i].vec[j],extseed);'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'indcpa_keypair',theory:`<h3>IND-CPA key generation</h3>`,q:'Complete indcpa_keypair:',
+ tmpl:[{t:'code',s:'void indcpa_keypair(uint8_t pk[],uint8_t sk[]) {'},
+  {t:'code',s:'    polyvec a[KYBER_K],e,pkpv,skpv; uint8_t seed[64],nonce=0;'},
+  {t:'gap',pre:'    randombytes(',suf:',KYBER_SYMBYTES);',ans:'seed',w:35,hc:'the local 64-byte seed buffer declared above (fill first 32 bytes with randomness)'},
+  {t:'code',s:'    hash_g(seed,seed,KYBER_SYMBYTES); gen_matrix(a,seed);'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_getnoise_eta1(&skpv.vec[i],seed+KYBER_SYMBYTES,',suf:'++);',ans:'nonce',w:55,hc:'the nonce variable declared above (post-increment to give each poly a unique nonce)'},
+  {t:'gap',pre:'    polyvec_ntt(',suf:');',ans:'&skpv',w:45,hc:'address-of the secret key polyvec skpv (prefix & operator)'},
+  {t:'code',s:'    /* compute pkpv=A*skpv+e, pack keys */'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'indcpa_enc u',theory:`<h3>IND-CPA encryption:u</h3><div class="mblock">// u = A^T*r + e1</div>`,q:'Complete u computation:',
+ tmpl:[{t:'code',s:'/* r_ntt already computed */'},
+  {t:'code',s:'polyvec_pointwise_acc_montgomery(&b.vec[0],&at[0],&r_ntt);'},
+  {t:'gap',pre:'poly_invntt_tomont(&b.vec[',suf:']);',ans:'0',w:25,hc:'index 0: this snippet handles only the first element of ciphertext vector b'},
+  {t:'gap',pre:'poly_add(&b.vec[0],&b.vec[0],&',suf:');',ans:'e1.vec[0]',w:70,hc:'e1.vec[0]: first element of the error polyvec e1 (struct field vec)'},
+  {t:'gap',pre:'poly_reduce(&b.vec[',suf:']);',ans:'0',w:25,hc:'same index 0 as the two lines above'}]},
+{type:'gaps',lang:'c',section:'indcpa_dec',theory:`<h3>IND-CPA decryption</h3><div class="mblock">// w = v - s^T*u</div>`,q:'Complete indcpa_dec:',
+ tmpl:[{t:'code',s:'void indcpa_dec(uint8_t m[],const uint8_t c[],const uint8_t sk[]) {'},
+  {t:'code',s:'    polyvec bp,skpv; poly v,mp;'},
+  {t:'code',s:'    unpackciphertext(&bp,&v,c); unpack_sk(&skpv,sk);'},
+  {t:'gap',pre:'    polyvec_ntt(',suf:');',ans:'&bp',w:35,hc:'address-of the unpacked ciphertext polyvec bp (prefix & operator)'},
+  {t:'gap',pre:'    polyvec_pointwise_acc_montgomery(&mp,&',suf:',&bp);',ans:'skpv',w:45,hc:'the unpacked secret key polyvec variable skpv'},
+  {t:'gap',pre:'    poly_invntt_tomont(&',suf:');',ans:'mp',w:25,hc:'the intermediate poly mp holding s̃^T·u so far'},
+  {t:'code',s:'    poly_sub(&mp,&v,&mp); poly_reduce(&mp);'},
+  {t:'gap',pre:'    poly_tomsg(',suf:',&mp);',ans:'m',w:25,hc:'the output message byte array m (first function parameter)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_tomsg',theory:`<h3>poly_tomsg: recover message bits</h3><div class="mblock">// bit=(coeff+q/4)/(q/2) mod 2</div>`,q:'Complete poly_tomsg:',
+ tmpl:[{t:'code',s:'void poly_tomsg(uint8_t msg[32],const poly *a) {'},
+  {t:'code',s:'    uint16_t t; int i;'},
+  {t:'code',s:'    for (i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        msg[i]=0;'},
+  {t:'code',s:'        for (int j=0; j<8; j++) {'},
+  {t:'gap',pre:'            t=a->coeffs[8*i+j]; t+=(',suf:'>>15)&KYBER_Q;',ans:'t',w:25,hc:'the coefficient variable t just loaded above (sign-extend: adds q if negative)'},
+  {t:'gap',pre:'            t=(((t<<1)+KYBER_Q/2)/',suf:')&1;',ans:'KYBER_Q',w:60,hc:'the modulus constant: divide by KYBER_Q to normalise then mask to 1 bit'},
+  {t:'gap',pre:'            msg[i]|=t<<',suf:';',ans:'j',w:25,hc:'the inner loop variable j: bit position within the current output byte'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_frommsg',theory:`<h3>poly_frommsg: encode message into poly</h3><div class="mblock">// bit=1→coeff=q/2  bit=0→coeff=0</div>`,q:'Complete poly_frommsg:',
+ tmpl:[{t:'code',s:'void poly_frommsg(poly *r,const uint8_t msg[32]) {'},
+  {t:'code',s:'    int16_t mask;'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        for (int j=0; j<8; j++) {'},
+  {t:'gap',pre:'            mask=-(int16_t)((msg[i]>>',suf:')&1);',ans:'j',w:25,hc:'inner loop variable j: bit position within the message byte'},
+  {t:'gap',pre:'            r->coeffs[8*i+j]=mask&((KYBER_Q+1)/',suf:');',ans:'2',w:25,hc:'bit 1 encodes as (KYBER_Q+1)/2 ≈ q/2: divide by 2 here'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'crypto_kem_keypair',theory:`<h3>KEM keypair wrapper</h3>`,q:'Complete crypto_kem_keypair:',
+ tmpl:[{t:'code',s:'int crypto_kem_keypair(uint8_t *pk,uint8_t *sk) {'},
+  {t:'gap',pre:'    indcpa_keypair(',suf:',sk);',ans:'pk',w:25,hc:'the public key output buffer (first function parameter)'},
+  {t:'gap',pre:'    memcpy(sk+KYBER_INDCPA_SECRETKEYBYTES,',suf:',KYBER_INDCPA_PUBLICKEYBYTES);',ans:'pk',w:25,hc:'same pk: the KEM secret key embeds a copy of the public key'},
+  {t:'code',s:'    hash_h(sk+KYBER_SECRETKEYBYTES-2*KYBER_SYMBYTES,pk,KYBER_INDCPA_PUBLICKEYBYTES);'},
+  {t:'gap',pre:'    randombytes(sk+KYBER_SECRETKEYBYTES-KYBER_SYMBYTES,',suf:');',ans:'KYBER_SYMBYTES',w:90,hc:'the size constant for the implicit-rejection random value (32 bytes)'},
+  {t:'code',s:'    return 0;'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'crypto_kem_enc',theory:`<h3>KEM encapsulation</h3>`,q:'Complete crypto_kem_enc:',
+ tmpl:[{t:'code',s:'int crypto_kem_enc(uint8_t *ct,uint8_t *ss,const uint8_t *pk) {'},
+  {t:'code',s:'    uint8_t buf[2*KYBER_SYMBYTES],kr[2*KYBER_SYMBYTES];'},
+  {t:'gap',pre:'    randombytes(',suf:',KYBER_SYMBYTES);',ans:'buf',w:35,hc:'the local randomness buffer declared above (fill first 32 bytes)'},
+  {t:'gap',pre:'    hash_h(',suf:',buf,KYBER_SYMBYTES);',ans:'buf',w:35,hc:'same buf: hash it in-place for domain separation (FO transform step)'},
+  {t:'code',s:'    hash_g(kr,buf,2*KYBER_SYMBYTES);'},
+  {t:'gap',pre:'    indcpa_enc(',suf:',buf,pk,kr+KYBER_SYMBYTES);',ans:'ct',w:25,hc:'the ciphertext output buffer (first function parameter)'},
+  {t:'gap',pre:'    hash_h(kr+KYBER_SYMBYTES,',suf:',KYBER_CIPHERTEXTBYTES);',ans:'ct',w:25,hc:'same ct: hash the ciphertext to bind it cryptographically to the shared secret'},
+  {t:'gap',pre:'    kdf(',suf:',kr,2*KYBER_SYMBYTES);',ans:'ss',w:25,hc:'the shared secret output buffer ss (second function parameter)'},
+  {t:'code',s:'    return 0;'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'crypto_kem_dec',theory:`<h3>KEM decapsulation (FO implicit rejection)</h3>`,q:'Complete crypto_kem_dec:',
+ tmpl:[{t:'code',s:'int crypto_kem_dec(uint8_t *ss,const uint8_t *ct,const uint8_t *sk) {'},
+  {t:'code',s:'    uint8_t buf[2*KYBER_SYMBYTES],kr[2*KYBER_SYMBYTES];'},
+  {t:'code',s:'    uint8_t cmp[KYBER_CIPHERTEXTBYTES]; int fail;'},
+  {t:'gap',pre:'    indcpa_dec(',suf:',ct,sk);',ans:'buf',w:35,hc:'local buffer to receive the decrypted message (declared above as buf[])'},
+  {t:'code',s:'    memcpy(buf+KYBER_SYMBYTES,sk+KYBER_SECRETKEYBYTES-2*KYBER_SYMBYTES,KYBER_SYMBYTES);'},
+  {t:'code',s:'    hash_g(kr,buf,2*KYBER_SYMBYTES);'},
+  {t:'gap',pre:'    indcpa_enc(cmp,buf,sk+KYBER_INDCPA_SECRETKEYBYTES,',suf:'+KYBER_SYMBYTES);',ans:'kr',w:35,hc:'re-encryption coins from kr (derived key material, second 32 bytes)'},
+  {t:'gap',pre:'    fail=verify(',suf:',ct,KYBER_CIPHERTEXTBYTES);',ans:'cmp',w:35,hc:'the re-encrypted ciphertext buffer cmp to compare against the received ct'},
+  {t:'code',s:'    hash_h(kr+KYBER_SYMBYTES,ct,KYBER_CIPHERTEXTBYTES);'},
+  {t:'code',s:'    cmov(kr,sk+KYBER_SECRETKEYBYTES-KYBER_SYMBYTES,KYBER_SYMBYTES,fail);'},
+  {t:'gap',pre:'    kdf(',suf:',kr,2*KYBER_SYMBYTES);',ans:'ss',w:25,hc:'the shared secret output buffer ss (first function parameter)'},
+  {t:'code',s:'    return 0;'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'verify + cmov',theory:`<h3>Constant-time verify and conditional move</h3>`,q:'Complete verify and cmov:',
+ tmpl:[{t:'code',s:'static int verify(const uint8_t *a,const uint8_t *b,size_t len) {'},
+  {t:'code',s:'    uint8_t r=0;'},
+  {t:'code',s:'    for (size_t i=0; i<len; i++)'},
+  {t:'gap',pre:'        r|=a[i]^',suf:';',ans:'b[i]',w:45,hc:'XOR with the corresponding byte of buffer b at index i'},
+  {t:'gap',pre:'    return -(1&((r-1)>>',suf:'));',ans:'8',w:25,hc:'right-shift by 8 (byte width) to propagate the borrow from (r-1) into the sign bit'},
+  {t:'code',s:'}'},
+  {t:'code',s:'static void cmov(uint8_t *r,const uint8_t *b,size_t len,uint8_t mask) {'},
+  {t:'code',s:'    mask=-mask;'},
+  {t:'code',s:'    for (size_t i=0; i<len; i++)'},
+  {t:'gap',pre:'        r[i]^=mask&(r[i]^',suf:');',ans:'b[i]',w:45,hc:'source byte b[i] to conditionally move into r[i] when mask is all-1s'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'polyvec_add',theory:`<h3>polyvec_add: element-wise poly add</h3>`,q:'Complete polyvec_add:',
+ tmpl:[{t:'code',s:'void polyvec_add(polyvec *r,const polyvec *a,const polyvec *b) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_add(&r->vec[i],&a->vec[',suf:'],&b->vec[i]);',ans:'i',w:25,hc:'same loop counter i (mirrors the r and b indices on either side)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'polyvec_reduce',theory:`<h3>polyvec_reduce: reduce all polys</h3>`,q:'Complete polyvec_reduce:',
+ tmpl:[{t:'code',s:'void polyvec_reduce(polyvec *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_reduce(&r->vec[',suf:']);',ans:'i',w:25,hc:'loop counter i: reduce each element of the polyvec in turn'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_csubq',theory:`<h3>poly_csubq: conditional subtract q</h3><div class="mblock">// Bring [0,2q) → [0,q)</div>`,q:'Complete poly_csubq:',
+ tmpl:[{t:'code',s:'void poly_csubq(poly *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++) {'},
+  {t:'gap',pre:'        r->coeffs[i]-=',suf:';',ans:'KYBER_Q',w:60,hc:'subtract the modulus: tentatively brings [0,2q) down to [−q,q)'},
+  {t:'gap',pre:'        r->coeffs[i]+=(r->coeffs[i]>>15)&',suf:';',ans:'KYBER_Q',w:60,hc:'add KYBER_Q back if the subtraction made it negative (>>15 extracts the sign bit)'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'pack_pk',theory:`<h3>pack_pk: serialise public key</h3><div class="mblock">// pk = compress(t) || rho</div>`,q:'Complete pack_pk:',
+ tmpl:[{t:'code',s:'void pack_pk(uint8_t r[],const polyvec *pk,const uint8_t seed[]) {'},
+  {t:'gap',pre:'    polyvec_compress(r,',suf:');',ans:'pk',w:25,hc:'the public key polyvec parameter (second function argument)'},
+  {t:'gap',pre:'    memcpy(r+KYBER_POLYVECCOMPRESSEDBYTES,',suf:',KYBER_SYMBYTES);',ans:'seed',w:45,hc:'the seed (ρ) parameter appended after the compressed polyvec bytes'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'pack_ciphertext',theory:`<h3>pack_ciphertext: serialise (u,v)</h3>`,q:'Complete pack_ciphertext:',
+ tmpl:[{t:'code',s:'void pack_ciphertext(uint8_t r[],const polyvec *b,const poly *v) {'},
+  {t:'gap',pre:'    polyvec_compress(r,',suf:');',ans:'b',w:25,hc:'the u ciphertext polyvec b (second function parameter)'},
+  {t:'gap',pre:'    poly_compress(r+KYBER_POLYVECCOMPRESSEDBYTES,',suf:');',ans:'v',w:25,hc:'the v ciphertext poly v (third function parameter)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'polyvec_invntt_tomont',theory:`<h3>polyvec_invntt_tomont: INTT each poly</h3>`,q:'Complete polyvec_invntt_tomont:',
+ tmpl:[{t:'code',s:'void polyvec_invntt_tomont(polyvec *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_invntt_tomont(&r->vec[',suf:']);',ans:'i',w:25,hc:'loop counter i: apply INTT to each poly in the vector'},
+  {t:'code',s:'}'}]},,
+{type:'gaps',lang:'c',section:'poly_getnoise',theory:`<h3>poly_getnoise_eta1: noise from PRF</h3>`,q:'Complete poly_getnoise_eta1:',
+ tmpl:[{t:'code',s:'void poly_getnoise_eta1(poly *r,const uint8_t seed[32],uint8_t nonce) {'},
+  {t:'code',s:'    uint8_t buf[KYBER_ETA1*KYBER_N/4];'},
+  {t:'gap',pre:'    prf(buf,sizeof(buf),',suf:',nonce);',ans:'seed',w:35,hc:'the 32-byte PRF seed parameter (function argument after poly *r)'},
+  {t:'gap',pre:'    cbd_eta1(r,',suf:');',ans:'buf',w:35,hc:'the PRF output buffer buf used as the CBD input bytes'},
+  {t:'code',s:'}'}]},
+];
+// INTERNATIONALISATION
+let LANG = localStorage.getItem('kyber_lang') || 'en';
+
+const T = {
+  en: {
+    logoSub:'Post-Quantum Cryptography Training System',
+    scoreLabel:'SCORE', streakLabel:'STREAK',
+    selTitle:'SELECT DIFFICULTY',
+    selSub:'six levels:from first principles to raw C implementation',
+    panelTheory:'THEORY / EXAMPLE',
+    typeLabels:{duo:'TEXT INPUT',btns:'MULTIPLE CHOICE',gaps:'CODE:FILL THE GAPS'},
+    btnStart:'START', btnBack:'← BACK', btnSubmit:'SUBMIT', btnNext:'NEXT →',
+    btnGoBack:'← GO BACK',
+    resTitle:'TRAINING COMPLETE',
+    lblCorrect:'CORRECT', lblTotal:'TOTAL', lblAccuracy:'ACCURACY',
+    fbStart:{gaps:'Fill all gaps then click SUBMIT.',duo:'Type your answer then click SUBMIT.',btns:'Select the correct answer.'},
+    fbCorrect:'✓ Correct!',
+    fbWrong:'✗ Wrong:correct answer highlighted.',
+    fbCorrectDuo:ans=>`✓ Correct! Answer: ${ans}`,
+    fbWrongDuo:(ans,hint)=>`✗ Wrong:expected: ${ans}. ${hint||''}`,
+    fbAllOk:'✓ All gaps correct!',
+    fbSomeWrong:'✗ Some gaps wrong:correct answers shown.',
+    fbFillFirst:'Fill all gaps before submitting.',
+    hintLabel:'Hint: ',
+    gameOverMsg:'You ran out of lives.',
+    gradeMsgs:{S:'Perfect execution.',A:'Excellent.',B:'Good:review the errors.',C:'Partial understanding.',F:'Study the theory and retry.'},
+    authLogin:'LOGIN', authRegister:'REGISTER',
+    authNoAccount:'No account? REGISTER', authHaveAccount:'Have account? LOGIN',
+    authAllRequired:'All fields required.', authRegFailed:'Registration failed.',
+    authCredRequired:'Username and password required.', authLoginFailed:'Login failed.',
+    leaderboard:'LEADERBOARD', langToggle:'ΕΛΛΗΝΙΚΑ', menuChangePwd:'CHANGE PASSWORD', menuAbout:'ABOUT',
+    aboutRole:'YOUR FAVOURITE PROGRAMMER', aboutTitle:'YOUR PILOT',
+    LABELS:{veryeasy:'VERY EASY',easy:'EASY',medium:'MEDIUM',hard:'HARD',veryhard:'VERY HARD',insane:'INSANE'},
+    levels:[
+      {key:'veryeasy',label:'LEVEL 01',name:'VERY EASY',
+       desc:'Duolingo-style. A worked example is shown first, then you solve the same step with different numbers. Text input only.',
+       meta:['<b>10</b> text-input computations','Worked example for every question','5 lives · no time pressure']},
+      {key:'easy',label:'LEVEL 02',name:'EASY',
+       desc:'Pure multiple-choice. Covers ring arithmetic, CBD, NTT roots, key generation, encapsulation and post-quantum security reasoning.',
+       meta:['<b>15</b> multiple-choice questions','4 options per question','5 lives']},
+      {key:'medium',label:'LEVEL 03',name:'MEDIUM',
+       desc:'Mixed format:harder text-input computations, conceptual multiple-choice questions, and introductory Python fill-the-gap code.',
+       meta:['<b>5</b> text-input (CBD &amp; encapsulation)','<b>5</b> multiple-choice (harder theory)','<b>8</b> Python fill-the-gap']},
+      {key:'hard',label:'LEVEL 04',name:'HARD',
+       desc:'Deep Kyber theory questions, then Python code fill-the-gap challenges that scale from single expressions to full algorithm implementations.',
+       meta:['<b>8</b> hard theory questions','<b>13</b> Python fill-the-gap (scaling)','3 lives']},
+      {key:'veryhard',label:'LEVEL 05',name:'VERY HARD',
+       desc:'Pure Python. Twenty-seven fill-the-gap challenges covering every function in the Kyber pipeline end-to-end. No theory. No multiple choice.',
+       meta:['<b>27</b> Python fill-the-gap only','Full pipeline coverage','3 lives']},
+      {key:'insane',label:'LEVEL 06',name:'INSANE',
+       desc:'Raw C. Thirty-two fill-the-gap challenges:Barrett reduction, Montgomery multiplication, NTT zeta tables, KEM encaps/decaps with FO transform.',
+       meta:['<b>32</b> C fill-the-gap only','Barrett · Montgomery · KEM in C','3 lives']},
+    ],
+  },
+  el: {
+    logoSub:'Σύστημα Εκπαίδευσης Post-Quantum Κρυπτογραφίας',
+    scoreLabel:'ΣΚΟΡ', streakLabel:'ΣΕΡΙ',
+    selTitle:'ΕΠΙΛΟΓΗ ΕΠΙΠΕΔΟΥ',
+    selSub:'έξι επίπεδα:από βασικές αρχές έως υλοποίηση σε C',
+    panelTheory:'ΘΕΩΡΙΑ / ΠΑΡΑΔΕΙΓΜΑ',
+    typeLabels:{duo:'ΕΙΣΑΓΩΓΗ ΚΕΙΜΕΝΟΥ',btns:'ΠΟΛΛΑΠΛΗ ΕΠΙΛΟΓΗ',gaps:'ΚΩΔΙΚΑΣ:ΣΥΜΠΛΗΡΩΣΕ ΤΑ ΚΕΝΑ'},
+    btnStart:'ΕΝΑΡΞΗ', btnBack:'← ΠΙΣΩ', btnSubmit:'ΥΠΟΒΟΛΗ', btnNext:'ΕΠΟΜΕΝΟ →',
+    btnGoBack:'← ΕΠΙΣΤΡΟΦΗ',
+    resTitle:'ΕΚΠΑΙΔΕΥΣΗ ΟΛΟΚΛΗΡΩΘΗΚΕ',
+    lblCorrect:'ΣΩΣΤΑ', lblTotal:'ΣΥΝΟΛΟ', lblAccuracy:'ΑΚΡΙΒΕΙΑ',
+    fbStart:{gaps:'Συμπλήρωσε όλα τα κενά και κάνε κλικ ΥΠΟΒΟΛΗ.',duo:'Γράψε την απάντησή σου και κάνε κλικ ΥΠΟΒΟΛΗ.',btns:'Επίλεξε τη σωστή απάντηση.'},
+    fbCorrect:'✓ Σωστά!',
+    fbWrong:'✗ Λάθος:η σωστή απάντηση επισημαίνεται.',
+    fbCorrectDuo:ans=>`✓ Σωστά! Απάντηση: ${ans}`,
+    fbWrongDuo:(ans,hint)=>`✗ Λάθος:αναμενόταν: ${ans}. ${hint||''}`,
+    fbAllOk:'✓ Όλα τα κενά σωστά!',
+    fbSomeWrong:'✗ Κάποια κενά λάθος:εμφανίζονται οι σωστές απαντήσεις.',
+    fbFillFirst:'Συμπλήρωσε όλα τα κενά πριν υποβάλεις.',
+    hintLabel:'Υπόδειξη: ',
+    gameOverMsg:'Εξαντλήσατε τις ζωές σας.',
+    gradeMsgs:{S:'Τέλεια εκτέλεση.',A:'Εξαιρετικά.',B:'Καλά:μελέτησε τα λάθη.',C:'Μερική κατανόηση.',F:'Μελέτα τη θεωρία και ξαναπροσπάθα.'},
+    authLogin:'ΣΥΝΔΕΣΗ', authRegister:'ΕΓΓΡΑΦΗ',
+    authNoAccount:'Δεν έχεις λογαριασμό; ΕΓΓΡΑΦΗ', authHaveAccount:'Έχεις λογαριασμό; ΣΥΝΔΕΣΗ',
+    authAllRequired:'Όλα τα πεδία είναι υποχρεωτικά.', authRegFailed:'Η εγγραφή απέτυχε.',
+    authCredRequired:'Απαιτούνται όνομα χρήστη και κωδικός.', authLoginFailed:'Η σύνδεση απέτυχε.',
+    leaderboard:'ΚΑΤΑΣΤΑΣΗ ΒΑΘΜΟΛΟΓΙΑΣ', langToggle:'ENGLISH', menuChangePwd:'ΑΛΛΑΓΗ ΚΩΔΙΚΟΥ', menuAbout:'ΣΧΕΤΙΚΑ',
+    aboutRole:'Ο ΑΓΑΠΗΜΕΝΟΣ ΣΑΣ ΠΡΟΓΡΑΜΜΑΤΙΣΤΗΣ', aboutTitle:'Ο ΠΙΛΟΤΟΣ ΣΑΣ',
+    LABELS:{veryeasy:'ΠΟΛΥ ΕΥΚΟΛΟ',easy:'ΕΥΚΟΛΟ',medium:'ΜΕΤΡΙΟ',hard:'ΔΥΣΚΟΛΟ',veryhard:'ΠΟΛΥ ΔΥΣΚΟΛΟ',insane:'ΤΡΕΛΟ'},
+    levels:[
+      {key:'veryeasy',label:'ΕΠΙΠΕΔΟ 01',name:'ΠΟΛΥ ΕΥΚΟΛΟ',
+       desc:'Στυλ Duolingo. Πρώτα παρουσιάζεται ένα εργαζόμενο παράδειγμα, μετά λύνεις το ίδιο βήμα με διαφορετικούς αριθμούς. Μόνο εισαγωγή κειμένου.',
+       meta:['<b>10</b> υπολογισμοί κειμένου','Εργαζόμενο παράδειγμα για κάθε ερώτηση','5 ζωές · χωρίς χρονική πίεση']},
+      {key:'easy',label:'ΕΠΙΠΕΔΟ 02',name:'ΕΥΚΟΛΟ',
+       desc:'Αμιγώς πολλαπλής επιλογής. Καλύπτει αριθμητική δακτυλίου, CBD, ρίζες NTT, δημιουργία κλειδιών, ενθυλάκωση και post-quantum ασφάλεια.',
+       meta:['<b>15</b> ερωτήσεις πολλαπλής επιλογής','4 επιλογές ανά ερώτηση','5 ζωές']},
+      {key:'medium',label:'ΕΠΙΠΕΔΟ 03',name:'ΜΕΤΡΙΟ',
+       desc:'Μικτή μορφή:πιο σύνθετοι υπολογισμοί, εννοιολογικές ερωτήσεις πολλαπλής επιλογής, και εισαγωγικός κώδικας Python με κενά.',
+       meta:['<b>5</b> εισαγωγή κειμένου (CBD &amp; ενθυλάκωση)','<b>5</b> πολλαπλής επιλογής (προχωρημένη θεωρία)','<b>8</b> Python:συμπλήρωσε τα κενά']},
+      {key:'hard',label:'ΕΠΙΠΕΔΟ 04',name:'ΔΥΣΚΟΛΟ',
+       desc:'Βαθιές ερωτήσεις θεωρίας Kyber, ακολουθούμενες από προκλήσεις Python με κενά που κλιμακώνονται από απλές εκφράσεις έως πλήρεις υλοποιήσεις.',
+       meta:['<b>8</b> ερωτήσεις δύσκολης θεωρίας','<b>13</b> Python:συμπλήρωσε τα κενά (κλιμακωτά)','3 ζωές']},
+      {key:'veryhard',label:'ΕΠΙΠΕΔΟ 05',name:'ΠΟΛΥ ΔΥΣΚΟΛΟ',
+       desc:'Αμιγώς Python. Είκοσι επτά προκλήσεις που καλύπτουν κάθε συνάρτηση της αλυσίδας Kyber από άκρο σε άκρο. Χωρίς θεωρία. Χωρίς πολλαπλή επιλογή.',
+       meta:['<b>27</b> Python:συμπλήρωσε τα κενά μόνο','Πλήρης κάλυψη αλυσίδας','3 ζωές']},
+      {key:'insane',label:'ΕΠΙΠΕΔΟ 06',name:'ΤΡΕΛΟ',
+       desc:'Αμιγώς C. Τριάντα δύο προκλήσεις:αναγωγή Barrett, πολλαπλασιασμός Montgomery, πίνακες zeta NTT, KEM encaps/decaps με μετασχηματισμό FO.',
+       meta:['<b>32</b> C:συμπλήρωσε τα κενά μόνο','Barrett · Montgomery · KEM σε C','3 ζωές']},
+    ],
+  },
+};
+
+// Greek challenge arrays
+// For code-gap questions the tmpl (code) is language-agnostic;
+// only theory, q, section, hint, and opts are translated.
+const VE_EL=[
+{type:'duo',section:'Αριθμητική Δακτυλίου',
+ theory:`<h3>Αναγωγή Modulo</h3><p>Όλοι οι συντελεστές Kyber ανήκουν στο Z_q = {0…q−1}. Μετά από κάθε πράξη, κάνε αναγωγή mod q.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">q = 17\n19 mod 17  →  19 − 17 = 2\nΑπάντηση: 2</div>`,
+ q:'Υπολόγισε: <strong>25 mod 17</strong>',prefix:'25 mod 17 =',ans:'8',hint:'mod είναι το υπόλοιπο ακεραίας διαίρεσης. 25 = 1×17 + ? (ποιο είναι το υπόλοιπο;)'},
+{type:'duo',section:'Αριθμητική Δακτυλίου',
+ theory:`<h3>Αρνητικοί Συντελεστές mod q</h3><p>Οι αρνητικές τιμές αποθηκεύονται ως θετικοί αντιπρόσωποι. Πρόσθεσε q μέχρι η τιμή να ανήκει στο {0…q−1}.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">−1 mod 17  →  −1 + 17 = 16\nΑπάντηση: 16</div>`,
+ q:'Υπολόγισε: <strong>−2 mod 17</strong>',prefix:'−2 mod 17 =',ans:'15',hint:'Αρνητική τιμή: πρόσθεσε q μέχρι να μπεις στο {0…q−1}. −2 + 17 = ?'},
+{type:'duo',section:'Αριθμητική Δακτυλίου',
+ theory:`<h3>Αρνητικά Κυκλική Αναγωγή:X⁸ ≡ −1</h3><p>Στο Z₁₇[X]/(X⁸+1) οποιοδήποτε X^k με k≥8 αναδιπλώνεται: X⁸→−1.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">3·X⁹: X⁹=X⁸·X=(−1)·X=−X\n3·X⁹ → −3·X ≡ 14·X mod 17\nΣυντελεστής του X: 14</div>`,
+ q:'Συντελεστής του X όταν το <strong>2·X⁹</strong> αναχθεί στο Z₁₇[X]/(X⁸+1);',prefix:'συντελ. X =',ans:'15',hint:'X⁸≡−1, οπότε X⁹=X⁸·X=−X. Τότε 2·X⁹=−2·X. Συντελεστής X: −2. Τώρα −2 mod 17: −2 + 17 = ?'},
+{type:'duo',section:'Δειγματοληψία CBD',
+ theory:`<h3>Υπολογισμός CBD</h3><p>Για bits b₀…b₃ (LSB πρώτα):</p><div class="mblock">coeff = (b₀+b₁) − (b₂+b₃)</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">Byte 0x01 = 00000001 (LSB-first: 1,0,0,0,0,0,0,0)\ncoeff[0]: (1+0)−(0+0) = +1  → αποθηκεύεται: 1\nΑπάντηση: 1</div>`,
+ q:'Byte <code>0xF0</code>=<code>11110000</code>. LSB-first:[0,0,0,0,1,1,1,1].<br>Ποιο είναι το <strong>coeff[0]</strong>; (bits 0–3: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[0] =',ans:'0',hint:'Τύπος: coeff=(b0+b1)−(b2+b3). Bits 0–3 είναι μηδέν: (0+0)−(0+0) = ?'},
+{type:'duo',section:'Δειγματοληψία CBD',
+ theory:`<h3>CBD:Δεύτερος Συντελεστής</h3><p>Κάθε byte δίνει 2 συντελεστές. Ο δεύτερος χρησιμοποιεί τα bits 4–7.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">Byte 0xF0 LSB-first:[0,0,0,0,1,1,1,1]\ncoeff[1]: bits4-7=(1,1,1,1)\n(b0+b1)−(b2+b3)=(1+1)−(1+1)=0\nΑπάντηση: 0</div>`,
+ q:'Byte <code>0x0F</code>=<code>00001111</code>. LSB-first:[1,1,1,1,0,0,0,0].<br>Ποιο είναι το <strong>coeff[1]</strong>; (bits 4–7: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[1] =',ans:'0',hint:'bits 4–7 είναι (0,0,0,0). Τύπος: (b0+b1)−(b2+b3) = ?'},
+{type:'duo',section:'Ρίζες NTT',
+ theory:`<h3>Δυνάμεις του ω mod 17</h3><p>ω=9 είναι η πρωτεύουσα 8η ρίζα της μονάδας mod 17.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">ROOTS[2] = ω² = 9×9=81 mod 17\n81 = 4×17+13 → ROOTS[2]=13\nΑπάντηση: 13</div>`,
+ q:'Υπολόγισε <strong>ROOTS[3]</strong> = ω³ mod 17 = 9³ mod 17',prefix:'ROOTS[3] =',ans:'15',hint:'ω²=ROOTS[2]=13. ω³=ω²×ω=13×9=117. mod 17: 117 = 6×17 + ? (βρες το υπόλοιπο)'},
+{type:'duo',section:'Πεταλούδα NTT',
+ theory:`<h3>Ένα Βήμα Πεταλούδας NTT</h3><div class="mblock">t     = v × w  mod q\nnew_u = (u + t) mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">u=1,v=2,w=9,q=17\nt=2×9=18≡1\nnew_u=(1+1)=2\nΑπάντηση: new_u=2</div>`,
+ q:'Πεταλούδα: <strong>u=3, v=1, w=9, q=17</strong>. Ποιο είναι το <strong>new_u</strong>;',prefix:'new_u =',ans:'12',hint:'Βήμα 1: t = v×w mod q = 1×9 = 9. Βήμα 2: new_u = (u+t) mod q = (3+9) mod 17 = ?'},
+{type:'duo',section:'Πεταλούδα NTT',
+ theory:`<h3>Πεταλούδα:new_v</h3><div class="mblock">t     = v × w  mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ (διαφορετικές τιμές)</div><div class="eg-box">u=2, v=3, w=9, q=17\nt = 3×9 = 27. mod 17: 27 = 1×17 + 10 → t=10\nnew_v = (2−10) mod 17 = −8 mod 17\nΑφού −8 &lt; 0: −8 + 17 = 9\nΑπάντηση: new_v = 9</div>`,
+ q:'Ίδια πεταλούδα: <strong>u=3, v=1, w=9, q=17</strong>. Ποιο είναι το <strong>new_v</strong>;',prefix:'new_v =',ans:'11',hint:'Βήμα 1: t = v×w mod q = 1×9 = 9. Βήμα 2: new_v = (u−t) mod q = (3−9) mod 17 = −6 mod 17. Αφού −6 < 0: −6 + 17 = ?'},
+{type:'duo',section:'Δημόσιο Κλειδί',
+ theory:`<h3>Πολλαπλασιασμός Κατά Σημεία mod q</h3><p>Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται ανά συντελεστή.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">a[0]=2, b[0]=11, q=17\n2×11=22 mod 17=5\nΑπάντηση: 5</div>`,
+ q:'Πολλαπλασιασμός κατά σημεία: <strong>a[0]=11, b[0]=3, q=17</strong>',prefix:'11 × 3 mod 17 =',ans:'16',hint:'11×3 = 33. mod 17: 33 = 1×17 + ? (βρες το υπόλοιπο)'},
+{type:'duo',section:'Αποθυλάκωση',
+ theory:`<h3>Αποκωδικοποίηση Μηνύματος:Κυκλική Απόσταση</h3><p>Συντελεστής w → bit 1 αν είναι πιο κοντά στο q/2=8 από το 0 (κυκλικά).</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">w=10, q=17\nd0  = min(10,17−10)=min(10,7)=7\ndq2 = min(|10−8|,17−|10−8|)=min(2,15)=2\n2 < 7 → bit=1\nΑπάντηση: 1</div>`,
+ q:'Αποκωδικοποίησε συντελεστή <strong>w=3, q=17</strong>. Ποιο bit;',prefix:'bit =',ans:'0',hint:'d0=min(w, q−w)=min(3, 17−3). dq2=min(|w−8|, 17−|w−8|)=min(|3−8|, 17−|3−8|). Σύγκρινε d0 και dq2: bit=1 αν dq2 < d0, αλλιώς bit=0.'},
+];
+const EZ_EL=[
+{type:'btns',section:'Επισκόπηση',
+ theory:`<h3>CRYSTALS-Kyber</h3><p>Ένας <strong>Μηχανισμός Ενθυλάκωσης Κλειδιών</strong> (KEM) βασισμένος στη δυσκολία Module-LWE, τυποποιημένος ως ML-KEM (FIPS 203).</p><div class="mblock">t = A·s + e\nA=δημόσιος πίνακας  s=μικρό μυστικό  e=θόρυβος</div>`,
+ q:'Ο Kyber έχει τυποποιηθεί από το NIST με ποιο όνομα;',opts:['ML-KEM (FIPS 203)','CRYSTALS-DSA','FALCON-512','SPHINCS+'],cor:0},
+{type:'btns',section:'Παράμετροι',
+ theory:`<h3>Παράμετροι Παιχνιδιού</h3><ul><li><strong>q=17</strong> πρώτος modulus</li><li><strong>n=8</strong> βαθμός πολυωνύμου</li><li><strong>k=2</strong> διάσταση module</li><li><strong>η=2</strong> όριο θορύβου CBD</li></ul><div class="mblock">N_INV=15 γιατί 8×15=120≡1 mod 17</div>`,
+ q:'Ποιο είναι το n⁻¹ mod q στις παραμέτρους παιχνιδιού μας (q=17, n=8);',opts:['13','15','9','2'],cor:1},
+{type:'btns',section:'Δακτύλιος',
+ theory:`<h3>Αρνητικά Κυκλικός Δακτύλιος</h3><div class="mblock">X⁸ ≡ −1 mod (X⁸+1)\nX⁹ → −X,  X¹⁰ → −X²,  X¹⁵ → −X⁷</div>`,
+ q:'Στο Z₁₇[X]/(X⁸+1), σε τι αναχθεί το X⁸;',opts:['0','+1','−1 (=16 mod 17)','X'],cor:2},
+{type:'btns',section:'CBD',
+ theory:`<h3>Αλγόριθμος CBD</h3><div class="mblock">bits = LSB-first από byte\ncoeff = (b₀+b₁)−(b₂+b₃)\nαποθηκεύεται ως coeff mod q</div>`,
+ q:'Byte 0x01 LSB-first:[1,0,0,0,0,0,0,0]. Ποιο είναι το coeff[0];',opts:['+1','0','16 (=−1)','−2'],cor:0},
+{type:'btns',section:'CBD',
+ theory:`<h3>Αρνητικοί Συντελεστές CBD</h3><p>Αρνητικές τιμές γίνονται θετικοί αντιπρόσωποι mod q: −1→16, −2→15.</p>`,
+ q:'Το CBD δίνει ακατέργαστη τιμή −2. Ποιος είναι ο αποθηκευμένος συντελεστής mod 17;',opts:['15','2','16','−2'],cor:0},
+{type:'btns',section:'Πρωτεύουσα Ρίζα',
+ theory:`<h3>Γεννήτρια g mod 17</h3><div class="mblock">g=2: 2⁸ mod 17=1 → τάξη=8 ✗\ng=3: 3⁸ mod 17=16≠1 → τάξη=16 ✓</div>`,
+ q:'Γιατί το g=2 απορρίπτεται ως πρωτεύουσα ρίζα mod 17;',opts:['Το 2 δεν είναι πρώτος','2⁸ mod 17=1, η τάξη είναι μόνο 8 και όχι 16','Το 2 παράγει μόνο ζυγούς αριθμούς','2¹⁶ mod 17≠1'],cor:1},
+{type:'btns',section:'Ρίζες NTT',
+ theory:`<h3>ψ, ω από g=3</h3><div class="mblock">ψ = 3^((17−1)/(2×8)) = 3¹ = 3\nω = ψ² = 9\nω⁻¹ = 2  (9×2=18≡1 mod 17)</div>`,
+ q:'Ποιο είναι το ω⁻¹ mod 17 (αντίστροφο του ω=9);',opts:['2','8','15','13'],cor:0},
+{type:'btns',section:'NTT',
+ theory:`<h3>Πράξη Πεταλούδας NTT</h3><div class="mblock">t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div>`,
+ q:'u=1, v=2, w=1, q=17. Ποιο είναι το new_v;',opts:['16 (=−1 mod 17)','3','0','2'],cor:0},
+{type:'btns',section:'NTT',
+ theory:`<h3>Μετάθεση Αντιστροφής Bit για n=8</h3><div class="mblock">δείκτης 1=001 → ανεστραμμένος 100=4\nδείκτης 3=011 → ανεστραμμένος 110=6\n→ ζεύγη (1,4) και (3,6) ανταλλάσσονται</div>`,
+ q:'Ο δείκτης 6 σε δυαδικό (3-bit) είναι 110. Ποιος είναι ο δείκτης με ανεστραμμένα bits;',opts:['3','6','7','1'],cor:0},
+{type:'btns',section:'INTT',
+ theory:`<h3>Αντίστροφο NTT</h3><p>Ίδια πεταλούδα με NTT αλλά χρησιμοποιεί inv_roots, μετά κάθε συντελεστής πολλαπλασιάζεται με n⁻¹.</p><div class="mblock">intt = scale(butterfly(x, inv_roots), n_inv)</div>`,
+ q:'Μετά τα στρώματα πεταλούδας INTT, κάθε συντελεστής πολλαπλασιάζεται με;',opts:['n⁻¹ = 15','ω = 9','q = 17','ψ = 3'],cor:0},
+{type:'btns',section:'Δημόσιο Κλειδί',
+ theory:`<h3>t̂ = Â·ŝ + ê</h3><div class="mblock">t̂[0] = Â[0][0]⊙ŝ[0] + Â[0][1]⊙ŝ[1] + ê[0]</div><p>⊙ = πολλαπλασιασμός κατά σημεία (ανά συντελεστή).</p>`,
+ q:'Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται;',opts:['Πολλαπλασιασμός κατά σημεία (στοιχείο-προς-στοιχείο)','Μακρύς πολλαπλασιασμός πολυωνύμων','Αντιστροφή πίνακα','Συνέλιξη'],cor:0},
+{type:'btns',section:'Ενθυλάκωση',
+ theory:`<h3>Γιατί Â^T στην ενθυλάκωση;</h3><div class="mblock">u = INTT(Â^T·r̂) + e1\nv = INTT(t̂^T·r̂) + e2 + m̂</div><p>Ο ανάστροφος επιτρέπει ακριβή αλγεβρική ακύρωση στην αποθυλάκωση.</p>`,
+ q:'Γιατί ο Bob χρησιμοποιεί Â^T (και όχι Â) κατά τον υπολογισμό του u;',opts:['Για αλγεβρική ακύρωση στην αποθυλάκωση','Γιατί το A είναι συμμετρικό','Για μείωση μεγέθους κρυπτοκειμένου','Τυχαία σχεδιαστική επιλογή'],cor:0},
+{type:'btns',section:'Κωδικοποίηση Μηνύματος',
+ theory:`<h3>Κωδικοποίηση bits σε Z_q</h3><div class="mblock">bit 0 → 0\nbit 1 → ⌊q/2⌋ = 8</div><p>Μεγιστοποιεί την κυκλική απόσταση μεταξύ κωδικοποιήσεων.</p>`,
+ q:'Ποια είναι η κωδικοποιημένη τιμή για bit=1 όταν q=17;',opts:['8','17','1','16'],cor:0},
+{type:'btns',section:'Αποθυλάκωση',
+ theory:`<h3>Προϋπολογισμός Θορύβου</h3><div class="mblock">w = v − INTT(ŝ^T·NTT(u))\nΑποκρυπτογράφηση επιτυχής αν |θόρυβος| &lt; q/4 = 4.25</div>`,
+ q:'w[i]=10, m̂[i]=8. Πετυχαίνει η αποκρυπτογράφηση για αυτόν τον συντελεστή;',opts:['Ναι:θόρυβος=+2, |2|<4.25','Όχι:θόρυβος=+2 υπερβαίνει το όριο','Ναι:θόρυβος=0','Όχι:θόρυβος=10'],cor:0},
+{type:'btns',section:'Ασφάλεια',
+ theory:`<h3>Post-Quantum Ασφάλεια</h3><div class="mblock">RSA: f(x)=7^x mod 15 → περιοδική → QFT τη σπάει\nLWE: t=A·s+e → χωρίς περιοδικότητα → QFT δεν βρίσκει τίποτα</div>`,
+ q:'Τι κάνει τον Kyber ανθεκτικό στον κβαντικό αλγόριθμο Shor;',opts:['Το LWE δεν έχει περιοδικότητα:ο θόρυβος αποτρέπει περιοδική δομή','Πολύ μεγάλα μεγέθη κλειδιών','Παραδοχή διακριτού λογαρίθμου','Συναρτήσεις κατακερματισμού'],cor:0},
+];
+// MED_EL: translate duo/btns; gaps inherit English tmpl
+const MED_EL=[
+{type:'duo',section:'CBD Δύσκολο',
+ theory:`<h3>CBD με αρνητικό αποτέλεσμα</h3><div class="mblock">Byte 0x03=00000011 LSB-first:[1,1,0,0,0,0,0,0]\ncoeff[0]=(1+1)−(0+0)=+2</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">Byte 0xC0=11000000 LSB-first:[0,0,0,0,0,0,1,1]\ncoeff[1]=(0+0)−(1+1)=−2 → −2 mod 17=15\nΑπάντηση: 15</div>`,
+ q:'Byte <code>0x30</code>=<code>00110000</code>. LSB-first:[0,0,0,0,1,1,0,0].<br><strong>coeff[1]</strong> (bits 4–7: b0=1,b1=1,b2=0,b3=0);',prefix:'coeff[1] =',ans:'2',hint:'bits 4–7: b0=1,b1=1,b2=0,b3=0. Τύπος: (b0+b1)−(b2+b3) = (1+1)−(0+0) = ?'},
+{type:'duo',section:'CBD Δύσκολο',
+ theory:`<h3>Αρνητικός CBD αποθηκευμένος mod q</h3><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">raw coeff = −2\nαποθηκευμένο = −2 + 17 = 15</div>`,
+ q:'Byte <code>0xC0</code>=<code>11000000</code>. LSB-first:[0,0,0,0,0,0,1,1].<br>coeff[1] raw = −2. Ποιο είναι το <strong>αποθηκευμένο</strong> (mod 17);',prefix:'αποθηκ. coeff[1] =',ans:'15',hint:'Ακατέργαστη τιμή: −2. mod 17: πρόσθεσε 17 για να μπεις στο {0…q−1}: −2 + 17 = ?'},
+{type:'duo',section:'Στρώμα NTT',
+ theory:`<h3>Αποτέλεσμα NTT s[0] Στρώμα 1</h3><p>Μετά αντιστροφή bit του s[0]=[1,0,0,1,0,0,0,1] → [1,0,0,0,0,0,1,1]. Στρώμα 1 χρησιμοποιεί w=1 για όλα τα ζεύγη.</p><div class="mblock">Τύπος: t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ:Ζεύγος [0,1]</div><div class="eg-box">u=r[0]=1, v=r[1]=0, w=1\nt = 0×1 = 0\nnew[0] = (1+0) mod 17 = 1\nnew[1] = (1−0) mod 17 = 1</div>`,
+ q:'Μετά το NTT Στρώμα 1 στο s[0], ποιο είναι το <strong>a[6]</strong>;',prefix:'a[6] μετά στρώμα1 =',ans:'2',hint:'Ζεύγος [6,7]: u=r[6]=1, v=r[7]=1, w=1. Υπολόγισε t = v×w mod q = 1×1 = 1. Τότε new[6] = (u+t) mod q = (1+1) mod 17 = ?'},
+{type:'duo',section:'Ενθυλάκωση',
+ theory:`<h3>Υπολογισμός t̂[0][0]</h3><div class="mblock">Â[0][0][0]=2, ŝ[0][0]=3 → 2×3=6\nÂ[0][1][0]=6, ŝ[1][0]=2 → 6×2=12\nê[0][0]=1\n(6+12+1) mod 17=2</div>`,
+ q:'Συντελεστής 1 του t̂[0]: Â[0][0][1]=11, ŝ[0][1]=1, Â[0][1][1]=6, ŝ[1][1]=8, ê[0][1]=1. Υπολόγισε <strong>t̂[0][1]</strong>.',prefix:'t̂[0][1] =',ans:'9',hint:'Υπολόγισε κάθε γινόμενο: 11×1=11, 6×8=48. Πρόσθεσε ê: 11+48+1=60. mod 17: 60 = 3×17 + ? (βρες το υπόλοιπο)'},
+{type:'duo',section:'Ενθυλάκωση',
+ theory:`<h3>Υπολογισμός ύψωσης σε δύναμη mod:τετραγωνισμός</h3><div class="mblock">3¹=3, 3²=9, 3⁴=9²=81≡13, 3⁸=13²=169≡16</div>`,
+ q:'Υπολόγισε <strong>3⁸ mod 17</strong> με επαναλαμβανόμενο τετραγωνισμό',prefix:'3⁸ mod 17 =',ans:'16',hint:'3¹=3. 3²=3×3=9. 3⁴=9²=81: 81=4×17+? → βρες 3⁴. Μετά 3⁸=(3⁴)²: τετραγώνισε αυτό το αποτέλεσμα mod 17.'},
+{type:'btns',section:'Θεωρία CBD',
+ theory:`<h3>Γιατί πρέπει οι συντελεστές να είναι μικροί;</h3><p>Ο προϋπολογισμός θορύβου για αποθυλάκωση: |θόρυβος| < q/4 = 4.25. CBD με η=2 εγγυάται συντελεστές στο {−2,…,+2}.</p>`,
+ q:'Το CBD με η=2 παράγει συντελεστές σε ποιο εύρος;',opts:['{−2,−1,0,+1,+2}','{0,1,…,16}','{−8,…,+8}','{0,1}'],cor:0},
+{type:'btns',section:'Θεωρία NTT',
+ theory:`<h3>Πλεονέκτημα πολυπλοκότητας NTT</h3><p>Αφελής πολλαπλασιασμός πολυωνύμων: O(n²). Με NTT: O(n log n). Για n=8 υπάρχουν ακριβώς log₂8=3 στρώματα πεταλούδας.</p>`,
+ q:'Πόσα στρώματα πεταλούδας χρειάζεται το NTT για n=8;',opts:['3  (log₂8=3)','8','4','2'],cor:0},
+{type:'btns',section:'Ιδιότητα INTT',
+ theory:`<h3>Ιδιότητα μετ'επιστροφής</h3><div class="mblock">INTT(NTT(poly)) == poly\nγια όλα τα poly στο R_q</div>`,
+ q:'Μετά την πεταλούδα INTT (με inv_roots), ποια τελική κλιμάκωση εφαρμόζεται;',opts:['Πολλαπλασιασμός κάθε συντελεστή με n⁻¹=15','Διαίρεση με q=17','Πρόσθεση q στα αρνητικά','Καμία κλιμάκωση'],cor:0},
+{type:'btns',section:'Ενθυλάκωση',
+ theory:`<h3>Διάνυσμα κωδικοποίησης μηνύματος</h3><div class="mblock">MSG=[1,0,1,0,1,0,1,0]\nM_HAT=[8,0,8,0,8,0,8,0]\nbit 1→⌊q/2⌋=8,  bit 0→0</div>`,
+ q:'Μετά κωδικοποίηση, MSG=[1,0,1,0,1,0,1,0] γίνεται M_HAT=;',opts:['[8,0,8,0,8,0,8,0]','[1,0,1,0,1,0,1,0]','[17,0,17,0,17,0,17,0]','[8,8,8,8,8,8,8,8]'],cor:0},
+{type:'btns',section:'Αποθυλάκωση',
+ theory:`<h3>Αλγεβρική ακύρωση στην αποθυλάκωση</h3><div class="mblock">v = t̂^T·r̂ + e2 + m̂  (μετά INTT)\nŝ^T·u ≈ Â^T·r̂ ακυρώνεται\nw = v − ŝ^T·u ≈ m̂ + μικρός θόρυβος</div>`,
+ q:'Τι ακυρώνεται ακριβώς κατά την αποθυλάκωση;',opts:['Οι όροι INTT(ŝ^T·Â^T·r̂) από v και ŝ^T·u','Το μήνυμα m̂','Ο όρος σφάλματος e2','Ο πίνακας A'],cor:0},
+// gaps:inherit English tmpl, translate only theory/q/section
+{...MED[10],section:'modpow',theory:`<h3>modpow:τετραγωνισμός</h3><div class="mblock">result=1, b=base%mod\nwhile exp>0:\n  if exp&1: result=result*b%mod\n  b=b*b%mod\n  exp>>=1</div>`,q:'Συμπλήρωσε το modpow:'},
+{...MED[11],section:'cbd_sample',theory:`<h3>Δειγματολήπτης CBD</h3><div class="mblock">bits LSB-first\ncoeff=(b0+b1)−(b2+b3)\nappend coeff%q</div>`,q:'Συμπλήρωσε το cbd_sample:'},
+{...MED[12],section:'bit_reverse_permute',theory:`<h3>Μετάθεση αντιστροφής bit</h3><div class="mblock">bits=int(log2(n))\nrev=int(f\'{i:0{bits}b}\'[::-1],2)\nif rev>i: swap r[i],r[rev]</div>`,q:'Συμπλήρωσε το bit_reverse_permute:'},
+{...MED[13],section:'Πυρήνας NTT',theory:`<h3>Βρόχος πεταλούδας NTT</h3><div class="mblock">step=n//length\nw=roots[j*step]\nt=a[s]*w%q\na[f]=(a[f]+t)%q\na[s]=(old_f−t)%q\nlength&lt;&lt;=1</div>`,q:'Συμπλήρωσε τον βρόχο πεταλούδας NTT:'},
+{...MED[14],section:'INTT',theory:`<h3>INTT = NTT(inv_roots) και κλιμάκωση με n⁻¹</h3>`,q:'Συμπλήρωσε το intt:'},
+{...MED[15],section:'Πράξεις κατά σημεία',theory:`<h3>Πράξεις κατά σημεία</h3><div class="mblock">mul: a[i]*b[i]%q\nadd: (a[i]+b[i])%q</div>`,q:'Συμπλήρωσε τα pointwise_mul και pointwise_add:'},
+{...MED[16],section:'keygen_t',theory:`<h3>t̂ = Â·ŝ + ê (πεδίο NTT κατά σημεία)</h3>`,q:'Συμπλήρωσε τον εσωτερικό βρόχο keygen_t:'},
+{...MED[17],section:'decode_bit',theory:`<h3>Αποκωδικοποίηση bit με κυκλική απόσταση</h3><div class="mblock">d0  = min(c, q-c)\ndq2 = min(|c-q//2|, q-|c-q//2|)\nreturn 1 if dq2&lt;d0 else 0</div>`,q:'Συμπλήρωσε το decode_bit:'},
+];
+const HARD_EL=[
+{type:'btns',section:'Module-LWE',
+ theory:`<h3>Παραδοχή Ασφάλειας Module-LWE</h3><p>Η δυσκολία του Kyber βασίζεται στη διάκριση (A, As+e) από (A, τυχαία ομοιόμορφη), ακόμη και με κβαντικούς πόρους.</p>`,
+ q:'Ποια είναι η κεντρική παραδοχή ασφάλειας του Kyber;',opts:['Δυσκολία Module-LWE (MLWE)','Παραγοντοποίηση ακεραίων','Διακριτός λογάριθμος','Μόνο πρόβλημα συντομότερου διανύσματος'],cor:0},
+{type:'btns',section:'Πρωτεύουσα Ρίζα',
+ theory:`<h3>Τάξη του g mod p</h3><p>Το g έχει τάξη d αν g^d≡1 mod p και καμία μικρότερη θετική k δεν ικανοποιεί g^k≡1. Αφού 16=2⁴, αρκεί να ελέγξουμε g^8≠1 για τάξη 16.</p>`,
+ q:'3⁸ mod 17=16. Τι σημαίνει αυτό για την τάξη του 3 mod 17;',opts:['16 (3^16≡1 και 3^8≠1)','8','4','32'],cor:0},
+{type:'btns',section:'Πεδίο NTT',
+ theory:`<h3>Πολλαπλασιασμός στο πεδίο NTT</h3><p>Μόλις βρισκόμαστε στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται O(n) κατά σημεία:κάθε ζεύγος συντελεστών πολλαπλασιάζεται ανεξάρτητα.</p>`,
+ q:'Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται τι;',opts:['Πολλαπλασιασμός κατά σημεία (στοιχείο-προς-στοιχείο)','Ανάστροφος πίνακα','Συνέλιξη','Διαίρεση πολυωνύμων'],cor:0},
+{type:'btns',section:'Ενθυλάκωση',
+ theory:`<h3>Αλγεβρική ακύρωση</h3><div class="mblock">v = INTT(t̂^T·r̂)+e2+m̂\nŝ^T·u = INTT(ŝ^T·Â^T·r̂)+INTT(ŝ^T·ê1)\nw = v−ŝ^T·u = m̂ + μικρός θόρυβος</div>`,
+ q:'Ποιος όρος ακυρώνεται ακριβώς μεταξύ v και ŝ^T·u;',opts:['INTT(ŝ^T·Â^T·r̂)','Το μήνυμα m̂','Ο θόρυβος e2','Το δημόσιο κλειδί t̂'],cor:0},
+{type:'btns',section:'Προϋπολογισμός Θορύβου',
+ theory:`<h3>Κατώφλι αποκρυπτογράφησης</h3><div class="mblock">bit 1 κωδικοποιείται ως q/2=8\nbit 0 κωδικοποιείται ως 0\nΣωστό αν |θόρυβος| &lt; q/4 = 4.25</div>`,
+ q:'Μέγιστη ανεκτή ένταση θορύβου για σωστή αποκρυπτογράφηση (q=17);',opts:['4 (αυστηρά μικρότερο από q/4=4.25)','8','17','2'],cor:0},
+{type:'btns',section:'Επίπεδα Ασφάλειας',
+ theory:`<h3>Επίπεδα ασφάλειας Kyber</h3><ul><li><strong>Kyber-512</strong>: 2¹¹⁸ post-quantum πράξεις</li><li><strong>Kyber-768</strong>: 2¹⁷⁸ post-quantum πράξεις</li><li><strong>Kyber-1024</strong>: 2²⁵⁴ post-quantum πράξεις</li></ul>`,
+ q:'Το Kyber-768 στοχεύει σε περίπου πόσα bits post-quantum ασφάλειας;',opts:['178 bits (2¹⁷⁸ κβαντικές πράξεις)','128 bits','254 bits','64 bits'],cor:0},
+{type:'btns',section:'Δημιουργία Πίνακα',
+ theory:`<h3>Δημιουργία πίνακα A</h3><p>Ο A παράγεται από σπόρο ρ μέσω cSHAKE128 + απόρριψη-δειγματοληψίας ώστε οι συντελεστές να είναι ομοιόμορφα κατανεμημένοι στο {0,…,q−1}.</p>`,
+ q:'Γιατί χρησιμοποιείται δειγματοληψία απόρριψης κατά τη δημιουργία του πίνακα A;',opts:['Για ομοιόμορφη κατανομή στο {0,…,q−1}','Για να είναι ο A αντιστρέψιμος','Για μείωση μεγέθους κλειδιού','Για προσθήκη θορύβου'],cor:0},
+{type:'btns',section:'Μετασχηματισμός FO',
+ theory:`<h3>Μετασχηματισμός Fujisaki-Okamoto</h3><p>Εφαρμόζεται στην CPA-ασφαλή κρυπτογράφηση του Kyber για παραγωγή CCA-ασφαλούς KEM. Σε αναντιστοιχία αποθυλάκωσης επιστρέφεται ψευδοτυχαίο κλειδί (υπονοούμενη απόρριψη):ποτέ σήμα αποτυχίας.</p>`,
+ q:'Ποια ιδιότητα ασφάλειας παρέχει ο μετασχηματισμός FO;',opts:['Ασφάλεια CCA (αντίσταση σε επιθέσεις επιλεγμένου κρυπτοκειμένου)','Μεγαλύτερα μεγέθη κλειδιών','Ταχύτερη αποκρυπτογράφηση','Κβαντική επιτάχυνση'],cor:0},
+// gaps:inherit English tmpl
+{...HARD[8],section:'modpow πλήρες',theory:`<h3>modpow πλήρες</h3>`,q:'Συμπλήρωσε το modpow εντελώς:'},
+{...HARD[9],section:'cbd_sample πλήρες',theory:`<h3>cbd_sample πλήρες</h3>`,q:'Συμπλήρωσε το cbd_sample:'},
+{...HARD[10],section:'NTT πλήρες',theory:`<h3>NTT πλήρες</h3>`,q:'Συμπλήρωσε τη συνάρτηση ntt:'},
+{...HARD[11],section:'INTT πλήρες',theory:`<h3>INTT:ίδια πεταλούδα + κλιμάκωση n⁻¹</h3>`,q:'Συμπλήρωσε το intt:'},
+{...HARD[12],section:'keygen_t πλήρες',theory:`<h3>keygen_t πλήρες</h3>`,q:'Συμπλήρωσε το keygen_t:'},
+{...HARD[13],section:'matvec_ntt',theory:`<h3>Πολλαπλασιασμός πίνακα-διανύσματος σε πεδίο NTT</h3>`,q:'Συμπλήρωσε το matvec_ntt:'},
+{...HARD[14],section:'Ενθυλάκωση ανάστροφος',theory:`<h3>Ενθυλάκωση: ανάστροφος A και u</h3><div class="mblock">A_T[i][j] = A_hat[j][i]\nu = INTT(A_T·r̂) + e1</div>`,q:'Συμπλήρωσε ανάστροφο και u:'},
+{...HARD[15],section:'Ενθυλάκωση v',theory:`<h3>Ενθυλάκωση: υπολογισμός v</h3><div class="mblock">v = INTT(t̂^T·r̂) + e2 + m̂</div>`,q:'Συμπλήρωσε τον υπολογισμό v:'},
+{...HARD[16],section:'Αποθυλάκωση',theory:`<h3>Αποθυλάκωση</h3><div class="mblock">u_ntt=NTT(u)\nstu=ŝ^T·û (εσωτερικό γινόμενο)\nw=v−INTT(stu)</div>`,q:'Συμπλήρωσε το decapsulate:'},
+{...HARD[17],section:'decode_bit πλήρες',theory:`<h3>Αποκωδικοποίηση με κυκλική απόσταση</h3>`,q:'Συμπλήρωσε το decode_bit:'},
+{...HARD[18],section:'Εύρεση ριζών',theory:`<h3>Εύρεση ω από g=3</h3>`,q:'Συμπλήρωσε εύρεση ριζών:'},
+{...HARD[19],section:'Αλυσίδα KeyGen',theory:`<h3>Πλήρης αλυσίδα KeyGen</h3>`,q:'Συμπλήρωσε το KeyGen:'},
+{...HARD[20],section:'Αλυσίδα Decaps βεβαίωση',theory:`<h3>Βεβαίωση πλήρους αλυσίδας</h3>`,q:'Συμπλήρωσε κλήση αποθυλάκωσης και βεβαίωση:'},
+];
+// VH_EL and INS_EL: only translate theory heading + q; tmpl is identical
+const VH_EL_META=[
+ {section:'modpow',theory:`<h3>Γρήγορη ύψωση σε δύναμη mod</h3>`,q:'Συμπλήρωσε το modpow:'},
+ {section:'cbd_sample',theory:`<h3>Δειγματολήπτης CBD η=2</h3>`,q:'Συμπλήρωσε το cbd_sample:'},
+ {section:'bit_reverse_permute',theory:`<h3>Μετάθεση αντιστροφής bit</h3>`,q:'Συμπλήρωσε το bit_reverse_permute:'},
+ {section:'Πυρήνας NTT',theory:`<h3>Πυρήνας NTT Cooley-Tukey</h3>`,q:'Συμπλήρωσε το σώμα NTT:'},
+ {section:'INTT',theory:`<h3>INTT</h3>`,q:'Συμπλήρωσε το intt:'},
+ {section:'Πράξεις κατά σημεία',theory:`<h3>Πράξεις κατά σημεία</h3>`,q:'Συμπλήρωσε τα pointwise_mul και add:'},
+ {section:'keygen_t',theory:`<h3>t̂=Â·ŝ+ê</h3>`,q:'Συμπλήρωσε το keygen_t:'},
+ {section:'matvec_ntt',theory:`<h3>Πολλαπλασιασμός πίνακα-διανύσματος στο πεδίο NTT</h3>`,q:'Συμπλήρωσε το matvec_ntt:'},
+ {section:'encode_message',theory:`<h3>Κωδικοποίηση μηνύματος bit→⌊q/2⌋</h3>`,q:'Συμπλήρωσε το encode_message:'},
+ {section:'encaps r_ntt+transpose',theory:`<h3>NTT στην τυχαιότητα r</h3>`,q:'Συμπλήρωσε τα r_ntt και ανάστροφο A:'},
+ {section:'encaps u',theory:`<h3>u=INTT(Â^T·r̂)+e1</h3>`,q:'Συμπλήρωσε το u:'},
+ {section:'encaps v',theory:`<h3>v=INTT(t̂^T·r̂)+e2+m̂</h3>`,q:'Συμπλήρωσε το v:'},
+ {section:'decaps u_ntt+stu',theory:`<h3>NTT στο κρυπτοκείμενο u</h3>`,q:'Συμπλήρωσε τα u_ntt και stu:'},
+ {section:'decaps w',theory:`<h3>w=v−INTT(ŝ^T·û)</h3>`,q:'Συμπλήρωσε την ανάκτηση w:'},
+ {section:'decode_bit',theory:`<h3>Αποκωδικοποίηση με κυκλική απόσταση</h3>`,q:'Συμπλήρωσε το decode_bit:'},
+ {section:'Πρωτεύουσες ρίζες',theory:`<h3>Εύρεση ω,ω⁻¹ από g=3</h3>`,q:'Συμπλήρωσε εύρεση ριζών:'},
+ {section:'Πίνακες ριζών',theory:`<h3>Δημιουργία ROOTS και INV_ROOTS</h3>`,q:'Συμπλήρωσε δημιουργία πινάκων ριζών:'},
+ {section:'Επαλήθευση ριζών',theory:`<h3>Επαλήθευση roots×inv_roots=1</h3>`,q:'Συμπλήρωσε επαλήθευση:'},
+ {section:'Βρόχος ιχνηλάτησης NTT',theory:`<h3>Βρόχος ιχνηλάτησης NTT</h3>`,q:'Συμπλήρωσε τον βρόχο ιχνηλάτησης:'},
+ {section:'Κλιμάκωση INTT',theory:`<h3>INTT: κλιμάκωση μετά πεταλούδα</h3>`,q:'Συμπλήρωσε κλιμάκωση INTT:'},
+ {section:'Βεβαιώσεις keygen',theory:`<h3>Βεβαίωση t̂</h3>`,q:'Συμπλήρωσε βεβαιώσεις:'},
+ {section:'Βεβαιώσεις encaps',theory:`<h3>Βεβαίωση κρυπτοκειμένου</h3>`,q:'Συμπλήρωσε βεβαιώσεις:'},
+ {section:'Βεβαίωση decaps',theory:`<h3>Βεβαίωση ανάκτησης μηνύματος</h3>`,q:'Συμπλήρωσε βεβαίωση:'},
+ {section:'Προϋπολογισμός θορύβου',theory:`<h3>Ανάλυση προϋπολογισμού θορύβου</h3>`,q:'Συμπλήρωσε βρόχο θορύβου:'},
+ {section:'Οριακές περιπτώσεις CBD',theory:`<h3>Επαλήθευση οριακών περιπτώσεων CBD</h3>`,q:'Συμπλήρωσε βεβαιώσεις οριακών περιπτώσεων:'},
+ {section:'Πλήρης αλυσίδα',theory:`<h3>Επαλήθευση πλήρους αλυσίδας</h3>`,q:'Συμπλήρωσε πλήρη αλυσίδα:'},
+ {section:'pointwise_add με ευρετήριο',theory:`<h3>Pointwise add:με ευρετήριο</h3>`,q:'Συμπλήρωσε με βρόχο ευρετηρίου:'},
+];
+const VH_EL=VH.map((ch,i)=>({...ch,...VH_EL_META[i]}));
+
+const INS_EL_META=[
+ {section:'barrett_reduce',theory:`<h3>Αναγωγή Barrett</h3><div class="mblock">// αναγωγή a mod KYBER_Q χωρίς διαίρεση\nint16_t barrett_reduce(int16_t a);</div>`,q:'Συμπλήρωσε το barrett_reduce:'},
+ {section:'montgomery_reduce',theory:`<h3>Αναγωγή Montgomery</h3><div class="mblock">// a*R^{-1} mod q\nQINV = q^{-1} mod 2^16</div>`,q:'Συμπλήρωσε το montgomery_reduce:'},
+ {section:'Δομή poly',theory:`<h3>Δομή πολυωνύμου</h3>`,q:'Συμπλήρωσε τα typedef poly και polyvec:'},
+ {section:'poly_add',theory:`<h3>Πρόσθεση πολυωνύμων</h3>`,q:'Συμπλήρωσε το poly_add:'},
+ {section:'poly_sub',theory:`<h3>Αφαίρεση πολυωνύμων</h3>`,q:'Συμπλήρωσε το poly_sub:'},
+ {section:'Βρόχος zeta NTT',theory:`<h3>NTT με πίνακα zeta</h3><div class="mblock">// zetas[k] = ψ^bitrev(k) mod q\n// Cooley-Tukey επαναληπτικό</div>`,q:'Συμπλήρωσε τον βρόχο zeta NTT:'},
+ {section:'Κλιμάκωση INTT',theory:`<h3>INTT:Gentleman-Sande + κλιμάκωση n⁻¹</h3><div class="mblock">// F=KYBER_N^{-1} mod q σε μορφή Montgomery</div>`,q:'Συμπλήρωσε κλιμάκωση INTT:'},
+ {section:'basemul',theory:`<h3>Basemul:πολλαπλασιασμός poly στο πεδίο NTT</h3><div class="mblock">// r[0]=a[0]*b[0]+a[1]*b[1]*zeta\n// r[1]=a[0]*b[1]+a[1]*b[0]</div>`,q:'Συμπλήρωσε το basemul:'},
+ {section:'Περιτύλιξη poly_ntt',theory:`<h3>Περιτύλιξη poly_ntt</h3>`,q:'Συμπλήρωσε τα poly_ntt και poly_invntt_tomont:'},
+ {section:'polyvec_ntt',theory:`<h3>polyvec_ntt: εφαρμογή NTT σε κάθε στοιχείο</h3>`,q:'Συμπλήρωσε το polyvec_ntt:'},
+ {section:'polyvec_pointwise_acc',theory:`<h3>Εσωτερικό γινόμενο δύο polyvec</h3><div class="mblock">// r = Σ a[i] ⊙ b[i]</div>`,q:'Συμπλήρωσε το polyvec_pointwise_acc_montgomery:'},
+ {section:'poly_reduce',theory:`<h3>poly_reduce: αναγωγή Barrett σε όλους συντελεστές</h3>`,q:'Συμπλήρωσε το poly_reduce:'},
+ {section:'poly_compress',theory:`<h3>poly_compress: Compress(x,d)</h3><div class="mblock">// round(2^d/q * x) mod 2^d</div>`,q:'Συμπλήρωσε το poly_compress (d=4):'},
+ {section:'poly_decompress',theory:`<h3>poly_decompress: Decompress(x,d)</h3><div class="mblock">// round(q/2^d * x)</div>`,q:'Συμπλήρωσε το poly_decompress (d=4):'},
+ {section:'cbd_eta2',theory:`<h3>CBD η=2 σε C (τέχνασμα popcount)</h3><div class="mblock">// d=t&0x55... + (t>>1)&0x55...\n// a=(d>>(4j))&3  b=(d>>(4j+2))&3</div>`,q:'Συμπλήρωσε το cbd_eta2:'},
+ {section:'gen_matrix',theory:`<h3>Πίνακας A από σπόρο</h3>`,q:'Συμπλήρωσε το gen_matrix:'},
+ {section:'indcpa_keypair',theory:`<h3>Δημιουργία κλειδιών IND-CPA</h3>`,q:'Συμπλήρωσε το indcpa_keypair:'},
+ {section:'indcpa_enc u',theory:`<h3>Κρυπτογράφηση IND-CPA:u</h3><div class="mblock">// u = A^T*r + e1</div>`,q:'Συμπλήρωσε τον υπολογισμό u:'},
+ {section:'indcpa_dec',theory:`<h3>Αποκρυπτογράφηση IND-CPA</h3><div class="mblock">// w = v - s^T*u</div>`,q:'Συμπλήρωσε το indcpa_dec:'},
+ {section:'poly_tomsg',theory:`<h3>poly_tomsg: ανάκτηση bits μηνύματος</h3><div class="mblock">// bit=(coeff+q/4)/(q/2) mod 2</div>`,q:'Συμπλήρωσε το poly_tomsg:'},
+ {section:'poly_frommsg',theory:`<h3>poly_frommsg: κωδικοποίηση μηνύματος σε poly</h3><div class="mblock">// bit=1→coeff=q/2  bit=0→coeff=0</div>`,q:'Συμπλήρωσε το poly_frommsg:'},
+ {section:'crypto_kem_keypair',theory:`<h3>Περιτύλιξη ζεύγους κλειδιών KEM</h3>`,q:'Συμπλήρωσε το crypto_kem_keypair:'},
+ {section:'crypto_kem_enc',theory:`<h3>Ενθυλάκωση KEM</h3>`,q:'Συμπλήρωσε το crypto_kem_enc:'},
+ {section:'crypto_kem_dec',theory:`<h3>Αποθυλάκωση KEM (υπονοούμενη απόρριψη FO)</h3>`,q:'Συμπλήρωσε το crypto_kem_dec:'},
+ {section:'verify + cmov',theory:`<h3>Σταθερού χρόνου verify και conditional move</h3>`,q:'Συμπλήρωσε τα verify και cmov:'},
+ {section:'polyvec_add',theory:`<h3>polyvec_add: πρόσθεση poly κατά στοιχείο</h3>`,q:'Συμπλήρωσε το polyvec_add:'},
+ {section:'polyvec_reduce',theory:`<h3>polyvec_reduce: αναγωγή όλων poly</h3>`,q:'Συμπλήρωσε το polyvec_reduce:'},
+ {section:'poly_csubq',theory:`<h3>poly_csubq: υπό συνθήκη αφαίρεση q</h3><div class="mblock">// Μεταφορά [0,2q) → [0,q)</div>`,q:'Συμπλήρωσε το poly_csubq:'},
+ {section:'pack_pk',theory:`<h3>pack_pk: σειριοποίηση δημόσιου κλειδιού</h3><div class="mblock">// pk = compress(t) || rho</div>`,q:'Συμπλήρωσε το pack_pk:'},
+ {section:'pack_ciphertext',theory:`<h3>pack_ciphertext: σειριοποίηση (u,v)</h3>`,q:'Συμπλήρωσε το pack_ciphertext:'},
+ {section:'polyvec_invntt_tomont',theory:`<h3>polyvec_invntt_tomont: INTT σε κάθε poly</h3>`,q:'Συμπλήρωσε το polyvec_invntt_tomont:'},
+ {section:'poly_getnoise',theory:`<h3>poly_getnoise_eta1: θόρυβος από PRF</h3>`,q:'Συμπλήρωσε το poly_getnoise_eta1:'},
+];
+const INS_EL=INS.map((ch,i)=>({...ch,...INS_EL_META[i]}));
+
+const CHALLENGES_EL={veryeasy:VE_EL,easy:EZ_EL,medium:MED_EL,hard:HARD_EL,veryhard:VH_EL,insane:INS_EL};
+
+function getChallenges(){return LANG==='el'?CHALLENGES_EL:CHALLENGES;}
+function getLabels(){return T[LANG].LABELS;}
+
+function switchLang(){
+  LANG=LANG==='en'?'el':'en';
+  localStorage.setItem('kyber_lang',LANG);
+  applyLang();
+  if(S.mode)render();
+}
+
+// Persisted completion map: { mode: true/false }
+const _completedModes = JSON.parse(localStorage.getItem('kyber_completed_modes') || '{}');
+
+function _setModeCompleted(mode) {
+  _completedModes[mode] = true;
+  localStorage.setItem('kyber_completed_modes', JSON.stringify(_completedModes));
+}
+
+function buildDiffGrid(){
+  const grid=document.getElementById('diffGrid');
+  if(!grid)return;
+  const lvls=T[LANG].levels;
+  grid.innerHTML=lvls.map((lv,i)=>`
+    <div class="diff-card${_completedModes[lv.key]?' done':''}" onclick="startMode('${lv.key}')">
+      <div class="diff-lvl">${lv.label}</div>
+      <div class="diff-name">${lv.name}</div>
+      <div class="diff-desc">${lv.desc}</div>
+      <div class="diff-meta">${lv.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+      <button class="btn-go">${T[LANG].btnStart}</button>
+    </div>`).join('');
+}
+
+function showLevelComplete(modeName) {
+  const banner = document.getElementById('lvlCompleteBanner');
+  if (!banner) return;
+  banner.textContent = `⚡ ${modeName ? modeName.toUpperCase() : 'LEVEL'} COMPLETE ⚡`;
+  banner.classList.add('show');
+  setTimeout(() => banner.classList.remove('show'), 3500);
+}
+
+function applyLang(){
+  const t=T[LANG];
+  const $ = id => document.getElementById(id);
+  const $q = sel => document.querySelector(sel);
+  if($('langToggleBtn'))$('langToggleBtn').textContent=t.langToggle;
+  if($q('.logo-sub'))$q('.logo-sub').textContent=t.logoSub;
+  if($('selTitle'))$('selTitle').textContent=t.selTitle;
+  if($('selSub'))$('selSub').textContent=t.selSub;
+  if($('lblScore'))$('lblScore').textContent=t.scoreLabel;
+  if($('lblStreak'))$('lblStreak').textContent=t.streakLabel;
+  if($('panelTheoryLabel'))$('panelTheoryLabel').textContent=t.panelTheory;
+  if($q('.res-title'))$q('.res-title').textContent=t.resTitle;
+  if($('lblCorrect'))$('lblCorrect').textContent=t.lblCorrect;
+  if($('lblTotal'))$('lblTotal').textContent=t.lblTotal;
+  if($('lblAccuracy'))$('lblAccuracy').textContent=t.lblAccuracy;
+  if($('btnGoBack'))$('btnGoBack').textContent=t.btnGoBack;
+  if($('submitBtn'))$('submitBtn').textContent=t.btnSubmit;
+  if($('nextBtn'))$('nextBtn').textContent=t.btnNext;
+  if($q('.ch-back'))$q('.ch-back').textContent=t.btnBack;
+  buildDiffGrid();
+  updateAuthBtn();
+  _updateMenuLang();
+}
+
+// ENGINE
+const CHALLENGES={veryeasy:VE,easy:EZ,medium:MED,hard:HARD,veryhard:VH,insane:INS};
+const LIVES_MAP={veryeasy:5,easy:5,medium:5,hard:3,veryhard:3,insane:3};
+const COLORS={veryeasy:'var(--c0)',easy:'var(--c1)',medium:'var(--c2)',hard:'var(--c3)',veryhard:'var(--c4)',insane:'var(--c5)'};
+const LABELS={veryeasy:'VERY EASY',easy:'EASY',medium:'MEDIUM',hard:'HARD',veryhard:'VERY HARD',insane:'INSANE'};
+
+let S={mode:null,idx:0,score:0,streak:0,correct:0,lives:5,answered:false};
+
+// Cookie helper
+function getCookie(name) {
+  const c = document.cookie.split(';').map(s=>s.trim()).find(s=>s.startsWith(name+'='));
+  return c ? decodeURIComponent(c.split('=').slice(1).join('=')) : null;
+}
+
+// Cumulative score:cookie is primary (set by backend on each correct answer), localStorage as fallback
+let _baseScore = parseInt(getCookie('kyber_score') || localStorage.getItem('kyber_total_score') || '0');
+
+function updateHeader(){
+  document.getElementById('hScore').textContent = _baseScore + (S.score || 0);
+  document.getElementById('hStreak').textContent=S.streak;
+  const row=document.getElementById('livesRow');
+  row.innerHTML='';
+  if(!S.mode)return;
+  for(let i=0;i<LIVES_MAP[S.mode];i++){
+    const d=document.createElement('div');
+    d.className='life'+(i>=S.lives?' lost':'');
+    row.appendChild(d);
+  }
+}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+function goBack(){show('select');S.mode=null;document.getElementById('livesRow').innerHTML='';refreshSelectLeaderboard();}
+function startMode(mode){
+  S={mode,idx:0,score:0,streak:0,correct:0,lives:LIVES_MAP[mode],answered:false,selectedOpt:null};
+  updateHeader();show('challenge');render();
+}
+
+// RENDER
+function render(){
+  const list=getChallenges()[S.mode];
+  const ch=list[S.idx];
+  S.answered=false;
+  S.selectedOpt=null;
+  const t=T[LANG];
+  const col=COLORS[S.mode],lbl=getLabels()[S.mode],total=list.length;
+  const badge=document.getElementById('chBadge');
+  badge.textContent=lbl;badge.style.color=col;badge.style.borderColor=col;
+  document.getElementById('chSection').textContent=ch.section||'';
+  document.getElementById('chTitle').textContent='Q'+(S.idx+1);
+  document.getElementById('chProgText').textContent=(S.idx+1)+'/'+total;
+  document.getElementById('pfill').style.width=((S.idx+1)/total*100)+'%';
+  document.getElementById('theoryContent').innerHTML=ch.theory||'';
+  const tp=document.getElementById('theoryPanel');
+  tp.style.display=ch.theory?'':'none';
+  document.querySelector('.ch-body').style.gridTemplateColumns=ch.theory?'1fr 1fr':'1fr';
+  document.getElementById('panelLabel').textContent=t.typeLabels[ch.type]||'CHALLENGE';
+  document.getElementById('panelTheoryLabel').textContent=t.panelTheory;
+  const cc=document.getElementById('chContent');
+  cc.innerHTML='';
+  if(ch.type==='duo')  cc.innerHTML=renderDuo(ch);
+  if(ch.type==='btns') cc.innerHTML=renderBtns(ch);
+  if(ch.type==='gaps') cc.innerHTML=renderGaps(ch);
+  const fm=document.getElementById('fbMsg');
+  fm.className='fb-msg neutral';
+  fm.textContent=t.fbStart[ch.type]||t.fbStart.btns;
+  document.getElementById('submitBtn').style.display=(ch.type==='duo'||ch.type==='gaps')?'inline-block':'none';
+  document.getElementById('submitBtn').textContent=t.btnSubmit;
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('nextBtn').textContent=t.btnNext;
+  document.querySelector('.ch-back').textContent=t.btnBack;
+  updateHeader();
+}
+
+// DUO
+function renderDuo(ch){
+  return`<div class="qtext">${ch.q}</div>
+    <div class="duo-wrap">
+      <div class="duo-input-row">
+        <span class="duo-prefix">${ch.prefix}</span>
+        <input class="duo-input" id="duoIn" placeholder="?" spellcheck="false" onkeydown="if(event.key==='Enter')submitAnswer()">
+      </div>
+      ${ch.hint?`<div class="duo-hint">Hint: ${ch.hint}</div>`:''}
+    </div>`;
+}
+
+// BTNS
+function renderBtns(ch){
+  return`<div class="qtext">${ch.q}</div><div class="opts">${
+    ch.opts.map((o,i)=>`<button class="opt-btn" onclick="pickOpt(${i})">${o}</button>`).join('')
+  }</div>`;
+}
+function pickOpt(idx){
+  if(S.answered)return;
+  S.selectedOpt=idx;
+  S.answered=true;
+  const ch=getChallenges()[S.mode][S.idx];
+  const btns=document.querySelectorAll('.opt-btn');
+  btns.forEach(b=>b.disabled=true);
+  const ok=idx===ch.cor;
+  btns[idx].classList.add(ok?'correct':'wrong');
+  if(!ok)btns[ch.cor].classList.add('correct');
+  showFeedback(ok,ok?T[LANG].fbCorrect:T[LANG].fbWrong);
+}
+
+// GAPS
+function renderGaps(ch){
+  const isC=ch.lang==='c';
+  let html=`<div class="qtext">${ch.q}</div>
+  <div class="code-editor">
+    <div class="ced-hdr"><div class="edot r"></div><div class="edot y"></div><div class="edot g"></div>
+    <span class="ced-lang">${isC?'C':'Python'}</span></div>
+    <div class="code-area">`;
+  let gi=0;
+  (ch.tmpl||[]).forEach((line,li)=>{
+    if(!line||typeof line!=='object')return;
+    html+=`<div class="code-line"><span class="lnum">${li+1}</span>`;
+    if(line.t==='code'){
+      html+=`<span class="ct">${hl(line.s||'',isC)}</span>`;
+    }else if(line.t==='gap'){
+      html+=`<span class="ct">${hl(line.pre||'',isC)}</span>`;
+      html+=`<input class="gap-input" id="g${gi}" data-i="${gi}" style="width:${line.w||60}px" placeholder="?" spellcheck="false">`;
+      html+=`<span class="ct">${hl(line.suf||'',isC)}</span>`;
+      if(line.hc) html+=`<span class="gap-hint">${isC?'  // ':'  # '}${line.hc}</span>`;
+      gi++;
+    }
+    html+=`</div>`;
+  });
+  html+=`</div></div>`;
+  return html;
+}
+
+// SYNTAX HIGHLIGHT
+function hl(code,isC){
+  if(!code)return'';
+  let s=code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if(isC){
+    s=s.replace(/\b(void|int|uint8_t|uint16_t|uint32_t|int16_t|int32_t|size_t|const|static|typedef|struct|for|if|return|sizeof)\b/g,'<span class="kw">$1</span>');
+    s=s.replace(/#(define|include)\b/g,'<span class="pp">#$1</span>');
+    s=s.replace(/\b([A-Z_]{3,})\b/g,'<span class="ty">$1</span>');
+    s=s.replace(/(\/\/.*$)/gm,'<span class="cm">$1</span>');
+    s=s.replace(/\b(\d+)\b/g,'<span class="num">$1</span>');
+    s=s.replace(/(0x[0-9a-fA-F]+)/g,'<span class="num">$1</span>');
+  }else{
+    s=s.replace(/(['"])(.*?)\1/g,'<span class="str">$1$2$1</span>');
+    s=s.replace(/\b(def|return|for|if|while|import|in|range|else|and|not|True|False|None|assert)\b/g,'<span class="kw">$1</span>');
+    s=s.replace(/\b(len|int|list|min|abs|zip|range|print|append|math|sum)\b/g,'<span class="fn">$1</span>');
+    s=s.replace(/(#.*$)/gm,'<span class="cm">$1</span>');
+    s=s.replace(/\b(\d+)\b/g,'<span class="num">$1</span>');
+    s=s.replace(/(0x[0-9a-fA-F]+)/g,'<span class="num">$1</span>');
+  }
+  return s;
+}
+
+// SUBMIT
+const normAns=s=>s.replace(/\s+/g,'');
+function submitAnswer(){
+  if(S.answered){nextQ();return;}
+  const ch=getChallenges()[S.mode][S.idx];
+  const t=T[LANG];
+  if(ch.type==='duo'){
+    const inp=document.getElementById('duoIn');
+    const val=(inp?.value||'').trim();
+    const ok=normAns(val)===normAns(ch.ans);
+    inp.classList.add(ok?'correct':'wrong');
+    S.answered=true;
+    if(!ok)setTimeout(()=>{inp.classList.remove('wrong');inp.value='';},600);
+    showFeedback(ok,ok?t.fbCorrectDuo(ch.ans):t.fbWrongDuo(ch.ans,ch.hint));
+    return;
+  }
+  if(ch.type==='gaps'){
+    const gaps=(ch.tmpl||[]).filter(l=>l&&l.t==='gap');
+    let allOk=true,anyEmpty=false;
+    gaps.forEach((line,i)=>{
+      const inp=document.getElementById('g'+i);
+      if(!inp)return;
+      const val=inp.value.trim();
+      if(!val){anyEmpty=true;return;}
+      const ok=normAns(val)===normAns(line.ans);
+      inp.classList.remove('correct','wrong');
+      inp.classList.add(ok?'correct':'wrong');
+      if(!ok)allOk=false;
+    });
+    if(anyEmpty){setFb(t.fbFillFirst,'neutral');return;}
+    S.answered=true;
+    if(!allOk){
+      gaps.forEach((line,i)=>{
+        const inp=document.getElementById('g'+i);
+        if(inp&&inp.classList.contains('wrong'))
+          setTimeout(()=>{inp.value=line.ans;inp.classList.remove('wrong');inp.classList.add('correct');},400);
+      });
+    }
+    showFeedback(allOk,allOk?t.fbAllOk:t.fbSomeWrong);
+  }
+}
+
+// FEEDBACK & SCORING
+function showFeedback(ok,msg){
+  if(ok){
+    S.correct++;S.streak++;
+    S.score+=10+(S.streak>1?(S.streak-1)*2:0);
+  }else{
+    S.streak=0;S.lives=Math.max(0,S.lives-1);
+  }
+  setFb(msg,ok?'ok':'bad');
+  document.getElementById('submitBtn').style.display='none';
+  document.getElementById('nextBtn').style.display='inline-block';
+  updateHeader();
+  if(S.lives===0)setTimeout(()=>showResults(true),1200);
+}
+function setFb(msg,cls){
+  const fm=document.getElementById('fbMsg');
+  fm.className='fb-msg '+cls;fm.textContent=msg;
+}
+
+// NEXT / RESULTS
+function nextQ(){
+  S.idx++;
+  if(S.idx>=getChallenges()[S.mode].length||S.lives===0)showResults(false);
+  else render();
+}
+function showResults(gameOver){
+  const t=T[LANG];
+  const total=getChallenges()[S.mode].length;
+  const pct=Math.round(S.correct/total*100);
+  let grade;
+  if(pct>=90)grade='S';else if(pct>=75)grade='A';else if(pct>=60)grade='B';
+  else if(pct>=40)grade='C';else grade='F';
+  document.getElementById('resGrade').textContent=gameOver?'☠':grade;
+  document.getElementById('resSub').textContent=gameOver?t.gameOverMsg:t.gradeMsgs[grade];
+  document.getElementById('resCorrect').textContent=S.correct;
+  document.getElementById('resTotal').textContent=total;
+  document.getElementById('resPct').textContent=pct+'%';
+  document.querySelector('.res-title').textContent=t.resTitle;
+  document.getElementById('lblCorrect').textContent=t.lblCorrect;
+  document.getElementById('lblTotal').textContent=t.lblTotal;
+  document.getElementById('lblAccuracy').textContent=t.lblAccuracy;
+  document.getElementById('btnGoBack').textContent=t.btnGoBack;
+  show('results');
+  // Wait for the last in-flight submit to commit, then pull authoritative totals.
+  // goBack() will also call refreshSelectLeaderboard() so the table is current
+  // by the time the user sees it.
+  setTimeout(syncScoreFromBackend, 600);
+}
+// API LAYER:connects to FastAPI backend
+// All client-side logic above still runs; this layer adds:
+//   - User auth (login / register modal)
+//   - Server-side submission recording
+//   - Leaderboard display
+// If the API is unreachable the app works offline (no score persistence).
+
+const API = {
+  base: '/api',
+  token: localStorage.getItem('kyber_token') || null,
+  csrf:  null,
+
+  headers() {
+    const h = { 'Content-Type': 'application/json' };
+    if (this.token)     h['Authorization']  = 'Bearer ' + this.token;
+    if (this.csrf)      h['X-CSRF-Token']   = this.csrf;
+    return h;
+  },
+
+  async post(path, body) {
+    try {
+      const r = await fetch(this.base + path, {
+        method: 'POST', headers: this.headers(),
+        credentials: 'include', body: JSON.stringify(body)
+      });
+      return { ok: r.ok, status: r.status, data: await r.json().catch(()=>({})) };
+    } catch(e) { return { ok: false, status: 0, data: {} }; }
+  },
+
+  async get(path) {
+    try {
+      const r = await fetch(this.base + path, {
+        headers: this.headers(), credentials: 'include'
+      });
+      return { ok: r.ok, status: r.status, data: await r.json().catch(()=>({})) };
+    } catch(e) { return { ok: false, status: 0, data: {} }; }
+  },
+
+  async login(username, password) {
+    const r = await this.post('/auth/login', { username, password });
+    if (r.ok && r.data.access_token) {
+      this.token = r.data.access_token;
+      localStorage.setItem('kyber_token', this.token);
+      // fetch CSRF token bound to session
+      const cr = await this.get('/auth/csrf-token');
+      if (cr.ok) this.csrf = cr.data.csrf_token;
+    }
+    return r;
+  },
+
+  async register(username, email, password) {
+    return await this.post('/auth/register', { username, email, password });
+  },
+
+  async logout() {
+    await this.post('/auth/logout', {});
+    this.token = null; this.csrf = null;
+    localStorage.removeItem('kyber_token');
+  },
+
+  async put(path, body) {
+    try {
+      const r = await fetch(this.base + path, {
+        method: 'PUT', headers: this.headers(),
+        credentials: 'include', body: JSON.stringify(body)
+      });
+      return { ok: r.ok, status: r.status, data: await r.json().catch(()=>({})) };
+    } catch(e) { return { ok: false, status: 0, data: {} }; }
+  },
+
+
+  async submitAnswer(mode, questionId, answer, streak) {
+    if (!this.token) return null; // offline:no-op
+    return await this.post('/challenges/submit', {
+      mode, question_id: questionId, answer, streak
+    });
+  },
+
+  async fetchLeaderboard(mode) {
+    const r = await this.get('/leaderboard/' + mode);
+    return r.ok ? r.data : [];
+  },
+
+  async fetchGlobalLeaderboard() {
+    const r = await this.get('/leaderboard/global');
+    return r.ok ? r.data : [];
+  },
+
+  isLoggedIn() { return !!this.token; }
+};
+
+// AUTH UI
+// Auth is handled by login.html:here we only update the header username display.
+function injectAuthUI() {
+  updateAuthBtn();
+}
+
+function updateAuthBtn() {
+  const el = document.getElementById('hUser');
+  if (!el) return;
+  if (API.isLoggedIn()) {
+    const u = localStorage.getItem('kyber_username') || 'USER';
+    el.textContent = u.toUpperCase() + ' [logout]';
+    el.style.color = 'var(--dim)';
+  } else {
+    el.textContent = '';
+  }
+}
+
+function doLogout() {
+  window.location.href = '/logout.html';
+}
+
+// MENU DROPDOWN
+function toggleMenu(e) {
+  if (e) e.stopPropagation();
+  const panel = document.getElementById('menuPanel');
+  const btn   = document.getElementById('menuBtn');
+  const open  = panel.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+
+function closeMenu() {
+  document.getElementById('menuPanel').classList.remove('open');
+  document.getElementById('menuBtn').classList.remove('open');
+}
+
+// Close menu when clicking anywhere outside it
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('menuWrap');
+  if (wrap && !wrap.contains(e.target)) closeMenu();
+});
+
+function menuSwitchLang() {
+  closeMenu();
+  switchLang();
+  // Update menu lang label to reflect the new toggle target
+  _updateMenuLang();
+}
+
+function _updateMenuLang() {
+  const t = T[LANG];
+  const set = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+  set('menuLangLabel',   t.langToggle);
+  set('menuLbLabel',     t.leaderboard);
+  set('menuPwdLabel',    t.menuChangePwd);
+  set('menuAboutLabel',  t.menuAbout);
+  set('lbOverlayTitle',  t.leaderboard);
+  set('pwdOverlayTitle', t.menuChangePwd);
+  set('pwdBtn',          t.menuChangePwd);
+  set('aboutRole',       t.aboutRole);
+  set('aboutTitle',      t.aboutTitle);
+}
+
+async function menuOpenLb() {
+  closeMenu();
+  const overlay = document.getElementById('lbOverlay');
+  const content = document.getElementById('lbOverlayContent');
+  overlay.classList.add('open');
+  content.innerHTML = '<div style="text-align:center;color:var(--dim);padding:24px;font-family:var(--mono);font-size:11px">Loading…</div>';
+  const rows = await API.fetchGlobalLeaderboard();
+  content.innerHTML = _buildLbTable(rows);
+}
+
+function closeLbOverlay(e) {
+  // If called from overlay click, only close if clicking the backdrop (not the box)
+  if (e && e.target !== document.getElementById('lbOverlay')) return;
+  document.getElementById('lbOverlay').classList.remove('open');
+}
+
+function _buildLbTable(rows) {
+  if (!Array.isArray(rows) || !rows.length) {
+    return '<div style="text-align:center;color:var(--dim);padding:24px;font-family:var(--mono);font-size:11px">No scores yet.</div>';
+  }
+  const myName = localStorage.getItem('kyber_username');
+  let html = `<table class="lb-table">
+    <tr>
+      <th>RANK</th><th>PLAYER</th>
+      <th style="text-align:right">SCORE</th>
+      <th style="text-align:right">CORRECT</th>
+    </tr>`;
+  rows.forEach(r => {
+    const isMe = r.username === myName;
+    const col  = isMe ? 'color:var(--accent2)' : '';
+    html += `<tr style="${col}">
+      <td>#${r.rank}</td>
+      <td>${r.username}${isMe ? ' ◀' : ''}</td>
+      <td style="text-align:right;color:var(--accent)">${r.total_score}</td>
+      <td style="text-align:right">${r.total_correct}</td>
+    </tr>`;
+  });
+  return html + '</table>';
+}
+
+// CHANGE PASSWORD
+function menuOpenChangePwd() {
+  closeMenu();
+  ['pwdCurrent','pwdNew','pwdConfirm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const msg = document.getElementById('pwdMsg');
+  if (msg) { msg.textContent = ''; msg.style.color = 'var(--danger)'; }
+  document.getElementById('pwdOverlay').classList.add('open');
+  setTimeout(() => { const el = document.getElementById('pwdCurrent'); if(el) el.focus(); }, 50);
+}
+
+function closePwdOverlay(e) {
+  if (e && e.target !== document.getElementById('pwdOverlay')) return;
+  document.getElementById('pwdOverlay').classList.remove('open');
+}
+
+function menuOpenAbout() {
+  closeMenu();
+  document.getElementById('aboutOverlay').classList.add('open');
+}
+
+function closeAboutOverlay(e) {
+  if (e && e.target !== document.getElementById('aboutOverlay')) return;
+  document.getElementById('aboutOverlay').classList.remove('open');
+}
+
+async function doChangePwd() {
+  const current = document.getElementById('pwdCurrent').value;
+  const newPwd  = document.getElementById('pwdNew').value;
+  const confirm = document.getElementById('pwdConfirm').value;
+  const msg     = document.getElementById('pwdMsg');
+  const btn     = document.getElementById('pwdBtn');
+
+  msg.style.color = 'var(--danger)';
+  msg.textContent = '';
+
+  if (!current || !newPwd || !confirm) { msg.textContent = 'All fields are required.'; return; }
+  if (newPwd !== confirm)              { msg.textContent = 'New passwords do not match.'; return; }
+  if (newPwd.length < 8)              { msg.textContent = 'New password must be at least 8 characters.'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'UPDATING…';
+
+  const r = await API.put('/users/me/password', {
+    current_password: current,
+    new_password: newPwd,
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'UPDATE PASSWORD';
+
+  if (r.ok) {
+    msg.style.color = 'var(--accent2)';
+    msg.textContent = 'Password changed successfully.';
+    setTimeout(() => closePwdOverlay(), 1800);
+  } else {
+    msg.textContent = r.data.detail || 'Failed to change password.';
+  }
+}
+
+// LEADERBOARD ON SELECT SCREEN
+function _renderSelectLeaderboard(rows) {
+  const sec = document.getElementById('lbSection');
+  if (!sec) return;
+  if (!Array.isArray(rows) || !rows.length) {
+    sec.innerHTML = '<div style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--dim);padding:20px">No scores yet. Complete a level to appear here.</div>';
+    return;
+  }
+  const myName = localStorage.getItem('kyber_username');
+  let html = `<div style="font-family:var(--head);font-size:12px;letter-spacing:3px;color:var(--accent);text-align:center;margin-bottom:16px;opacity:.7">LEADERBOARD</div>
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px">
+    <tr style="color:var(--dim);border-bottom:1px solid var(--border)">
+      <th style="padding:6px 10px;text-align:left;font-weight:normal">RANK</th>
+      <th style="padding:6px 10px;text-align:left;font-weight:normal">PLAYER</th>
+      <th style="padding:6px 10px;text-align:right;font-weight:normal">SCORE</th>
+      <th style="padding:6px 10px;text-align:right;font-weight:normal">CORRECT</th>
+    </tr>`;
+  rows.forEach(r => {
+    const isMe = r.username === myName;
+    const col = isMe ? 'var(--accent2)' : 'var(--text)';
+    html += `<tr style="border-bottom:1px solid rgba(14,42,58,.5);color:${col}">
+      <td style="padding:8px 10px">#${r.rank}</td>
+      <td style="padding:8px 10px">${r.username}${isMe?' ◀':''}</td>
+      <td style="padding:8px 10px;text-align:right;color:var(--accent)">${r.total_score}</td>
+      <td style="padding:8px 10px;text-align:right">${r.total_correct}</td>
+    </tr>`;
+  });
+  html += '</table>';
+  sec.innerHTML = html;
+}
+
+async function refreshSelectLeaderboard() {
+  const sec = document.getElementById('lbSection');
+  if (!sec || !API.isLoggedIn()) { if(sec) sec.innerHTML=''; return; }
+  sec.innerHTML = '<div style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--dim);padding:20px">Loading…</div>';
+  const rows = await API.fetchGlobalLeaderboard();
+  _renderSelectLeaderboard(rows);
+}
+
+// HOOK INTO showFeedback
+// Wrap showFeedback: post answer to backend, update score + leaderboard from response
+const _origShowFeedback = showFeedback;
+showFeedback = async function(ok, msg) {
+  _origShowFeedback(ok, msg);
+  if (!API.isLoggedIn() || !S.mode) return;
+  const ch = getChallenges()[S.mode][S.idx];
+  if (!ch) return;
+  let answerPayload = '';
+  if (ch.type === 'btns') {
+    answerPayload = String(S.selectedOpt ?? ch.cor);
+  } else if (ch.type === 'duo') {
+    const inp = document.getElementById('duoIn');
+    answerPayload = inp ? inp.value.trim() : ch.ans;
+  } else if (ch.type === 'gaps') {
+    const gaps = (ch.tmpl||[]).filter(l=>l&&l.t==='gap');
+    answerPayload = JSON.stringify(gaps.map((_,i) => {
+      const el = document.getElementById('g'+i);
+      return el ? el.value.trim() : '';
+    }));
+  }
+  try {
+    const result = await API.submitAnswer(S.mode, S.idx, answerPayload, S.streak);
+    if (result && result.ok) {
+      const d = result.data;
+
+      // If this question was already answered correctly, the backend awards 0 pts.
+      // Override the local feedback message so the user knows why.
+      if (d.already_correct && d.correct) {
+        setFb('✓ Already answered correctly — 0 pts awarded.', 'ok');
+        // Also undo the local score increment for this answer (backend is authoritative)
+        S.score -= (10 + (S.streak > 1 ? (S.streak - 1) * 2 : 0));
+      }
+
+      if (d.correct) {
+        // Backend score is authoritative — sync it
+        _baseScore = d.total_score || _baseScore;
+        S.score = 0;
+        localStorage.setItem('kyber_total_score', _baseScore);
+        updateHeader();
+      }
+
+      // Level completed for the first time (or repeated)
+      if (d.completed) {
+        _setModeCompleted(S.mode);
+        buildDiffGrid(); // refresh cards to show ✓ badge
+        if (d.correct) {
+          // Brief delay so the answer feedback is visible first
+          setTimeout(() => showLevelComplete(getLabels()[S.mode]), 800);
+        }
+      }
+
+      // Refresh leaderboard from response (no extra API call)
+      if (Array.isArray(d.leaderboard)) {
+        _renderSelectLeaderboard(d.leaderboard);
+        const overlay = document.getElementById('lbOverlay');
+        if (overlay && overlay.classList.contains('open')) {
+          const content = document.getElementById('lbOverlayContent');
+          if (content) content.innerHTML = _buildLbTable(d.leaderboard);
+        }
+      }
+    }
+  } catch(e) {}
+};
+
+// SCORE SYNC
+// Fetch authoritative score from /users/me (works even on fresh DB after volume wipe)
+// then separately fetch + render the leaderboard.
+async function syncScoreFromBackend() {
+  if (!API.isLoggedIn()) return;
+
+  // 1. Get own score:authoritative, does not depend on leaderboard top-N
+  const me = await API.get('/users/me');
+  if (me.ok) {
+    const total = me.data.stats?.total_score ?? 0;
+    _baseScore = total;
+    S.score = 0;
+    localStorage.setItem('kyber_total_score', total);
+    document.cookie = `kyber_score=${total}; path=/; samesite=lax; max-age=${30 * 86400}`;
+  }
+  updateHeader();
+
+  // 2. Fetch completion status for all modes and sync localStorage badges
+  const MODES = ['veryeasy','easy','medium','hard','veryhard','insane'];
+  await Promise.all(MODES.map(async mode => {
+    try {
+      const r = await API.get('/challenges/progress/' + mode);
+      if (r.ok && r.data.completed) _setModeCompleted(mode);
+    } catch(e) {}
+  }));
+  buildDiffGrid(); // re-render cards with up-to-date badges
+
+  // 3. Fetch + render leaderboard
+  const rows = await API.fetchGlobalLeaderboard();
+  _renderSelectLeaderboard(Array.isArray(rows) ? rows : []);
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+  if (!API.token) {
+    // Not authenticated:send to login page
+    window.location.replace('/login.html');
+    return;
+  }
+  injectAuthUI();
+  applyLang();
+  updateHeader(); // paint stored score immediately (from cookie/localStorage) before API round-trip
+  API.get('/auth/csrf-token').then(r => { if(r.ok) API.csrf = r.data.csrf_token; });
+  syncScoreFromBackend(); // verify with backend + render leaderboard (async, updates header again)
+});
+
+</script>
+</body>
+</html>

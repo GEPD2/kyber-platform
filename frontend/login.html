@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRYSTALS-Kyber — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050a0f;--panel:#0a1520;--border:#0e2a3a;
+  --accent:#00d4ff;--accent2:#00ff88;--danger:#ef233c;
+  --text:#c8d8e8;--dim:#4a6070;
+  --glow:0 0 20px rgba(0,212,255,.35);
+  --mono:'Share Tech Mono',monospace;--head:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;}
+body::before{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.015) 2px,rgba(0,212,255,.015) 4px);
+  pointer-events:none;z-index:9999}
+
+.logo{text-align:center;margin-bottom:36px}
+.logo-title{font-family:var(--head);font-size:22px;font-weight:900;letter-spacing:4px;
+  color:var(--accent);text-shadow:var(--glow)}
+.logo-sub{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px;margin-top:4px}
+
+.card{background:var(--panel);border:1px solid var(--border);padding:40px 44px;width:380px;max-width:95vw;position:relative}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+
+.card-title{font-family:var(--head);font-size:13px;letter-spacing:3px;color:var(--accent);margin-bottom:24px}
+.error-msg{font-family:var(--mono);font-size:11px;color:var(--danger);margin-bottom:12px;min-height:16px}
+.field{width:100%;background:#060d14;border:1px solid var(--border);color:var(--text);
+  font-family:var(--mono);font-size:13px;padding:11px 14px;outline:none;margin-bottom:12px;
+  box-sizing:border-box;transition:border-color .2s}
+.field:focus{border-color:var(--accent)}
+.btn-primary{width:100%;padding:12px;border:1px solid var(--accent);background:transparent;
+  color:var(--accent);font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:2px;
+  cursor:pointer;transition:all .2s;margin-bottom:12px}
+.btn-primary:hover{background:rgba(0,212,255,.1)}
+.btn-toggle{width:100%;padding:9px;border:1px solid var(--border);background:transparent;
+  color:var(--dim);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .2s}
+.btn-toggle:hover{color:var(--text);border-color:var(--dim)}
+</style>
+</head>
+<body>
+
+<div class="logo">
+  <div class="logo-title">CRYSTALS-KYBER</div>
+  <div class="logo-sub">Post-Quantum Cryptography Training System</div>
+</div>
+
+<div class="card">
+  <div class="card-title" id="cardTitle">LOGIN</div>
+  <div class="error-msg" id="errMsg"></div>
+  <div id="regFields" style="display:none">
+    <input id="fEmail" class="field" type="email" placeholder="email" autocomplete="email">
+  </div>
+  <input id="fUser" class="field" type="text" placeholder="username" autocomplete="username">
+  <input id="fPass" class="field" type="password" placeholder="password" autocomplete="current-password">
+  <button class="btn-primary" id="btnSubmit" onclick="doAuth()">LOGIN</button>
+  <button class="btn-toggle" onclick="toggleMode()"><span id="toggleLabel">No account? Register</span></button>
+</div>
+
+<script>
+// If already authenticated redirect straight to game
+if (localStorage.getItem('kyber_token')) {
+  window.location.replace('/main.html');
+}
+
+let _mode = 'login'; // 'login' | 'register'
+
+function toggleMode() {
+  _mode = _mode === 'login' ? 'register' : 'login';
+  const isReg = _mode === 'register';
+  document.getElementById('cardTitle').textContent  = isReg ? 'REGISTER' : 'LOGIN';
+  document.getElementById('btnSubmit').textContent  = isReg ? 'REGISTER' : 'LOGIN';
+  document.getElementById('toggleLabel').textContent = isReg ? 'Have an account? Login' : 'No account? Register';
+  document.getElementById('regFields').style.display = isReg ? 'block' : 'none';
+  document.getElementById('errMsg').textContent = '';
+}
+
+// Allow Enter key to submit
+document.addEventListener('keydown', e => { if(e.key==='Enter') doAuth(); });
+
+async function doAuth() {
+  const user  = document.getElementById('fUser').value.trim();
+  const pass  = document.getElementById('fPass').value;
+  const err   = document.getElementById('errMsg');
+  err.textContent = '';
+
+  if (_mode === 'register') {
+    const email = document.getElementById('fEmail').value.trim();
+    if (!user || !email || !pass) { err.textContent = 'All fields are required.'; return; }
+    const r = await apiPost('/api/auth/register', { username: user, email, password: pass });
+    if (!r.ok) { err.textContent = r.data.detail || 'Registration failed.'; return; }
+    _mode = 'login'; // auto-proceed to login
+  }
+
+  if (!user || !pass) { err.textContent = 'Username and password required.'; return; }
+  const r = await apiPost('/api/auth/login', { username: user, password: pass });
+  if (!r.ok) { err.textContent = r.data.detail || 'Login failed.'; return; }
+
+  // Store token + username, then fetch CSRF and go to game
+  localStorage.setItem('kyber_token',    r.data.access_token);
+  localStorage.setItem('kyber_username', user);
+
+  const cr = await apiGet('/api/auth/csrf-token', r.data.access_token);
+  if (cr.ok) {
+    // CSRF is stored transiently; main.html will re-fetch it on load
+  }
+
+  window.location.replace('/main.html');
+}
+
+async function apiPost(path, body) {
+  try {
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body)
+    });
+    return { ok: res.ok, data: await res.json().catch(()=>({})) };
+  } catch(e) { return { ok: false, data: {} }; }
+}
+
+async function apiGet(path, token) {
+  try {
+    const h = { 'Content-Type': 'application/json' };
+    if (token) h['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(path, { headers: h, credentials: 'include' });
+    return { ok: res.ok, data: await res.json().catch(()=>({})) };
+  } catch(e) { return { ok: false, data: {} }; }
+}
+</script>
+</body>
+</html>
