@@ -1,0 +1,77 @@
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+
+Copyright (c) 2026 Georgios Efthymiou
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+Why AGPL-3.0?
+
+The kyber-platform runs as a network service (HTTPS). Standard GPL allows
+modified versions to be run as a service without releasing source changes.
+The AGPL closes this loophole: if you deploy a modified version of this
+platform — even over a network — you must make the complete modified source
+code available to users of that service under the same license.
+
+This ensures that improvements to the educational platform remain open and
+available to the community.
+
+---
+
+Additional Terms — Scope of the License
+
+This license applies to:
+
+  - The FastAPI backend (auth.py, challenges.py, leaderboard.py,
+    answer_validator.py, challenge_store.py, rate_limit.py, security.py)
+  - The NGINX configuration (nginx.conf, app.conf)
+  - The Docker orchestration (docker-compose.yml, Dockerfile)
+  - The database schema (01_schema.sql)
+  - The static frontend (index.html, login.html, main.html)
+  - All shell scripts (start.sh, stop.sh, backup.sh,
+    enable_tls.sh, disable_tls.sh)
+
+The cryptographic challenge content (questions, worked examples, and
+answer keys) is NOT covered by this license. All challenge content is
+© 2026 Georgios Efthymiou — All Rights Reserved. You may not reproduce,
+distribute, or create derivative works from the challenge content without
+explicit written permission.
+
+---
+
+Deployment Notice
+
+If you deploy this platform publicly, you must:
+
+  1. Display a link to the complete source code in the platform UI.
+  2. Retain all copyright notices and this license file.
+  3. License any modifications under AGPLv3 or a compatible license.
+  4. Not remove or obscure any attribution to the original author.
+
+---
+
+No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+For the full AGPL-3.0 license text see:
+https://www.gnu.org/licenses/agpl-3.0.txt
