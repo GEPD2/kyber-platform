@@ -1,7 +1,7 @@
 # CRYSTALS-Kyber Training Platform
 
 Post-Quantum Cryptography training application.  
-Six difficulty levels — from Duolingo-style arithmetic to raw C KEM implementation.
+Six difficulty levels from Duolingo-style arithmetic to raw C KEM implementation.
 
 ## Stack
 
