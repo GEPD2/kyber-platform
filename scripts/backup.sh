@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  backup.sh — dump MySQL data to a timestamped .sql.gz file
+#  backup.sh, dump MySQL data to a timestamped .sql.gz file
 #  Usage:  ./scripts/backup.sh [output_dir]
 #  Default output dir: ./backups/
 # ─────────────────────────────────────────────────────────────────────────────

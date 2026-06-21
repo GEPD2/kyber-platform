@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-#  HTTP virtual host — active when TLS_ENABLED=false
+#  HTTP virtual host, active when TLS_ENABLED=false
 #  To enable HTTPS: replace this with app_tls.conf (rename files)
 # ─────────────────────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 """
-SecurityHeadersMiddleware — adds security response headers to every reply.
+SecurityHeadersMiddleware, adds security response headers to every reply.
 These mirror what Nginx also sets, giving defence-in-depth.
 """
 

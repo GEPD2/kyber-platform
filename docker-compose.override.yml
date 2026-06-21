@@ -1,6 +1,6 @@
-#  docker-compose.override.yml — development overrides
+#  docker-compose.override.yml, development overrides
 #  This file is loaded automatically alongside docker-compose.yml in dev.
-#  Do NOT use in production — it removes :ro mounts and enables hot-reload.
+#  Do NOT use in production, it removes :ro mounts and enables hot-reload.
 #  In production: docker compose -f docker-compose.yml up -d
 services:
   backend:

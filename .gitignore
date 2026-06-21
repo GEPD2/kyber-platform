@@ -1,7 +1,7 @@
-# Environment — NEVER commit secrets
+# Environment, NEVER commit secrets
 .env
 
-# TLS certificates — NEVER commit private keys
+# TLS certificates, NEVER commit private keys
 nginx/certs/*.pem
 nginx/certs/*.key
 nginx/certs/*.crt

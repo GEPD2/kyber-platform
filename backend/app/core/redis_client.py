@@ -1,5 +1,5 @@
 """
-Async Redis client — singleton pattern.
+Async Redis client, singleton pattern.
 Used by: rate limiter, session store, refresh token blacklist.
 """
 

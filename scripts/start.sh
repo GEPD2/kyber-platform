@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  start.sh — build and start all services
+#  start.sh, build and start all services
 #  Usage:  ./scripts/start.sh          (first run: builds images)
 #          ./scripts/start.sh --build  (force image rebuild)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ fi
 for key in SECRET_KEY JWT_SECRET MYSQL_ROOT_PASSWORD MYSQL_PASSWORD REDIS_PASSWORD; do
   val=$(grep "^${key}=" .env | cut -d= -f2-)
   if [[ "$val" == *"CHANGE_ME"* ]]; then
-    echo "[WARN] ${key} still has placeholder value — replace it in .env"
+    echo "[WARN] ${key} still has placeholder value, replace it in .env"
   fi
 done
 

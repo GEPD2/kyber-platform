@@ -1,5 +1,5 @@
 """
-Alembic environment — uses the same SQLAlchemy models as the app.
+Alembic environment, uses the same SQLAlchemy models as the app.
 Run:  docker compose exec backend alembic upgrade head
 """
 import asyncio

@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-#  TLS 1.3 virtual host — rename to app.conf when certs are ready
+#  TLS 1.3 virtual host, rename to app.conf when certs are ready
 #  Certs expected at:
 #    /etc/nginx/certs/fullchain.pem
 #    /etc/nginx/certs/privkey.pem
@@ -25,12 +25,12 @@ server {
     ssl_protocols             TLSv1.3;
     ssl_prefer_server_ciphers off;
 
-    # TLS 1.3 does not need explicit cipher list — it has its own mandatory set:
+    # TLS 1.3 does not need explicit cipher list, it has its own mandatory set:
     #   TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256
     # The line below is for nginx TLS 1.3 session tickets:
     ssl_session_timeout       1d;
     ssl_session_cache         shared:SSL:10m;
-    ssl_session_tickets       off;   # disable — use session IDs instead
+    ssl_session_tickets       off;   # disable, use session IDs instead
 
     # HSTS: tell browsers to only use HTTPS for 1 year
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;

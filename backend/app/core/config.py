@@ -1,7 +1,7 @@
 """
 Application settings loaded from environment variables via pydantic-settings.
 
-ALLOWED_ORIGINS is declared as a plain str and split manually — pydantic-settings
+ALLOWED_ORIGINS is declared as a plain str and split manually, pydantic-settings
 tries to JSON-parse List[str] fields, which breaks comma-separated env values.
 """
 import secrets

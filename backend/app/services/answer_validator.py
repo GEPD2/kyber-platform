@@ -1,6 +1,6 @@
 """
 Server-side answer validator.
-The correct answers for every question live only here — never sent to the browser.
+The correct answers for every question live only here, never sent to the browser.
 The frontend sends the user's answer to POST /api/challenges/submit,
 and this module does the comparison.
 
@@ -16,8 +16,8 @@ from typing import Any
 def validate_answer(challenge: dict, raw_answer: str) -> bool:
     """
     Returns True if raw_answer matches the correct answer for this challenge.
-    challenge  — dict from CHALLENGE_DATA (includes correct answer fields)
-    raw_answer — sanitised string from the client
+    challenge, dict from CHALLENGE_DATA (includes correct answer fields)
+    raw_answer, sanitised string from the client
     """
     qtype = challenge.get("type")
 

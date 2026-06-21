@@ -21,7 +21,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 
-# Lazy singletons — built on first use, not at import time
+# Lazy singletons, built on first use, not at import time
 
 @lru_cache(maxsize=1)
 def _pwd_context() -> CryptContext:
@@ -120,7 +120,7 @@ def verify_csrf_token(token: str, session_id: str) -> bool:
 
 # Game-session cookie
 
-_SESSION_MAX_AGE = 7 * 86400  # 7 days — matches REFRESH_TOKEN_EXPIRE_DAYS
+_SESSION_MAX_AGE = 7 * 86400  # 7 days, matches REFRESH_TOKEN_EXPIRE_DAYS
 
 
 def sign_session_cookie(user_id: str) -> str:

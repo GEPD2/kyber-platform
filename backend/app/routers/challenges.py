@@ -1,14 +1,14 @@
 """
-Challenges router — /api/challenges/*
+Challenges router, /api/challenges/*
 
 IMPORTANT: FastAPI matches routes in declaration order.
 /submit and /progress/* must come BEFORE /{mode} to avoid being swallowed
 as path-parameter values.
 
 Routes:
-  POST /api/challenges/submit          — validate answer, record submission
-  GET  /api/challenges/progress/{mode} — user's answered questions for a mode
-  GET  /api/challenges/{mode}          — question metadata (no correct answers)
+  POST /api/challenges/submit, validate answer, record submission
+  GET  /api/challenges/progress/{mode}, user's answered questions for a mode
+  GET  /api/challenges/{mode}, question metadata (no correct answers)
 """
 
 from datetime import datetime, timezone
@@ -72,7 +72,7 @@ class SubmitResponse(BaseModel):
     already_correct: bool  # True when this question was already answered correctly before
 
 
-# Endpoints — fixed order (specific before parametric)
+# Endpoints, fixed order (specific before parametric)
 
 @router.post("/submit", response_model=SubmitResponse)
 async def submit_answer(
@@ -218,11 +218,11 @@ async def submit_answer(
     )
 
     if already_correct and correct:
-        message = "Already answered correctly — no points awarded."
+        message = "Already answered correctly, no points awarded."
     elif correct:
         message = "Correct! Level complete!" if level_completed else "Correct!"
     else:
-        message = "Wrong — review the theory."
+        message = "Wrong, review the theory."
 
     return SubmitResponse(
         correct=correct,
@@ -288,7 +288,7 @@ async def get_challenges(
     user: User = Depends(get_current_user),
 ):
     """
-    Return question metadata for a mode — type info only, NO correct answers.
+    Return question metadata for a mode, type info only, NO correct answers.
     The frontend already holds all question text client-side.
     """
     if mode not in VALID_MODES:

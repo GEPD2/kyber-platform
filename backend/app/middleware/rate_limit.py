@@ -1,7 +1,7 @@
 """
 Redis-backed sliding window rate limiter middleware.
 Limits requests per IP. Auth and submit endpoints have tighter limits
-(those are also limited at Nginx level — this is the backend defence-in-depth).
+(those are also limited at Nginx level, this is the backend defence-in-depth).
 """
 
 import time

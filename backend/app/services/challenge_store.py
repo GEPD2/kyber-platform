@@ -1,5 +1,5 @@
 """
-Challenge store — all question data with correct answers lives here.
+Challenge store, all question data with correct answers lives here.
 The API strips answers before sending to the browser.
 VALID_MODES matches all 6 difficulty levels in the frontend.
 """
@@ -7,7 +7,7 @@ from typing import Any
 
 VALID_MODES = {"veryeasy", "easy", "medium", "hard", "veryhard", "insane"}
 
-# Correct answers only — the minimal server-side truth needed for validation.
+# Correct answers only, the minimal server-side truth needed for validation.
 # The full question text, theory, and templates are kept in the frontend JS.
 # The backend only needs: type, correct/ans/gaps fields.
 
@@ -85,12 +85,12 @@ ANSWER_KEYS: dict[str, list[dict]] = {
   {"type":"gaps","gaps":["inv_roots","q"]},
   {"type":"gaps","gaps":["0","row","acc","row"]},
   {"type":"gaps","gaps":["0","i"]},
-  {"type":"gaps","gaps":["j","rr","row","row"]},
+  {"type":"gaps","gaps":["j","rr","row"]},
   {"type":"gaps","gaps":["c","tTr","i"]},
   {"type":"gaps","gaps":["roots","j","stu","stu_n[i]"]},
-  {"type":"gaps","gaps":["c","q","d0"]},
-  {"type":"gaps","gaps":["N","psi","Q","2","N"]},
-  {"type":"gaps","gaps":["ROOTS","Q"]},
+  {"type":"gaps","gaps":["c","q","dq2"]},
+  {"type":"gaps","gaps":["N","psi","2","N","N"]},
+  {"type":"gaps","gaps":["ROOTS","Q","A"]},
   {"type":"gaps","gaps":["Q","MSG"]},
 ],
 
@@ -98,7 +98,7 @@ ANSWER_KEYS: dict[str, list[dict]] = {
   {"type":"gaps","gaps":["mod","exp","b","exp"]},
   {"type":"gaps","gaps":["i","p","(b[2]+b[3])","q"]},
   {"type":"gaps","gaps":["len(a)","n","[::-1]","rev"]},
-  {"type":"gaps","gaps":["poly","2","length","2","length","step","t","<<=1"]},
+  {"type":"gaps","gaps":["poly","2","length","2","length","step","s","<<=1"]},
   {"type":"gaps","gaps":["inv_roots","n_inv"]},
   {"type":"gaps","gaps":["x","a"]},
   {"type":"gaps","gaps":["n","col","p","row"]},
@@ -119,44 +119,48 @@ ANSWER_KEYS: dict[str, list[dict]] = {
   {"type":"gaps","gaps":["U0","U1","V"]},
   {"type":"gaps","gaps":["DECODED"]},
   {"type":"gaps","gaps":["i","n","Q"]},
-  {"type":"gaps","gaps":["i"]},
   {"type":"gaps","gaps":["[0,0]","[2,0]"]},
   {"type":"gaps","gaps":["sn","ROOTS","N_INV","MSG"]},
+  {"type":"gaps","gaps":["i"]},
 ],
 
+# INSANE (32 C fill-the-gap), rebuilt on the canonical kyber_fips203_update.c
+# (plain % q, normal-domain zetas, real names). Order mirrors that file
+# top-to-bottom: primitives -> K-PKE -> ML-KEM. Keep in lock-step with the
+# frontend INS array in frontend/main.html (same order, same gap answers).
 "insane": [
-  {"type":"gaps","gaps":["20159","KYBER_Q"]},
-  {"type":"gaps","gaps":["QINV","16"]},
-  {"type":"gaps","gaps":["coeffs","vec"]},
-  {"type":"gaps","gaps":["b->coeffs[i]"]},
-  {"type":"gaps","gaps":["b->coeffs[i]"]},
-  {"type":"gaps","gaps":["k++","j+len","j"]},
-  {"type":"gaps","gaps":["F"]},
-  {"type":"gaps","gaps":["a","b","b","b"]},
-  {"type":"gaps","gaps":["r","r","r"]},
-  {"type":"gaps","gaps":["vec"]},
-  {"type":"gaps","gaps":["0","i","r"]},
-  {"type":"gaps","gaps":["coeffs"]},
-  {"type":"gaps","gaps":["KYBER_Q","0xf"]},
-  {"type":"gaps","gaps":["8","8"]},
-  {"type":"gaps","gaps":["0x55555555","0x55555555","0x3","2","b"]},
-  {"type":"gaps","gaps":["seed","i","j"]},
-  {"type":"gaps","gaps":["seed","nonce","&skpv"]},
-  {"type":"gaps","gaps":["0","e1.vec[0]","0"]},
-  {"type":"gaps","gaps":["&bp","skpv","mp","m"]},
-  {"type":"gaps","gaps":["t","KYBER_Q","j"]},
-  {"type":"gaps","gaps":["j","2"]},
-  {"type":"gaps","gaps":["pk","pk","KYBER_SYMBYTES"]},
-  {"type":"gaps","gaps":["buf","buf","ct","ct","ss"]},
-  {"type":"gaps","gaps":["buf","kr","cmp","ss"]},
-  {"type":"gaps","gaps":["b[i]","8","b[i]"]},
+  {"type":"gaps","gaps":["3329","KYBER_N"]},
+  {"type":"gaps","gaps":["i+20","1"]},
   {"type":"gaps","gaps":["i"]},
-  {"type":"gaps","gaps":["i"]},
+  {"type":"gaps","gaps":["2","r"]},
+  {"type":"gaps","gaps":["rate","0"]},
+  {"type":"gaps","gaps":["domain","0x80"]},
+  {"type":"gaps","gaps":["168","72"]},
+  {"type":"gaps","gaps":["128","2*len"]},
   {"type":"gaps","gaps":["KYBER_Q","KYBER_Q"]},
-  {"type":"gaps","gaps":["pk","seed"]},
-  {"type":"gaps","gaps":["b","v"]},
-  {"type":"gaps","gaps":["i"]},
-  {"type":"gaps","gaps":["seed","nonce","buf"]},
+  {"type":"gaps","gaps":["127","128"]},
+  {"type":"gaps","gaps":["N_INV"]},
+  {"type":"gaps","gaps":["64","KYBER_Q"]},
+  {"type":"gaps","gaps":["KYBER_Q","KYBER_Q"]},
+  {"type":"gaps","gaps":["rho","R"]},
+  {"type":"gaps","gaps":["KYBER_Q","KYBER_N"]},
+  {"type":"gaps","gaps":["j","j","b"]},
+  {"type":"gaps","gaps":["nonce","eta"]},
+  {"type":"gaps","gaps":["KYBER_Q","d"]},
+  {"type":"gaps","gaps":["1","7"]},
+  {"type":"gaps","gaps":["d","KYBER_Q"]},
+  {"type":"gaps","gaps":["t","d"]},
+  {"type":"gaps","gaps":["SEED_BYTES","CT_C2_BYTES"]},
+  {"type":"gaps","gaps":["sha3_512","sigma","e[i]"]},
+  {"type":"gaps","gaps":["tmp","e[i]","rho"]},
+  {"type":"gaps","gaps":["i","e1[i]"]},
+  {"type":"gaps","gaps":["mu","KYBER_DV"]},
+  {"type":"gaps","gaps":["tmp","v","1"]},
+  {"type":"gaps","gaps":["ek","sha3_256","z"]},
+  {"type":"gaps","gaps":["32","sha3_512","32"]},
+  {"type":"gaps","gaps":["h","mp"]},
+  {"type":"gaps","gaps":["Kbar","Kr"]},
+  {"type":"gaps","gaps":["SS_BYTES","SS_BYTES"]},
 ],
 
 }
@@ -171,7 +175,7 @@ def _strip_answers(ch: dict) -> dict:
 def get_mode_meta(mode: str) -> dict:
     """Public: return question count and answer-stripped questions."""
     items = ANSWER_KEYS.get(mode, [])
-    # Return minimal metadata — browser already has full question text
+    # Return minimal metadata, browser already has full question text
     return {
         "mode":  mode,
         "total": len(items),

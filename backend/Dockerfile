@@ -1,4 +1,4 @@
-#  Backend Dockerfile — FastAPI / Python 3.11
+#  Backend Dockerfile, FastAPI / Python 3.11
 #  Multi-stage: builder compiles C extensions, runtime has no build tools.
 #  Runs as non-root appuser (UID 1001).
 

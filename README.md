@@ -1,26 +1,27 @@
 # CRYSTALS-Kyber Training Platform
 
-Post-Quantum Cryptography training application.  
-Six difficulty levels from Duolingo-style arithmetic to raw C KEM implementation.
+Post-Quantum Cryptography training application.
+Six difficulty levels, from Duolingo-style arithmetic to a raw C KEM
+implementation, with 123 questions in total.
 
 ## Stack
 
-| Service  | Image              | Role                              |
-|----------|--------------------|-----------------------------------|
-| nginx    | nginx:1.25-alpine  | Reverse proxy + static frontend   |
-| backend  | python:3.11-slim   | FastAPI — auth, answers, scoring  |
-| mysql    | mysql:8.0          | Users, submissions, leaderboard   |
-| redis    | redis:7-alpine     | Rate limiting + session store     |
+| Service  | Image              | Role                               |
+|----------|--------------------|------------------------------------|
+| nginx    | nginx:1.25-alpine  | Reverse proxy and static frontend  |
+| backend  | python:3.11-slim   | FastAPI for auth, answers, scoring |
+| mysql    | mysql:8.0          | Users, submissions, leaderboard    |
+| redis    | redis:7-alpine     | Rate limiting and session store    |
 
 ## Quick Start
 
 ```bash
-# 1. Clone / extract the project
+# 1. Clone or extract the project
 cd kyber-platform
 
 # 2. Create your .env
 cp .env.example .env
-# Edit .env — replace every CHANGE_ME value with real secrets:
+# Edit .env and replace every CHANGE_ME value with real secrets:
 #   python3 -c "import secrets; print(secrets.token_hex(32))"
 
 # 3. Start (builds images on first run)
@@ -38,13 +39,16 @@ kyber-platform/
 ├── README.md
 │
 ├── frontend/
-│   └── index.html              # Complete single-file training app
+│   ├── index.html              # Redirect to the login page
+│   ├── login.html              # Login and registration page
+│   ├── logout.html             # Logout page
+│   └── main.html               # Complete single-file training app (all six levels)
 │
 ├── backend/
 │   ├── Dockerfile              # Multi-stage, non-root (UID 1001)
 │   ├── requirements.txt
 │   └── app/
-│       ├── main.py             # FastAPI app + middleware stack
+│       ├── main.py             # FastAPI app and middleware stack
 │       ├── core/
 │       │   ├── config.py       # Settings from environment
 │       │   ├── database.py     # Async SQLAlchemy (aiomysql)
@@ -79,48 +83,48 @@ kyber-platform/
 │       └── 01_schema.sql       # Tables created on first boot
 │
 └── scripts/
-    ├── start.sh                # Build + start all services
+    ├── start.sh                # Build and start all services
     ├── stop.sh                 # Stop (preserves volumes)
-    ├── enable_tls.sh           # Swap HTTP → TLS 1.3 config
-    └── disable_tls.sh          # Revert TLS → HTTP
+    ├── enable_tls.sh           # Swap the HTTP config for TLS 1.3
+    └── disable_tls.sh          # Revert TLS back to HTTP
 ```
 
 ## API Endpoints
 
 ```
-POST /api/auth/register          — create account
-POST /api/auth/login             — returns access_token + sets refresh cookie
-POST /api/auth/logout            — revokes refresh token
-POST /api/auth/refresh           — new access_token from refresh cookie
-GET  /api/auth/csrf-token        — get CSRF token for state-changing requests
+POST /api/auth/register          create account
+POST /api/auth/login             returns access_token, sets refresh cookie
+POST /api/auth/logout            revokes refresh token
+POST /api/auth/refresh           new access_token from refresh cookie
+GET  /api/auth/csrf-token        get CSRF token for state-changing requests
 
-GET  /api/challenges/{mode}      — question metadata for a mode (no answers)
-POST /api/challenges/submit      — validate answer, record score
+GET  /api/challenges/{mode}      question metadata for a mode (no answers)
+POST /api/challenges/submit      validate answer, record score
 GET  /api/challenges/progress/{mode}
 
-GET  /api/leaderboard/global     — top 20 across all modes
-GET  /api/leaderboard/{mode}     — top 20 for one mode
+GET  /api/leaderboard/global     top 20 across all modes
+GET  /api/leaderboard/{mode}     top 20 for one mode
 
-GET  /api/users/me               — own profile + stats
-PUT  /api/users/me/password      — change password
+GET  /api/users/me               own profile and stats
+PUT  /api/users/me/password      change password
 ```
 
 ## Security Implementation
 
-| Threat          | Mitigation                                                    |
-|-----------------|---------------------------------------------------------------|
-| XSS             | html.escape on all string inputs + CSP headers in Nginx + X-XSS-Protection |
-| CSRF            | HMAC-signed token (itsdangerous) tied to user ID, required on all mutations |
-| Path traversal  | Regex block on `../` patterns in all answer inputs            |
-| XXE             | Regex block on `<!ENTITY`, `SYSTEM`, `<!DOCTYPE` in inputs    |
-| SQL injection   | SQLAlchemy ORM parameterised queries — no raw SQL              |
-| Brute force     | Redis-backed login attempt counter + account lockout           |
-| Password        | bcrypt (12 rounds) + constant-time verify                      |
-| Rate limiting   | Nginx zones (general/auth/submit) + Redis sliding window middleware |
-| Token leakage   | Refresh token in HttpOnly cookie, access token short-lived (60 min) |
-| Token revocation| `revoked_tokens` table tracks invalidated JTIs                 |
-| Info leakage    | Generic 500 handler, stack traces never reach client           |
-| Container       | Non-root user UID 1001, multi-stage build, minimal runtime     |
+| Threat           | Mitigation                                                                  |
+|------------------|-----------------------------------------------------------------------------|
+| XSS              | html.escape on all string inputs, plus CSP headers in Nginx and X-XSS-Protection |
+| CSRF             | HMAC-signed token (itsdangerous) tied to user ID, required on all mutations |
+| Path traversal   | Regex block on `../` patterns in all answer inputs                          |
+| XXE              | Regex block on `<!ENTITY`, `SYSTEM`, `<!DOCTYPE` in inputs                  |
+| SQL injection    | SQLAlchemy ORM parameterised queries, no raw SQL                            |
+| Brute force      | Redis-backed login attempt counter and account lockout                      |
+| Password         | bcrypt (12 rounds) with constant-time verify                                |
+| Rate limiting    | Nginx zones (general/auth/submit) and a Redis sliding-window middleware     |
+| Token leakage    | Refresh token in HttpOnly cookie, access token short-lived (60 min)         |
+| Token revocation | `revoked_tokens` table tracks invalidated JTIs                              |
+| Info leakage     | Generic 500 handler, stack traces never reach the client                    |
+| Container        | Non-root user UID 1001, multi-stage build, minimal runtime                  |
 
 ## Enabling TLS 1.3 (HTTPS)
 
@@ -144,7 +148,7 @@ The TLS config enforces:
 - HSTS with preload (max-age=31536000)
 - OCSP stapling
 - Session tickets disabled
-- HTTP → HTTPS redirect on port 80
+- Redirect from HTTP to HTTPS on port 80
 
 ## Environment Variables
 
@@ -152,7 +156,7 @@ See `.env.example` for the full list. Key secrets to generate:
 
 ```bash
 python3 -c "import secrets; print(secrets.token_hex(32))"
-# Run twice — once for SECRET_KEY, once for JWT_SECRET
+# Run twice: once for SECRET_KEY, once for JWT_SECRET
 ```
 
 ## Development Mode

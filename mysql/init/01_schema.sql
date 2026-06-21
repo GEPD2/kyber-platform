@@ -1,4 +1,4 @@
---  CRYSTALS-Kyber Training Platform — MySQL 8 Schema
+--  CRYSTALS-Kyber Training Platform, MySQL 8 Schema
 --  Executed automatically on first container start via docker-entrypoint-initdb.d
 --  Engine: InnoDB  |  Charset: utf8mb4  |  Collation: utf8mb4_unicode_ci
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS users (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
 
--- Submissions — every answer attempt
+-- Submissions, every answer attempt
 CREATE TABLE IF NOT EXISTS submissions (
     id           BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
     user_id      BIGINT UNSIGNED  NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS submissions (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
 
--- Leaderboard — best score per user per mode
+-- Leaderboard, best score per user per mode
 CREATE TABLE IF NOT EXISTS leaderboard (
     id              BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
     user_id         BIGINT UNSIGNED  NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS leaderboard (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
 
--- Revoked tokens — JWT refresh token blacklist
+-- Revoked tokens, JWT refresh token blacklist
 CREATE TABLE IF NOT EXISTS revoked_tokens (
     id         BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
     jti        VARCHAR(64)      NOT NULL,

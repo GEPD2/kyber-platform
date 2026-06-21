@@ -1,9 +1,9 @@
 """
-Users router — /api/users/*
+Users router, /api/users/*
 
 Routes:
-  GET /api/users/me              — own profile + aggregated stats
-  PUT /api/users/me/password     — change password (CSRF required)
+  GET /api/users/me, own profile + aggregated stats
+  PUT /api/users/me/password, change password (CSRF required)
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status

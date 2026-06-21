@@ -1,8 +1,8 @@
 """
 Shared FastAPI dependencies injected via Depends().
-  - get_current_user  — verifies JWT, returns User ORM object
-  - require_csrf      — validates X-CSRF-Token header
-  - get_current_admin — same as get_current_user but checks is_admin
+  - get_current_user, verifies JWT, returns User ORM object
+  - require_csrf, validates X-CSRF-Token header
+  - get_current_admin, same as get_current_user but checks is_admin
 """
 
 from fastapi import Depends, Header, HTTPException, Request, status

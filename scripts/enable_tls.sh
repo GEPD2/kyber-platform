@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  enable_tls.sh — activate TLS 1.3 HTTPS
+#  enable_tls.sh, activate TLS 1.3 HTTPS
 #
 #  Prerequisites:
 #    1. Obtain a certificate pair (Let's Encrypt, self-signed, etc.)

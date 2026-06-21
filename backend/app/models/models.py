@@ -1,5 +1,5 @@
 """
-SQLAlchemy ORM models — maps to MySQL tables.
+SQLAlchemy ORM models, maps to MySQL tables.
 All tables use utf8mb4 charset and InnoDB engine.
 """
 
@@ -44,7 +44,7 @@ class User(Base):
     leaderboard:   Mapped[list["Leaderboard"]]   = relationship(back_populates="user", lazy="select")
 
 
-# Submissions — every answered question
+# Submissions, every answered question
 class Submission(Base):
     __tablename__ = "submissions"
     __table_args__ = (
@@ -64,7 +64,7 @@ class Submission(Base):
     user: Mapped["User"] = relationship(back_populates="submissions")
 
 
-# Leaderboard — aggregated per-user per-mode
+# Leaderboard, aggregated per-user per-mode
 class Leaderboard(Base):
     __tablename__ = "leaderboard"
     __table_args__ = (
@@ -86,7 +86,7 @@ class Leaderboard(Base):
     user: Mapped["User"] = relationship(back_populates="leaderboard")
 
 
-# Refresh token blacklist — invalidated tokens
+# Refresh token blacklist, invalidated tokens
 class RevokedToken(Base):
     __tablename__ = "revoked_tokens"
     __table_args__ = (

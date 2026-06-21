@@ -1,5 +1,5 @@
 """
-CRYSTALS-Kyber Training Platform — FastAPI Application
+CRYSTALS-Kyber Training Platform, FastAPI Application
 
 Startup sequence:
   1. DB engine created (connection pool, not yet connected)
@@ -38,14 +38,14 @@ log = structlog.get_logger()
 async def lifespan(app: FastAPI):
     log.info("startup.begin", env=settings.APP_ENV)
 
-    # Create DB tables (idempotent — safe to run every boot)
+    # Create DB tables (idempotent, safe to run every boot)
     try:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         log.info("startup.db", status="ok")
     except Exception as exc:
         log.error("startup.db", status="failed", error=str(exc))
-        raise  # abort startup — container will be unhealthy, Docker will restart
+        raise  # abort startup, container will be unhealthy, Docker will restart
 
     # Verify Redis
     try:
@@ -99,7 +99,7 @@ app.add_middleware(
 
 @app.exception_handler(RequestValidationError)
 async def validation_handler(request: Request, exc: RequestValidationError):
-    """Clean 422 — never leak internal field names or stack traces."""
+    """Clean 422, never leak internal field names or stack traces."""
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={"detail": "Invalid request data."},
@@ -108,7 +108,7 @@ async def validation_handler(request: Request, exc: RequestValidationError):
 
 @app.exception_handler(Exception)
 async def generic_handler(request: Request, exc: Exception):
-    """Catch-all — log server-side, return safe generic message."""
+    """Catch-all, log server-side, return safe generic message."""
     log.error("unhandled_exception", path=request.url.path, exc=repr(exc))
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -130,7 +130,7 @@ app.include_router(leaderboard.router, prefix="/api/leaderboard", tags=["leaderb
 async def health():
     """
     Docker HEALTHCHECK endpoint.
-    Returns 200 as soon as uvicorn is serving — before DB/Redis are verified.
+    Returns 200 as soon as uvicorn is serving, before DB/Redis are verified.
     The lifespan will crash the process if DB or Redis are unreachable,
     which Docker will catch via the health check timing out.
     """

@@ -1,5 +1,5 @@
 """
-Leaderboard router — /api/leaderboard/*
+Leaderboard router, /api/leaderboard/*
 
 IMPORTANT: FastAPI matches routes in declaration order.
 /global must come BEFORE /{mode} so it is not swallowed as a path parameter.

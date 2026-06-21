@@ -1,19 +1,19 @@
 """
-Auth router — /api/auth/*
+Auth router, /api/auth/*
 
 Routes:
-  POST /api/auth/register   — create new account
-  POST /api/auth/login      — returns JWT access token + HttpOnly refresh cookie
-  POST /api/auth/logout     — revoke refresh token, clear cookies
-  POST /api/auth/refresh    — issue new access token from refresh cookie
-  GET  /api/auth/csrf-token — get a CSRF token for state-changing requests
+  POST /api/auth/register, create new account
+  POST /api/auth/login, returns JWT access token + HttpOnly refresh cookie
+  POST /api/auth/logout, revoke refresh token, clear cookies
+  POST /api/auth/refresh, issue new access token from refresh cookie
+  GET  /api/auth/csrf-token, get a CSRF token for state-changing requests
 
 Security implemented:
   - bcrypt password hashing (rounds from BCRYPT_ROUNDS env)
   - Constant-time comparison (prevents timing attacks on missing users)
   - Redis-backed brute-force lockout (MAX_LOGIN_ATTEMPTS per LOCKOUT_MINUTES)
-  - Refresh token stored HttpOnly, SameSite=strict — not readable by JS
-  - CSRF token returned as readable cookie — JS must echo it in X-CSRF-Token header
+  - Refresh token stored HttpOnly, SameSite=strict, not readable by JS
+  - CSRF token returned as readable cookie, JS must echo it in X-CSRF-Token header
   - JTI-based refresh token revocation stored in MySQL
 """
 
@@ -147,7 +147,7 @@ async def login(
     result = await db.execute(select(User).where(User.username == body.username))
     user: User | None = result.scalar_one_or_none()
 
-    # Constant-time path — run bcrypt even when user doesn't exist
+    # Constant-time path, run bcrypt even when user doesn't exist
     # This prevents timing-based user enumeration.
     _DUMMY = "$2b$12$zZ3c0OoRLOn/lDNzqBB17OxXdQQ.C9t4.bq5zEfFEaE7o8DzqOspu"
     stored = user.password_hash if user else _DUMMY
@@ -226,7 +226,7 @@ async def logout(
                 db.add(RevokedToken(jti=jti, expires_at=exp))
                 await db.flush()
         except Exception:
-            pass  # invalid/expired token — still clear cookie
+            pass  # invalid/expired token, still clear cookie
 
     response.delete_cookie("refresh_token",  path="/api/auth/refresh")
     response.delete_cookie("csrf_token",     path="/")
@@ -276,6 +276,6 @@ async def get_csrf_token(user: User = Depends(get_current_user)):
     """
     Issue a CSRF token tied to the authenticated user's ID.
     The JS layer must read this and send it as X-CSRF-Token on every mutation.
-    Verification in require_csrf also uses str(user.id) — they must match.
+    Verification in require_csrf also uses str(user.id), they must match.
     """
     return {"csrf_token": generate_csrf_token(str(user.id))}
