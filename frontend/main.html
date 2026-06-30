@@ -449,7 +449,7 @@ const EZ=[
  q:'w[i]=10, m̂[i]=8. Does decryption succeed for this coefficient?',opts:['Yes:noise=+2, |2|<4.25','No:noise=+2 exceeds limit','Yes:noise=0','No:noise=10'],cor:0},
 {type:'btns',section:'Security',
  theory:`<h3>Post-Quantum Security</h3><div class="mblock">RSA: f(x)=7^x mod 15 → periodic → QFT breaks it\nLWE: t=A·s+e → no periodicity → QFT finds nothing</div>`,
- q:'What makes Kyber resistant to Shor\'s quantum algorithm?',opts:['LWE has no periodicity:fresh noise prevents periodic structure','Very large key sizes','Discrete logarithm assumption','Hash functions'],cor:0},
+ q:'What makes Kyber resistant to Shor\'s quantum algorithm?',opts:['MLWE is not a period-finding/hidden-subgroup problem, so the QFT has no period to extract','Very large key sizes','Discrete logarithm assumption','Hash functions'],cor:0},
 ];
 // LEVEL 3:MEDIUM  (5 duo + 5 btns + 8 gaps = 18)
 const MED=[
@@ -1280,7 +1280,7 @@ const EZ_EL=[
  q:'w[i]=10, m̂[i]=8. Πετυχαίνει η αποκρυπτογράφηση για αυτόν τον συντελεστή;',opts:['Ναι:θόρυβος=+2, |2|<4.25','Όχι:θόρυβος=+2 υπερβαίνει το όριο','Ναι:θόρυβος=0','Όχι:θόρυβος=10'],cor:0},
 {type:'btns',section:'Ασφάλεια',
  theory:`<h3>Post-Quantum Ασφάλεια</h3><div class="mblock">RSA: f(x)=7^x mod 15 → περιοδική → QFT τη σπάει\nLWE: t=A·s+e → χωρίς περιοδικότητα → QFT δεν βρίσκει τίποτα</div>`,
- q:'Τι κάνει τον Kyber ανθεκτικό στον κβαντικό αλγόριθμο Shor;',opts:['Το LWE δεν έχει περιοδικότητα:ο θόρυβος αποτρέπει περιοδική δομή','Πολύ μεγάλα μεγέθη κλειδιών','Παραδοχή διακριτού λογαρίθμου','Συναρτήσεις κατακερματισμού'],cor:0},
+ q:'Τι κάνει τον Kyber ανθεκτικό στον κβαντικό αλγόριθμο Shor;',opts:['Το MLWE δεν είναι πρόβλημα εύρεσης περιόδου/κρυφής υποομάδας, οπότε ο QFT δεν έχει περίοδο να εξαγάγει','Πολύ μεγάλα μεγέθη κλειδιών','Παραδοχή διακριτού λογαρίθμου','Συναρτήσεις κατακερματισμού'],cor:0},
 ];
 // MED_EL: translate duo/btns; gaps inherit English tmpl
 const MED_EL=[
@@ -2048,10 +2048,13 @@ showFeedback = async function(ok, msg) {
   if (!ch) return;
   let answerPayload = '';
   if (ch.type === 'btns') {
-    answerPayload = String(S.selectedOpt ?? ch.cor);
+    // Never fall back to ch.cor: if no option is selected, send an invalid
+    // payload so the server rejects it rather than auto-scoring it correct.
+    answerPayload = (S.selectedOpt == null) ? '' : String(S.selectedOpt);
   } else if (ch.type === 'duo') {
     const inp = document.getElementById('duoIn');
-    answerPayload = inp ? inp.value.trim() : ch.ans;
+    // Never fall back to ch.ans: send the user's value, or empty if absent.
+    answerPayload = inp ? inp.value.trim() : '';
   } else if (ch.type === 'gaps') {
     const gaps = (ch.tmpl||[]).filter(l=>l&&l.t==='gap');
     answerPayload = JSON.stringify(gaps.map((_,i) => {
