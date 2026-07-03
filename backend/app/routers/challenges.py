@@ -22,8 +22,10 @@ from app.core.database import get_db
 from app.core.deps     import get_current_user, require_csrf
 from app.core.security import sanitise_answer, verify_session_cookie
 from app.models.models import Leaderboard, Submission, User
-from app.services.answer_validator import validate_answer
-from app.services.challenge_store  import ANSWER_KEYS, VALID_MODES, get_challenge, get_mode_meta
+from app.services.answer_validator import grade_gaps, validate_answer
+from app.services.challenge_store  import (
+    ANSWER_KEYS, VALID_MODES, get_challenge, get_mode_meta, previous_mode,
+)
 
 router = APIRouter()
 
@@ -34,6 +36,8 @@ class SubmitRequest(BaseModel):
     mode:        str
     question_id: int
     answer:      str    # option index string (btns), value string (duo), JSON array (gaps)
+    # Deprecated: the server derives the streak from its own submission
+    # history.  Accepted for backward compatibility, but ignored.
     streak:      int = 0
 
     @field_validator("mode")
@@ -66,10 +70,16 @@ class SubmitResponse(BaseModel):
     correct:         bool
     score_delta:     int
     total_score:     int   # user's cumulative total across all modes
+    streak:          int   # server-derived current streak for this mode
     message:         str
     leaderboard:     list  # top-10 global leaderboard (rank/username/total_score/total_correct)
     completed:       bool  # True when ALL questions in the mode are now answered correctly
     already_correct: bool  # True when this question was already answered correctly before
+    # Per-gap verdicts for 'gaps' questions (None for other types / bad payload)
+    gap_results:     list[bool] | None = None
+    # The correct answer, revealed ONLY after a wrong submission so the
+    # student can learn from it: int index (btns), str (duo), list (gaps).
+    correct_answer:  int | str | list[str] | None = None
 
 
 # Endpoints, fixed order (specific before parametric)
@@ -102,11 +112,43 @@ async def submit_answer(
             detail="Invalid or expired game session. Please log in again.",
         )
 
+    # Level gating: each level requires the previous one to be completed.
+    prereq = previous_mode(body.mode)
+    if prereq is not None:
+        prereq_res = await db.execute(
+            select(func.count(func.distinct(Submission.question_id))).where(
+                Submission.user_id == user.id,
+                Submission.mode    == prereq,
+                Submission.correct == True,
+            )
+        )
+        if (prereq_res.scalar() or 0) < len(ANSWER_KEYS[prereq]):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Level '{body.mode}' is locked. Complete '{prereq}' first.",
+            )
+
     challenge = get_challenge(body.mode, body.question_id)
     if not challenge:
         raise HTTPException(status_code=404, detail="Question not found.")
 
     correct = validate_answer(challenge, body.answer)
+    gap_results = grade_gaps(challenge, body.answer) if challenge.get("type") == "gaps" else None
+
+    # Server-derived streak: consecutive correct submissions in this mode,
+    # counted backwards from the most recent one. The client's claim is ignored.
+    hist_res = await db.execute(
+        select(Submission.correct)
+        .where(Submission.user_id == user.id, Submission.mode == body.mode)
+        .order_by(desc(Submission.id))
+        .limit(500)
+    )
+    prev_streak = 0
+    for was_correct in hist_res.scalars():
+        if not was_correct:
+            break
+        prev_streak += 1
+    streak = prev_streak + 1 if correct else 0
 
     # Was this question already answered correctly in a previous attempt?
     prev_res = await db.execute(
@@ -124,7 +166,7 @@ async def submit_answer(
     if already_correct:
         score_delta = 0
     else:
-        score_delta = (10 + max(0, body.streak - 1) * 2) if correct else 0
+        score_delta = (10 + max(0, streak - 1) * 2) if correct else 0
 
     # Persist submission
     db.add(Submission(
@@ -155,7 +197,7 @@ async def submit_answer(
     if correct and not already_correct:
         entry.total_correct = (entry.total_correct or 0) + 1
         entry.best_score    = (entry.best_score    or 0) + score_delta
-        entry.best_streak   = max(entry.best_streak or 0, body.streak + 1)
+        entry.best_streak   = max(entry.best_streak or 0, streak)
 
     # Level-completion check
     # Count distinct question_ids answered correctly (before this flush).
@@ -224,14 +266,29 @@ async def submit_answer(
     else:
         message = "Wrong, review the theory."
 
+    # Reveal the correct answer only after a wrong submission (didactic
+    # feedback). The answer is never shipped with the question itself.
+    correct_answer: int | str | list[str] | None = None
+    if not correct:
+        qtype = challenge.get("type")
+        if qtype == "btns":
+            correct_answer = challenge.get("correct")
+        elif qtype == "duo":
+            correct_answer = str(challenge.get("ans", ""))
+        elif qtype == "gaps":
+            correct_answer = [str(g) for g in challenge.get("gaps", [])]
+
     return SubmitResponse(
         correct=correct,
         score_delta=score_delta,
         total_score=user_total,
+        streak=streak,
         message=message,
         leaderboard=leaderboard,
         completed=level_completed,
         already_correct=already_correct,
+        gap_results=gap_results,
+        correct_answer=correct_answer,
     )
 
 

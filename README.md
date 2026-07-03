@@ -109,6 +109,35 @@ GET  /api/users/me               own profile and stats
 PUT  /api/users/me/password      change password
 ```
 
+## Answer Validation, Scoring and Progression
+
+The backend is the single source of truth. The browser holds question
+text and theory only; every correct answer lives exclusively in
+`backend/app/services/challenge_store.py` and is **never** shipped to
+the client. Each submission goes to `POST /api/challenges/submit`,
+which:
+
+- **Validates** the answer server-side (`answer_validator.py`), with
+  whitespace-insensitive comparison and per-gap grading for
+  fill-the-gap questions.
+- **Derives the streak** from the user's own submission history; the
+  client cannot claim a streak.
+- **Scores**: `10 + max(0, streak − 1) × 2` points per newly-correct
+  answer. Questions already answered correctly always award 0 points
+  on retry.
+- **Reveals the correct answer only after a wrong submission**, so the
+  Duolingo-style "learn from the mistake" feedback works without ever
+  pre-loading answers in the browser.
+- **Enforces level gating**: the six levels unlock in order
+  (veryeasy → easy → medium → hard → veryhard → insane); submitting to
+  a locked level returns 403 until every question of the previous
+  level has been answered correctly.
+- Returns the updated total score, completion status, and the global
+  top-10 leaderboard in the same response.
+
+Lives (5/5/5/3/3/3 per level) are a client-side game mechanic only and
+do not affect server-side scores.
+
 ## Security Implementation
 
 | Threat           | Mitigation                                                                  |
@@ -124,6 +153,7 @@ PUT  /api/users/me/password      change password
 | Token leakage    | Refresh token in HttpOnly cookie, access token short-lived (60 min)         |
 | Token revocation | `revoked_tokens` table tracks invalidated JTIs                              |
 | Info leakage     | Generic 500 handler, stack traces never reach the client                    |
+| Answer leakage   | Correct answers never sent to the browser; server-side validation, streak and gating |
 | Container        | Non-root user UID 1001, multi-stage build, minimal runtime                  |
 
 ## Enabling TLS 1.3 (HTTPS)

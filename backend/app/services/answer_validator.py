@@ -13,6 +13,13 @@ import json
 from typing import Any
 
 
+def _norm(s: Any) -> str:
+    """Remove ALL whitespace, mirroring the frontend's normAns().
+    Several gap answers contain internal spaces ("a, b", "q - c", "<<= 1");
+    a user typing "a,b" must be judged the same way on both sides."""
+    return "".join(str(s).split())
+
+
 def validate_answer(challenge: dict, raw_answer: str) -> bool:
     """
     Returns True if raw_answer matches the correct answer for this challenge.
@@ -31,26 +38,28 @@ def validate_answer(challenge: dict, raw_answer: str) -> bool:
 
     elif qtype == "duo":
         # ans field is the expected string (number or short expression)
-        expected = str(challenge.get("ans", "")).strip()
-        return raw_answer.strip() == expected
+        return _norm(raw_answer) == _norm(challenge.get("ans", ""))
 
     elif qtype == "gaps":
-        # gaps field is a list of correct strings, one per gap
-        # raw_answer is a JSON-encoded list
-        try:
-            submitted: list = json.loads(raw_answer)
-            if not isinstance(submitted, list):
-                return False
-        except (json.JSONDecodeError, ValueError):
-            return False
-
-        expected_gaps: list = challenge.get("gaps", [])
-        if len(submitted) != len(expected_gaps):
-            return False
-
-        return all(
-            str(s).strip() == str(e).strip()
-            for s, e in zip(submitted, expected_gaps)
-        )
+        results = grade_gaps(challenge, raw_answer)
+        return results is not None and all(results)
 
     return False
+
+
+def grade_gaps(challenge: dict, raw_answer: str) -> list[bool] | None:
+    """Per-gap grading for 'gaps' questions.
+    raw_answer is a JSON-encoded list of strings, one per gap.
+    Returns one bool per expected gap, or None if the payload is malformed."""
+    try:
+        submitted = json.loads(raw_answer)
+        if not isinstance(submitted, list):
+            return None
+    except (json.JSONDecodeError, ValueError):
+        return None
+
+    expected_gaps: list = challenge.get("gaps", [])
+    if len(submitted) != len(expected_gaps):
+        return None
+
+    return [_norm(s) == _norm(e) for s, e in zip(submitted, expected_gaps)]

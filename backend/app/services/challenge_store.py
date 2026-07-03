@@ -5,7 +5,15 @@ VALID_MODES matches all 6 difficulty levels in the frontend.
 """
 from typing import Any
 
-VALID_MODES = {"veryeasy", "easy", "medium", "hard", "veryhard", "insane"}
+# Pedagogical order: each level requires completion of the previous one.
+MODE_ORDER = ["veryeasy", "easy", "medium", "hard", "veryhard", "insane"]
+VALID_MODES = set(MODE_ORDER)
+
+
+def previous_mode(mode: str) -> str | None:
+    """The prerequisite level for a mode, or None for the first level."""
+    idx = MODE_ORDER.index(mode)
+    return MODE_ORDER[idx - 1] if idx > 0 else None
 
 # Correct answers only, the minimal server-side truth needed for validation.
 # The full question text, theory, and templates are kept in the frontend JS.
