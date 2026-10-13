@@ -16,3 +16,10 @@ export function RichText({ text }: { text: string }) {
   if (last < text.length) out.push(<Fragment key="end">{text.slice(last)}</Fragment>);
   return <>{out}</>;
 }
+
+// Same markup as plain text, for places that only take a string (the terminal).
+// Only the two known tag pairs are unwrapped; anything else stays literal and
+// React escapes it when rendering.
+export function plainText(text: string): string {
+  return text.replace(TAG_RE, "$2");
+}

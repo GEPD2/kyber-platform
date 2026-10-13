@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ApiError, api } from "@/lib/api";
 import { usePrefs } from "@/lib/prefs";
+import { plainText } from "./RichText";
 import type { Lang, Mode, ModeContent, SubmitResult, TermQuestion } from "@/lib/types";
 
 type LineKind = "cmd" | "out" | "err" | "info" | "ok" | "task";
@@ -108,7 +109,7 @@ export function Terminal({ mode, content, question, index, streak, allSolved, on
     const key = `${question.id}:${lang}`;
     if (announced.current === key) return;
     announced.current = key;
-    push([{ kind: "task", text: `[${t.termTask} ${index + 1}/${content.total}] ${question.q.replace(/<[^>]+>/g, "")}` }]);
+    push([{ kind: "task", text: `[${t.termTask} ${index + 1}/${content.total}] ${plainText(question.q)}` }]);
   }, [question.id, question.q, index, content.total, lang, push, t.termTask]);
 
   useEffect(() => {
@@ -141,7 +142,7 @@ export function Terminal({ mode, content, question, index, streak, allSolved, on
         push([{ kind: "info", text: t.termHelp }]);
         return true;
       case "task":
-        push([{ kind: "task", text: question.q.replace(/<[^>]+>/g, "") }]);
+        push([{ kind: "task", text: plainText(question.q) }]);
         return true;
       case "clear":
         setLines([]);

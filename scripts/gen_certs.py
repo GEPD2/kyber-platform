@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Create a self-signed TLS certificate for local HTTPS.
 
-Writes nginx/certs/fullchain.pem and nginx/certs/privkey.pem (mode 600),
+Writes nginx/certs/fullchain.pem and nginx/certs/privkey.pem (mode 640: owner
+and the owner's group, which the non-root nginx container is given),
 valid for localhost, 127.0.0.1 and ::1 plus any --host you add. Browsers
 will warn ("Not secure") because no CA vouches for it; accept it once.
 
@@ -70,13 +71,13 @@ def main() -> None:
             os.umask(old_umask)
         os.replace(tmp_key, key)
         os.replace(tmp_cert, cert)
-    key.chmod(0o600)
+    key.chmod(0o640)
     cert.chmod(0o644)
 
     fp = subprocess.run(["openssl", "x509", "-in", str(cert), "-noout", "-fingerprint", "-sha256", "-enddate"],
                         capture_output=True, text=True).stdout.strip()
     info(f"Certificate: {cert}")
-    info(f"Private key: {key} (mode 600)")
+    info(f"Private key: {key} (mode 640)")
     info(f"Valid for:   {san}")
     for line in fp.splitlines():
         info(line)

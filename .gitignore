@@ -29,6 +29,10 @@ id_ecdsa*
 credentials.json
 *.kdbx
 
+# Private vulnerability log: findings and fixes stay on this machine.
+SECURITY_NOTES.md
+SECURITY_NOTES*.md
+
 # Claude Code: per-project settings, memory and local notes.
 .claude/
 **/.claude/

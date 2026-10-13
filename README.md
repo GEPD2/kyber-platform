@@ -9,7 +9,7 @@ generates a real ML-KEM key.
 
 | Service  | Image                         | Role                                                   |
 |----------|-------------------------------|--------------------------------------------------------|
-| nginx    | built from `frontend/` (nginx:1.25-alpine) | TLS 1.3 termination, rate limits, static Next.js site |
+| nginx    | built from `frontend/` (owasp/modsecurity-crs, nginx 1.30) | TLS 1.3, WAF (ModSecurity + OWASP CRS), rate limits, static site |
 | backend  | python:3.11-slim              | FastAPI: auth, question content, validation, scoring   |
 | mysql    | mysql:8.0                     | Users, submissions, leaderboard                        |
 | redis    | redis:7-alpine                | Rate limiting, lockouts, hint counters                 |
@@ -29,8 +29,10 @@ python3 -c "import secrets; print(secrets.token_hex(32))"   # one per secret
 # 3. Open https://localhost and accept the self-signed certificate once
 ```
 
-`start.py` creates the local TLS certificate on its first run and warns about any
-secret still set to `CHANGE_ME`. The site is HTTPS only; see below.
+`start.py` creates the local TLS certificate on its first run, warns about any
+secret still set to `CHANGE_ME`, and loads the host firewall through `sudo` (it
+asks for your password). `stop.py` removes the firewall again. The site is HTTPS
+only; see below.
 
 ## Levels
 
@@ -60,13 +62,13 @@ kyber-platform/
 ├── .env.example                  # template; copy to .env (never committed)
 │
 ├── frontend/                     # Next.js 16 + TypeScript, static export
-│   ├── Dockerfile                # node build, then nginx image with the site
+│   ├── Dockerfile                # node build + CSP hashes, then the WAF nginx image
+│   ├── scripts/csp-hashes.mjs    # hashes every inline script for the CSP
 │   └── src/
 │       ├── app/                  # /, /login, /play/[mode], /leaderboard, /account
 │       ├── components/           # PlayClient, CodeGaps, TheoryCard, Terminal, ...
 │       ├── lib/                  # api.ts (typed client), i18n.ts (EN/EL), types.ts
 │       └── styles/               # tokens.css (all colour values, dark/light), app.css
-├── frontend_legacy/              # previous single-file UI, reference only
 │
 ├── backend/
 │   ├── Dockerfile                # multi-stage, non-root (UID 1001)
@@ -93,11 +95,13 @@ kyber-platform/
 │       ├── test_content.py       # runs every template; every distractor must fail
 │       ├── test_services.py      # hints and scoring
 │       ├── test_mlkem.py         # mlkem.py vs the C reference, byte for byte
+│       ├── test_security.py      # IDOR, CSRF and XSS regression checks
 │       └── data/kyber_fips203_update.c   # canonical FIPS 203 reference
 │
 ├── nginx/
 │   ├── nginx.conf                # rate-limit zones, upstream
-│   ├── conf.d/app.conf           # HTTPS-only vhost (TLS 1.3, port 443)
+│   ├── conf.d/app.conf           # HTTPS-only vhost (TLS 1.3, 8443 in the container)
+│   ├── modsecurity/kyber-exclusions.conf   # the one WAF exclusion (answer field)
 │   └── certs/                    # fullchain.pem + privkey.pem (never committed)
 │
 ├── mysql/
@@ -110,6 +114,7 @@ kyber-platform/
     ├── stop.py                   # stop; data volumes are kept
     ├── backup.py                 # mysqldump into backups/kyber_<timestamp>.sql.gz
     ├── gen_certs.py              # local self-signed certificate
+    ├── firewall.py               # nftables host firewall (start/stop load and remove it)
     └── reset_progress.py         # clear answers and scores, keep accounts
 ```
 
@@ -146,6 +151,9 @@ cd backend
 python3 tests/test_content.py      # or: pytest tests/
 python3 tests/test_services.py
 python3 tests/test_mlkem.py        # needs gcc for the C cross-check
+python3 tests/test_security.py     # route checks need the backend dependencies:
+# docker compose cp backend/tests backend:/tmp/tests
+# docker compose exec -e PYTHONPATH=/app backend python /tmp/tests/test_security.py
 ```
 
 `test_content.py` fills every code template with the correct answer and runs it:
@@ -176,13 +184,16 @@ virtual ESP-IDF project.
 
 ## HTTPS only
 
-The site is served only over HTTPS (TLS 1.3, HTTP/2) on port 443. There is no
+The site is served only over HTTPS (TLS 1.3, HTTP/2) on port 443 (nginx runs as
+a non-root user and listens on 8443 inside the container). There is no
 plain-HTTP listener: port 80 is neither published by docker-compose nor served by
 nginx, so `http://localhost` is refused instead of redirected, and nothing, not
 even the first request path, travels in clear text.
 
 `start.py` creates a self-signed certificate on its first run if `nginx/certs/`
-is empty (EC P-256, valid for localhost, 127.0.0.1 and ::1, key mode 600). To
+is empty (EC P-256, valid for localhost, 127.0.0.1 and ::1). The key is mode 640:
+only you and your group can read it, and the container gets that group
+(`CERT_GID`, set by `start.py`). To
 recreate it or add names:
 
 ```bash
@@ -204,24 +215,62 @@ backend to MySQL and Redis stay inside the private Docker network. In developmen
 MySQL and Redis are reachable from the host only on 127.0.0.1 (ports 3307 and
 6380, configurable with `MYSQL_HOST_PORT` and `REDIS_HOST_PORT`).
 
+## Web application firewall
+
+nginx runs ModSecurity v3 with the OWASP Core Rule Set 4 (paranoia level 1,
+anomaly threshold 5) in blocking mode. It rejects with 403 the usual attack
+shapes before they reach the backend: XSS and SQL injection in any field, path
+traversal, and scanner tools.
+
+The answers of this platform are code and shell commands by design, so exactly
+one field, `answer` on `POST /api/challenges/submit`, skips the code-injection
+rule families (`nginx/modsecurity/kyber-exclusions.conf`). Without it, 21 of the
+147 accepted answers would be blocked; with it, all pass and every other field
+keeps the full rule set.
+
+```bash
+docker compose logs nginx | grep '"ruleId"'      # what the WAF matched
+MODSEC_RULE_ENGINE=DetectionOnly ./scripts/start.py   # log only, block nothing
+```
+
+## Host firewall
+
+Docker publishes ports with DNAT, which bypasses the host INPUT chain, so ufw
+alone does not see that traffic. `scripts/firewall.py` adds its own nftables
+table (`inet kyber`) on the forward path: from other machines only port 443 is
+reachable, every other port Docker publishes is dropped. It never touches ufw,
+firewalld or Docker's own rules.
+
+`start.py` loads it before the containers start and `stop.py` removes it after
+they stop. Settings in `.env`: `FIREWALL_ENABLED`, `FIREWALL_ALLOW` (default
+443) and `FIREWALL_HOST_INPUT` (also drop new inbound connections to the host).
+
+```bash
+./scripts/firewall.py                  # print the ruleset
+./scripts/firewall.py --check          # syntax check, changes nothing
+sudo nft delete table inet kyber       # remove by hand
+```
+
 ## Security
 
 | Threat            | Mitigation                                                                 |
 |-------------------|----------------------------------------------------------------------------|
 | Eavesdropping     | HTTPS only (TLS 1.3); port 80 closed; Secure cookies                        |
 | Answer leakage    | Answers, hints and explanations stay on the server; checked by tests       |
-| XSS               | React rendering without innerHTML; strict CSP; nosniff; frame-ancestors none |
+| XSS (stored, reflected, DOM) | React text rendering, no innerHTML; CSP with script hashes, no 'unsafe-inline'; WAF; nosniff |
 | CSRF              | HMAC-signed token (itsdangerous) tied to the user, required on mutations   |
 | Path traversal    | Answer inputs reject `../` patterns                                         |
 | XXE               | Answer inputs reject `<!ENTITY`, `SYSTEM "`, `<!DOCTYPE`                    |
-| SQL injection     | SQLAlchemy ORM with bound parameters; no raw SQL                            |
+| SQL injection     | SQLAlchemy ORM with bound parameters; no raw SQL; WAF                       |
+| IDOR              | No route takes a user or object id; every query uses the token's user (tested) |
+| Network exposure  | nftables table: only 443 reachable from other machines                     |
 | Brute force       | Redis login-attempt counter with lockout                                   |
 | Passwords         | bcrypt (12 rounds), constant-time verify                                   |
 | Rate limiting     | nginx zones (general, auth, submit and hint) plus a Redis sliding window   |
 | Token theft       | Refresh token in an HttpOnly cookie; access token lives 60 minutes         |
 | Token revocation  | `revoked_tokens` table of invalidated JTIs                                 |
 | Information leaks | Generic 500 handler; no stack traces reach the client                      |
-| Containers        | Non-root user (UID 1001), multi-stage build                                |
+| Containers        | Non-root backend (UID 1001) and nginx (UID 101), multi-stage builds        |
 
 ## Keeping secrets out of git
 

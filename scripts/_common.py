@@ -1,4 +1,6 @@
 """Shared helpers for the management scripts (standard library only)."""
+import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -65,3 +67,32 @@ def compose(*args: str, check: bool = True, **kwargs) -> subprocess.CompletedPro
         fail("docker not found on PATH.")
     except subprocess.CalledProcessError as e:
         fail(f"docker compose {' '.join(args)} failed (exit {e.returncode}).", e.returncode)
+
+
+def firewall(action: str, env: dict[str, str]) -> bool:
+    """Load (--apply) or remove (--remove) the nftables table of scripts/firewall.py.
+
+    Needs root, so it goes through sudo (which may ask for the password).
+    Settings in .env: FIREWALL_ENABLED (default true), FIREWALL_ALLOW (comma
+    list, default 443), FIREWALL_HOST_INPUT (default false).
+    """
+    if env.get("FIREWALL_ENABLED", "true").lower() != "true":
+        info("Firewall: disabled (FIREWALL_ENABLED=false in .env).")
+        return True
+    if not shutil.which("nft"):
+        warn("Firewall: nft not found; install nftables to enable it.")
+        return False
+    cmd = [sys.executable, str(ROOT / "scripts" / "firewall.py"), action]
+    if action == "--apply":
+        for port in env.get("FIREWALL_ALLOW", "443").split(","):
+            if port.strip():
+                cmd += ["--allow", port.strip()]
+        if env.get("FIREWALL_HOST_INPUT", "false").lower() == "true":
+            cmd.append("--host-input")
+    if os.geteuid() != 0:
+        if not shutil.which("sudo"):
+            warn("Firewall: needs root and sudo is not installed.")
+            return False
+        info("Firewall: root is needed for nftables; sudo may ask for your password.")
+        cmd = ["sudo", *cmd]
+    return subprocess.run(cmd).returncode == 0
