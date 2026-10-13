@@ -1,0 +1,136 @@
+"""Level 2: Easy. Concept checks, one per idea. Correct positions are mixed."""
+from app.content import cards as C
+from app.content.schema import L, btns
+
+S_OV = L("Overview", "Επισκόπηση")
+S_RING = L("Ring", "Δακτύλιος")
+S_NTT = L("NTT", "NTT")
+S_FIPS = L("FIPS 203", "FIPS 203")
+S_ENC = L("Encryption", "Κρυπτογράφηση")
+
+QUESTIONS = [
+btns("ez-name", S_OV,
+     L("Under which name did NIST standardise Kyber?", "Με ποιο όνομα τυποποίησε το NIST τον Kyber;"),
+     ["ML-DSA (FIPS 204)", "ML-KEM (FIPS 203)", "FALCON", "SLH-DSA (FIPS 205)"], 1, C.SECURITY,
+     [L("Kyber is a key encapsulation mechanism.", "Ο Kyber είναι μηχανισμός ενθυλάκωσης κλειδιού (KEM)."),
+      L("Look for 'KEM' in the name.", "Ψάξε για «KEM» στο όνομα.")],
+     L("ML-KEM = Module-Lattice-based KEM, FIPS 203. ML-DSA and SLH-DSA are signature standards.",
+       "ML-KEM = Module-Lattice-based KEM, FIPS 203. Τα ML-DSA και SLH-DSA είναι πρότυπα υπογραφών.")),
+
+btns("ez-hard-problem", S_OV,
+     L("Given A and t = A·s + e with small s and e, what is assumed hard?",
+       "Με γνωστά A και t = A·s + e, με μικρά s και e, τι θεωρείται δύσκολο;"),
+     [L("Recovering s (the MLWE problem)", "Η ανάκτηση του s (το πρόβλημα MLWE)"), L("Factoring q", "Η παραγοντοποίηση του q"),
+      L("Computing a discrete logarithm", "Ο υπολογισμός διακριτού λογαρίθμου"), L("Inverting SHA-3", "Η αντιστροφή του SHA-3")], 0, C.KEYGEN,
+     [L("The small error e is what hides s.", "Το μικρό σφάλμα e είναι αυτό που κρύβει το s."),
+      L("Without e this would be plain linear algebra.", "Χωρίς το e θα ήταν απλή γραμμική άλγεβρα.")],
+     L("Module Learning With Errors: the noise turns easy linear algebra into a hard lattice problem.",
+       "Module Learning With Errors: ο θόρυβος κάνει την εύκολη γραμμική άλγεβρα δύσκολο πρόβλημα πλέγματος.")),
+
+btns("ez-x8", S_RING,
+     L("In Z₁₇[X]/(X⁸ + 1), what does X⁸ reduce to?", "Στο Z₁₇[X]/(X⁸ + 1), σε τι ανάγεται το X⁸;"),
+     ["0", "+1", "X", "−1 (= 16)"], 3, C.RING,
+     [L("Set the modulus polynomial to zero.", "Θέσε το πολυώνυμο-μέτρο ίσο με μηδέν."),
+      L("X⁸ + 1 ≡ 0.", "X⁸ + 1 ≡ 0.")],
+     L("X⁸ + 1 ≡ 0 gives X⁸ ≡ −1 ≡ 16.", "Από X⁸ + 1 ≡ 0 προκύπτει X⁸ ≡ −1 ≡ 16.")),
+
+btns("ez-neg-store", S_RING,
+     L("CBD produced −2. What is stored, mod 17?", "Το CBD έδωσε −2. Τι αποθηκεύεται, mod 17;"),
+     ["2", "16", "15", "−2"], 2, C.NEG,
+     [L("Stored values are in {0, …, 16}.", "Οι αποθηκευμένες τιμές είναι στο {0, …, 16}."),
+      L("Add q once.", "Πρόσθεσε το q μία φορά.")],
+     L("−2 + 17 = 15.", "−2 + 17 = 15.")),
+
+btns("ez-ninv", S_NTT,
+     L("What is n⁻¹ mod 17 for n = 8?", "Πόσο είναι το n⁻¹ mod 17 για n = 8;"),
+     ["13", "9", "15", "2"], 2, C.INTT,
+     [L("Find x with 8·x ≡ 1 (mod 17).", "Βρες x με 8·x ≡ 1 (mod 17)."),
+      L("Try each option: 8·x = 17·k + 1.", "Δοκίμασε κάθε επιλογή: 8·x = 17·k + 1.")],
+     L("8·15 = 120 = 7·17 + 1. The INTT multiplies by it at the end.",
+       "8·15 = 120 = 7·17 + 1. Η INTT πολλαπλασιάζει με αυτό στο τέλος.")),
+
+btns("ez-gen", S_NTT,
+     L("Why is g = 2 not a primitive root mod 17?", "Γιατί το g = 2 δεν είναι πρωταρχική ρίζα mod 17;"),
+     [L("2 is even", "Το 2 είναι άρτιο"), L("2⁸ ≡ 1 (mod 17), so its order is only 8, not 16", "2⁸ ≡ 1 (mod 17), άρα η τάξη του είναι μόνο 8, όχι 16"),
+      L("2 is not prime", "Το 2 δεν είναι πρώτος"), "2¹⁶ ≢ 1 (mod 17)"], 1, C.ROOTS,
+     [L("A primitive root mod 17 must have order 16.", "Μια πρωταρχική ρίζα mod 17 πρέπει να έχει τάξη 16."),
+      L("Compute 2⁸ = 256 mod 17.", "Υπολόγισε 2⁸ = 256 mod 17.")],
+     L("256 = 15·17 + 1, so 2 repeats after 8 steps. g = 3 works: 3⁸ ≡ 16.",
+       "256 = 15·17 + 1, άρα το 2 επαναλαμβάνεται μετά από 8 βήματα. Το g = 3 δουλεύει: 3⁸ ≡ 16.")),
+
+btns("ez-omega-inv", S_NTT,
+     L("What is ω⁻¹ mod 17 for ω = 9?", "Πόσο είναι το ω⁻¹ mod 17 για ω = 9;"),
+     ["8", "2", "15", "13"], 1, C.ROOTS,
+     [L("Find x with 9·x ≡ 1.", "Βρες x με 9·x ≡ 1."),
+      L("9·x should be 18, 35, 52, …", "Το 9·x πρέπει να είναι 18, 35, 52, …")],
+     L("9·2 = 18 ≡ 1. The inverse NTT uses powers of 2.", "9·2 = 18 ≡ 1. Η αντίστροφη NTT χρησιμοποιεί δυνάμεις του 2.")),
+
+btns("ez-bitrev", S_NTT,
+     L("Index 6 is 110 in 3 bits. What is its bit-reversed index?", "Ο δείκτης 6 είναι 110 σε 3 bits. Ποιος είναι ο αντεστραμμένος δείκτης;"),
+     ["6", "1", "3", "7"], 2, C.BITREV,
+     [L("Read the bits backwards.", "Διάβασε τα bits ανάποδα."),
+      L("110 reversed is 011.", "Το 110 ανάποδα είναι 011.")],
+     L("011 = 3, so indices 3 and 6 swap.", "011 = 3, άρα οι δείκτες 3 και 6 ανταλλάσσονται.")),
+
+btns("ez-ntt-mul", S_NTT,
+     L("In the toy NTT domain, multiplying two polynomials becomes…", "Στο πεδίο NTT του toy, ο πολλαπλασιασμός δύο πολυωνύμων γίνεται…"),
+     [L("a convolution", "συνέλιξη"), L("a matrix inversion", "αντιστροφή πίνακα"),
+      L("coefficient-by-coefficient products", "γινόμενα συντελεστή-συντελεστή"), L("long division", "ευκλείδεια διαίρεση")], 2, C.NTT,
+     [L("That is the whole point of transforming.", "Αυτός είναι όλος ο λόγος του μετασχηματισμού."),
+      L("Each output coefficient depends on one input pair.", "Κάθε συντελεστής εξόδου εξαρτάται από ένα ζεύγος εισόδου.")],
+     L("Pointwise products. Real Kyber gets close: 128 small products of degree-1 pairs.",
+       "Γινόμενα σημείο-προς-σημείο. Ο πραγματικός Kyber πλησιάζει: 128 μικρά γινόμενα ζευγών βαθμού 1.")),
+
+btns("ez-xof", S_FIPS,
+     L("Which function expands the public matrix A from the seed ρ?", "Ποια συνάρτηση επεκτείνει τον δημόσιο πίνακα A από τον σπόρο ρ;"),
+     ["SHA3-512", "SHAKE256", "SHAKE128", "SHA3-256"], 2, C.HASHES,
+     [L("It is an extendable-output function (XOF).", "Είναι συνάρτηση επεκτάσιμης εξόδου (XOF)."),
+      L("SHAKE256 is reserved for secret noise.", "Το SHAKE256 προορίζεται για μυστικό θόρυβο.")],
+     L("SHAKE128(ρ ‖ j ‖ i), then rejection sampling. SHAKE256 is the PRF for noise.",
+       "SHAKE128(ρ ‖ j ‖ i), μετά δειγματοληψία με απόρριψη. Το SHAKE256 είναι η PRF για τον θόρυβο.")),
+
+btns("ez-eta", S_FIPS,
+     L("Which η₁ does ML-KEM-512 use for s, e and r?", "Ποιο η₁ χρησιμοποιεί το ML-KEM-512 για τα s, e και r;"),
+     ["2", "3", "4", "1"], 1, C.CBD,
+     [L("It is not the same for all three parameter sets.", "Δεν είναι ίδιο και στα τρία σύνολα παραμέτρων."),
+      L("The smallest set compensates with a wider noise.", "Το μικρότερο σύνολο αντισταθμίζει με πιο πλατύ θόρυβο.")],
+     L("η₁ = 3 for ML-KEM-512, 2 for 768 and 1024; η₂ = 2 always.",
+       "η₁ = 3 για ML-KEM-512, 2 για 768 και 1024· η₂ = 2 πάντα.")),
+
+btns("ez-encode", S_ENC,
+     L("With q = 17, what value encodes the message bit 1?", "Με q = 17, ποια τιμή κωδικοποιεί το bit 1 του μηνύματος;"),
+     ["1", "17", "16", "8"], 3, C.ENCRYPT,
+     [L("Put it as far from 0 as possible.", "Βάλ' το όσο πιο μακριά από το 0 γίνεται."),
+      L("Halfway round the circle: ⌊q/2⌋.", "Στη μέση του κύκλου: ⌊q/2⌋.")],
+     L("⌊17/2⌋ = 8. FIPS 203 uses ⌈q/2⌋ = 1665 for q = 3329.",
+       "⌊17/2⌋ = 8. Το FIPS 203 χρησιμοποιεί ⌈q/2⌋ = 1665 για q = 3329.")),
+
+btns("ez-noise", S_ENC,
+     L("w = 10 and the encoded bit was 8 (q = 17). Does this coefficient decrypt correctly?",
+       "w = 10 και το κωδικοποιημένο bit ήταν 8 (q = 17). Αποκρυπτογραφείται σωστά αυτός ο συντελεστής;"),
+     [L("No: noise 2 exceeds the limit", "Όχι: ο θόρυβος 2 ξεπερνά το όριο"), L("Yes: noise = +2 and |2| < q/4 = 4.25", "Ναι: θόρυβος = +2 και |2| < q/4 = 4.25"),
+      L("Yes: the noise is 0", "Ναι: ο θόρυβος είναι 0"), L("No: the noise is 10", "Όχι: ο θόρυβος είναι 10")], 1, C.DECRYPT,
+     [L("Noise = w − encoded value.", "Θόρυβος = w − κωδικοποιημένη τιμή."),
+      L("Compare |noise| with q/4.", "Σύγκρινε το |θόρυβο| με το q/4.")],
+     L("10 − 8 = 2 < 4.25, so it still rounds to 8, which is bit 1.",
+       "10 − 8 = 2 < 4.25, άρα στρογγυλεύεται ακόμη στο 8, δηλαδή bit 1.")),
+
+btns("ez-shor", S_OV,
+     L("Why does Shor's algorithm not break Kyber?", "Γιατί ο αλγόριθμος του Shor δεν σπάει τον Kyber;"),
+     [L("Kyber keys are larger than RSA keys", "Τα κλειδιά του Kyber είναι μεγαλύτερα από του RSA"),
+      L("Shor finds hidden periods; MLWE is not a period-finding problem, so the QFT has nothing to extract",
+        "Ο Shor βρίσκει κρυμμένες περιόδους· το MLWE δεν είναι πρόβλημα εύρεσης περιόδου, άρα ο QFT δεν έχει τι να εξαγάγει"),
+      L("The noise erases the periodicity the QFT needs", "Ο θόρυβος σβήνει την περιοδικότητα που χρειάζεται ο QFT"),
+      L("Kyber uses hash functions", "Ο Kyber χρησιμοποιεί συναρτήσεις hash")], 1, C.SECURITY,
+     [L("What kind of structure does Shor exploit in RSA?", "Ποια δομή εκμεταλλεύεται ο Shor στο RSA;"),
+      L("Is there a period in t = A·s + e at all?", "Υπάρχει καθόλου περίοδος στο t = A·s + e;")],
+     L("MLWE has no period to begin with; the 'noise destroys periodicity' story is a common misconception.",
+       "Το MLWE δεν έχει περίοδο εξαρχής· η εξήγηση «ο θόρυβος καταστρέφει την περιοδικότητα» είναι συνηθισμένη παρανόηση.")),
+
+btns("ez-ss", S_FIPS,
+     L("How long is the ML-KEM shared secret?", "Πόσο μεγάλο είναι το κοινό μυστικό του ML-KEM;"),
+     ["16 bytes", "32 bytes", "64 bytes", L("It depends on k", "Εξαρτάται από το k")], 1, C.SIZES,
+     [L("It does not change between the three sets.", "Δεν αλλάζει μεταξύ των τριών συνόλων."),
+      L("It is the first half of G's 64-byte output.", "Είναι το πρώτο μισό της εξόδου 64 bytes του G.")],
+     L("32 bytes (256 bits) for every parameter set.", "32 bytes (256 bits) για κάθε σύνολο παραμέτρων.")),
+]

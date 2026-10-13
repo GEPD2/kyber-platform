@@ -1,14 +1,16 @@
 """
-Challenges router, /api/challenges/*
+Challenges router — /api/challenges/*
 
 IMPORTANT: FastAPI matches routes in declaration order.
 /submit and /progress/* must come BEFORE /{mode} to avoid being swallowed
 as path-parameter values.
 
 Routes:
-  POST /api/challenges/submit, validate answer, record submission
-  GET  /api/challenges/progress/{mode}, user's answered questions for a mode
-  GET  /api/challenges/{mode}, question metadata (no correct answers)
+  POST /api/challenges/submit          — validate answer, record submission
+  POST /api/challenges/hint            — next hint level for one gap (lowers points)
+  GET  /api/challenges/modes           — question count per mode
+  GET  /api/challenges/progress/{mode} — user's answered questions for a mode
+  GET  /api/challenges/{mode}?lang=    — public question content (no answers)
 """
 
 from datetime import datetime, timezone
@@ -18,14 +20,18 @@ from pydantic import BaseModel, field_validator
 from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config   import settings
 from app.core.database import get_db
+from app.core.redis_client import get_redis
 from app.core.deps     import get_current_user, require_csrf
 from app.core.security import sanitise_answer, verify_session_cookie
 from app.models.models import Leaderboard, Submission, User
-from app.services.answer_validator import grade_gaps, validate_answer
+from app.services.answer_validator import validate_answer
 from app.services.challenge_store  import (
-    ANSWER_KEYS, VALID_MODES, get_challenge, get_mode_meta, previous_mode,
+    LEVEL_ORDER, VALID_LANGS, VALID_MODES, explanation, get_challenge, mode_size, public_mode,
 )
+from app.services.hint_service     import base_points, hints_used, next_hint
+from app.services.lab_runner       import step_output, wrong_output
 
 router = APIRouter()
 
@@ -36,9 +42,8 @@ class SubmitRequest(BaseModel):
     mode:        str
     question_id: int
     answer:      str    # option index string (btns), value string (duo), JSON array (gaps)
-    # Deprecated: the server derives the streak from its own submission
-    # history.  Accepted for backward compatibility, but ignored.
     streak:      int = 0
+    lang:        str = "en"
 
     @field_validator("mode")
     @classmethod
@@ -46,6 +51,11 @@ class SubmitRequest(BaseModel):
         if v not in VALID_MODES:
             raise ValueError(f"Invalid mode '{v}'.")
         return v
+
+    @field_validator("lang")
+    @classmethod
+    def validate_lang(cls, v: str) -> str:
+        return v if v in VALID_LANGS else "en"
 
     @field_validator("answer")
     @classmethod
@@ -66,23 +76,52 @@ class SubmitRequest(BaseModel):
         return max(0, min(v, 500))
 
 
+class HintRequest(BaseModel):
+    mode:        str
+    question_id: int
+    gap:         int = 0
+    lang:        str = "en"
+
+    @field_validator("mode")
+    @classmethod
+    def validate_mode(cls, v: str) -> str:
+        if v not in VALID_MODES:
+            raise ValueError(f"Invalid mode '{v}'.")
+        return v
+
+    @field_validator("question_id", "gap")
+    @classmethod
+    def validate_ints(cls, v: int) -> int:
+        if not (0 <= v <= 999):
+            raise ValueError("Out of range.")
+        return v
+
+    @field_validator("lang")
+    @classmethod
+    def validate_lang(cls, v: str) -> str:
+        return v if v in VALID_LANGS else "en"
+
+
 class SubmitResponse(BaseModel):
     correct:         bool
+    per_gap:         list[bool]  # which gaps are right; never the answers
+    explain:         str         # sent only when the answer is correct
+    output:          str = ""    # Lab terminal: simulated tool output (step output or error)
     score_delta:     int
     total_score:     int   # user's cumulative total across all modes
-    streak:          int   # server-derived current streak for this mode
     message:         str
     leaderboard:     list  # top-10 global leaderboard (rank/username/total_score/total_correct)
     completed:       bool  # True when ALL questions in the mode are now answered correctly
     already_correct: bool  # True when this question was already answered correctly before
-    # Per-gap verdicts for 'gaps' questions (None for other types / bad payload)
-    gap_results:     list[bool] | None = None
-    # The correct answer, revealed ONLY after a wrong submission so the
-    # student can learn from it: int index (btns), str (duo), list (gaps).
-    correct_answer:  int | str | list[str] | None = None
 
 
-# Endpoints, fixed order (specific before parametric)
+def _terminal_output(challenge: dict, command: str, correct: bool, user_id: int) -> str:
+    if challenge.get("type") != "term":
+        return ""
+    return step_output(challenge, command, user_id) if correct else wrong_output(challenge, command)
+
+
+# Endpoints — fixed order (specific before parametric)
 
 @router.post("/submit", response_model=SubmitResponse)
 async def submit_answer(
@@ -112,43 +151,12 @@ async def submit_answer(
             detail="Invalid or expired game session. Please log in again.",
         )
 
-    # Level gating: each level requires the previous one to be completed.
-    prereq = previous_mode(body.mode)
-    if prereq is not None:
-        prereq_res = await db.execute(
-            select(func.count(func.distinct(Submission.question_id))).where(
-                Submission.user_id == user.id,
-                Submission.mode    == prereq,
-                Submission.correct == True,
-            )
-        )
-        if (prereq_res.scalar() or 0) < len(ANSWER_KEYS[prereq]):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Level '{body.mode}' is locked. Complete '{prereq}' first.",
-            )
-
     challenge = get_challenge(body.mode, body.question_id)
     if not challenge:
         raise HTTPException(status_code=404, detail="Question not found.")
 
-    correct = validate_answer(challenge, body.answer)
-    gap_results = grade_gaps(challenge, body.answer) if challenge.get("type") == "gaps" else None
-
-    # Server-derived streak: consecutive correct submissions in this mode,
-    # counted backwards from the most recent one. The client's claim is ignored.
-    hist_res = await db.execute(
-        select(Submission.correct)
-        .where(Submission.user_id == user.id, Submission.mode == body.mode)
-        .order_by(desc(Submission.id))
-        .limit(500)
-    )
-    prev_streak = 0
-    for was_correct in hist_res.scalars():
-        if not was_correct:
-            break
-        prev_streak += 1
-    streak = prev_streak + 1 if correct else 0
+    result  = validate_answer(challenge, body.answer)
+    correct = result["correct"]
 
     # Was this question already answered correctly in a previous attempt?
     prev_res = await db.execute(
@@ -166,7 +174,9 @@ async def submit_answer(
     if already_correct:
         score_delta = 0
     else:
-        score_delta = (10 + max(0, streak - 1) * 2) if correct else 0
+        redis = await get_redis()
+        used  = await hints_used(redis, user.id, body.mode, body.question_id)
+        score_delta = (base_points(used) + max(0, body.streak - 1) * 2) if correct else 0
 
     # Persist submission
     db.add(Submission(
@@ -197,13 +207,13 @@ async def submit_answer(
     if correct and not already_correct:
         entry.total_correct = (entry.total_correct or 0) + 1
         entry.best_score    = (entry.best_score    or 0) + score_delta
-        entry.best_streak   = max(entry.best_streak or 0, streak)
+        entry.best_streak   = max(entry.best_streak or 0, body.streak + 1)
 
     # Level-completion check
     # Count distinct question_ids answered correctly (before this flush).
     # If the current answer is newly correct, add 1 manually because the new
     # Submission hasn't been flushed yet.
-    total_q = len(ANSWER_KEYS[body.mode])
+    total_q = mode_size(body.mode)
     dist_res = await db.execute(
         select(func.count(func.distinct(Submission.question_id))).where(
             Submission.user_id == user.id,
@@ -254,42 +264,55 @@ async def submit_answer(
         key="kyber_score",
         value=str(user_total),
         httponly=False,
+        secure=settings.TLS_ENABLED,
         samesite="lax",
         path="/",
         max_age=30 * 86400,
     )
 
     if already_correct and correct:
-        message = "Already answered correctly, no points awarded."
+        message = "Already answered correctly — no points awarded."
     elif correct:
         message = "Correct! Level complete!" if level_completed else "Correct!"
     else:
-        message = "Wrong, review the theory."
-
-    # Reveal the correct answer only after a wrong submission (didactic
-    # feedback). The answer is never shipped with the question itself.
-    correct_answer: int | str | list[str] | None = None
-    if not correct:
-        qtype = challenge.get("type")
-        if qtype == "btns":
-            correct_answer = challenge.get("correct")
-        elif qtype == "duo":
-            correct_answer = str(challenge.get("ans", ""))
-        elif qtype == "gaps":
-            correct_answer = [str(g) for g in challenge.get("gaps", [])]
+        message = "Not yet. The marked gaps need another look; a hint is available."
 
     return SubmitResponse(
         correct=correct,
+        per_gap=result["per_gap"],
+        explain=explanation(challenge, body.lang) if correct else "",
+        output=_terminal_output(challenge, body.answer, correct, user.id),
         score_delta=score_delta,
         total_score=user_total,
-        streak=streak,
         message=message,
         leaderboard=leaderboard,
         completed=level_completed,
         already_correct=already_correct,
-        gap_results=gap_results,
-        correct_answer=correct_answer,
     )
+
+
+@router.post("/hint")
+async def get_hint(
+    body:  HintRequest,
+    _csrf: None = Depends(require_csrf),
+    user:  User = Depends(get_current_user),
+):
+    """Reveal the next hint level for one gap. Hints never contain the answer."""
+    challenge = get_challenge(body.mode, body.question_id)
+    if not challenge:
+        raise HTTPException(status_code=404, detail="Question not found.")
+    redis = await get_redis()
+    hint = await next_hint(redis, user.id, body.mode, body.question_id,
+                           challenge, body.gap, body.lang)
+    if hint is None:
+        raise HTTPException(status_code=404, detail="No hint for this gap.")
+    return hint
+
+
+@router.get("/modes")
+async def list_modes(user: User = Depends(get_current_user)):
+    """Question count per mode, for the level picker."""
+    return {mode: mode_size(mode) for mode in LEVEL_ORDER}
 
 
 @router.get("/progress/{mode}")
@@ -316,7 +339,7 @@ async def get_progress(
 
     # A question "counts" as correctly answered if ANY submission was correct.
     correctly_answered_ids = {s.question_id for s in rows if s.correct}
-    total_q    = len(ANSWER_KEYS[mode])
+    total_q    = mode_size(mode)
     completed  = len(correctly_answered_ids) == total_q
 
     # Leaderboard row for completed_at (if any)
@@ -342,12 +365,10 @@ async def get_progress(
 @router.get("/{mode}")
 async def get_challenges(
     mode: str,
+    lang: str = "en",
     user: User = Depends(get_current_user),
 ):
-    """
-    Return question metadata for a mode, type info only, NO correct answers.
-    The frontend already holds all question text client-side.
-    """
+    """Public question content for a mode. Every answer field is stripped server-side."""
     if mode not in VALID_MODES:
         raise HTTPException(status_code=404, detail=f"Mode '{mode}' not found.")
-    return get_mode_meta(mode)
+    return public_mode(mode, lang)

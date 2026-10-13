@@ -1,0 +1,77 @@
+/* The only file with raw colour values. Light on :root, dark via data-theme. */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f7;
+  --border: #d9dee8;
+  --text: #141a26;
+  --muted: #5b667a;
+  --accent: #0e7490;
+  --accent-soft: #e0f2f7;
+  --on-accent: #ffffff;
+  --ok: #15803d;
+  --ok-soft: #e3f5e9;
+  --bad: #b91c1c;
+  --bad-soft: #fdeaea;
+  --warn: #a16207;
+  --warn-soft: #fdf3dc;
+
+  --code-bg: #f3f5f9;
+  --code-kw: #7c3aed;
+  --code-fn: #0369a1;
+  --code-num: #b45309;
+  --code-str: #15803d;
+  --code-cm: #7a8599;
+  --code-const: #be185d;
+  --code-pp: #6d28d9;
+
+  --term-bg: #0f1720;
+  --term-bar: #1a2430;
+  --term-text: #d6dee8;
+  --term-dim: #8796a8;
+  --term-prompt: #4ade80;
+  --term-task: #67e8f9;
+  --term-err: #fca5a5;
+  --term-ok: #86efac;
+  --dot-r: #ef4444;
+  --dot-y: #eab308;
+  --dot-g: #22c55e;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b1017;
+  --surface: #121a24;
+  --surface-2: #18222f;
+  --border: #253244;
+  --text: #e3e9f2;
+  --muted: #8b98ad;
+  --accent: #22d3ee;
+  --accent-soft: #0f2d36;
+  --on-accent: #062028;
+  --ok: #4ade80;
+  --ok-soft: #10291b;
+  --bad: #f87171;
+  --bad-soft: #321516;
+  --warn: #fbbf24;
+  --warn-soft: #2e240d;
+
+  --code-bg: #0f1620;
+  --code-kw: #c4a5ff;
+  --code-fn: #7dd3fc;
+  --code-num: #fdba74;
+  --code-str: #86efac;
+  --code-cm: #6b7a90;
+  --code-const: #f9a8d4;
+  --code-pp: #c4b5fd;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
+
+  --term-bg: #05090e;
+  --term-bar: #111a24;
+}

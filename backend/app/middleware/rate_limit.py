@@ -1,7 +1,7 @@
 """
 Redis-backed sliding window rate limiter middleware.
 Limits requests per IP. Auth and submit endpoints have tighter limits
-(those are also limited at Nginx level, this is the backend defence-in-depth).
+(those are also limited at Nginx level — this is the backend defence-in-depth).
 """
 
 import time
@@ -19,6 +19,7 @@ ROUTE_LIMITS = {
     "/api/auth/login":    (settings.MAX_LOGIN_ATTEMPTS * 2, 60),
     "/api/auth/register": (10, 60),
     "/api/challenges/submit": (settings.ANSWER_SUBMIT_LIMIT, 60),
+    "/api/challenges/hint":   (settings.ANSWER_SUBMIT_LIMIT, 60),
 }
 DEFAULT_LIMIT  = (settings.RATE_LIMIT_REQUESTS, settings.RATE_LIMIT_WINDOW)
 

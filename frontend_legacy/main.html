@@ -155,11 +155,6 @@ header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;ba
 /* DIFF CARD COMPLETED BADGE */
 .diff-card.done::after{content:'✓ COMPLETED';position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--accent2);border:1px solid var(--accent2);padding:2px 6px;background:rgba(0,255,136,.08);pointer-events:none}
 
-/* DIFF CARD LOCKED (prerequisite level not yet completed) */
-.diff-card.locked{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
-.diff-card.locked:hover{transform:none;box-shadow:none!important}
-.diff-card.locked .btn-go{cursor:not-allowed}
-
 /* RESULTS */
 .results{max-width:660px;margin:60px auto;text-align:center}
 .res-grade{font-family:var(--head);font-size:80px;font-weight:900;color:var(--accent);text-shadow:var(--glow);margin-bottom:12px}
@@ -379,117 +374,117 @@ header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;ba
 const VE=[
 {type:'duo',section:'Ring Arithmetic',
  theory:`<h3>Modular Reduction</h3><p>All Kyber coefficients live in Z_q = {0…q−1}. After every operation reduce mod q.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">q = 17\n19 mod 17  →  19 − 17 = 2\nAnswer: 2</div>`,
- q:'Compute: <strong>25 mod 17</strong>',prefix:'25 mod 17 =',hint:'mod is the remainder of integer division. 25 = 1×17 + ? (what is the remainder?)'},
+ q:'Compute: <strong>25 mod 17</strong>',prefix:'25 mod 17 =',ans:'8',hint:'mod is the remainder of integer division. 25 = 1×17 + ? (what is the remainder?)'},
 {type:'duo',section:'Ring Arithmetic',
  theory:`<h3>Negative Coefficients mod q</h3><p>Negative values are stored as positive representatives. Add q until in {0…q−1}.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">−1 mod 17  →  −1 + 17 = 16\nAnswer: 16</div>`,
- q:'Compute: <strong>−2 mod 17</strong>',prefix:'−2 mod 17 =',hint:'Negative values: add q until in {0…q−1}. −2 + 17 = ?'},
+ q:'Compute: <strong>−2 mod 17</strong>',prefix:'−2 mod 17 =',ans:'15',hint:'Negative values: add q until in {0…q−1}. −2 + 17 = ?'},
 {type:'duo',section:'Ring Arithmetic',
  theory:`<h3>Negacyclic Reduction:X⁸ ≡ −1</h3><p>In Z₁₇[X]/(X⁸+1) any X^k with k≥8 wraps: X⁸→−1.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">3·X⁹: X⁹=X⁸·X=(−1)·X=−X\n3·X⁹ → −3·X ≡ 14·X mod 17\nCoefficient of X: 14</div>`,
- q:'Coefficient of X when <strong>2·X⁹</strong> is reduced in Z₁₇[X]/(X⁸+1)?',prefix:'coeff of X =',hint:'X⁸≡−1, so X⁹=X⁸·X=−X. Then 2·X⁹=−2·X. Coefficient is −2. Now −2 mod 17: −2 + 17 = ?'},
+ q:'Coefficient of X when <strong>2·X⁹</strong> is reduced in Z₁₇[X]/(X⁸+1)?',prefix:'coeff of X =',ans:'15',hint:'X⁸≡−1, so X⁹=X⁸·X=−X. Then 2·X⁹=−2·X. Coefficient is −2. Now −2 mod 17: −2 + 17 = ?'},
 {type:'duo',section:'CBD Sampling',
  theory:`<h3>CBD Computation</h3><p>For bits b₀…b₃ read LSB-first:</p><div class="mblock">coeff = (b₀+b₁) − (b₂+b₃)</div><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">Byte 0x01 = 00000001 (LSB-first: 1,0,0,0,0,0,0,0)\ncoeff[0]: (1+0)−(0+0) = +1  → stored: 1\nAnswer: 1</div>`,
- q:'Byte <code>0xF0</code>=<code>11110000</code>. LSB-first:[0,0,0,0,1,1,1,1].<br>What is <strong>coeff[0]</strong>? (bits 0–3: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[0] =',hint:'Formula: coeff=(b0+b1)−(b2+b3). Bits 0–3 are all 0: (0+0)−(0+0) = ?'},
+ q:'Byte <code>0xF0</code>=<code>11110000</code>. LSB-first:[0,0,0,0,1,1,1,1].<br>What is <strong>coeff[0]</strong>? (bits 0–3: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[0] =',ans:'0',hint:'Formula: coeff=(b0+b1)−(b2+b3). Bits 0–3 are all 0: (0+0)−(0+0) = ?'},
 {type:'duo',section:'CBD Sampling',
  theory:`<h3>CBD:Second Coefficient</h3><p>Each byte gives 2 coefficients. Second uses bits 4–7.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">Byte 0xF0 LSB-first:[0,0,0,0,1,1,1,1]\ncoeff[1]: bits4-7=(1,1,1,1)\n(b0+b1)−(b2+b3)=(1+1)−(1+1)=0\nAnswer: 0</div>`,
- q:'Byte <code>0x0F</code>=<code>00001111</code>. LSB-first:[1,1,1,1,0,0,0,0].<br>What is <strong>coeff[1]</strong>? (bits 4–7: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[1] =',hint:'bits 4–7 are (0,0,0,0). Apply formula: (b0+b1)−(b2+b3) = ?'},
+ q:'Byte <code>0x0F</code>=<code>00001111</code>. LSB-first:[1,1,1,1,0,0,0,0].<br>What is <strong>coeff[1]</strong>? (bits 4–7: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[1] =',ans:'0',hint:'bits 4–7 are (0,0,0,0). Apply formula: (b0+b1)−(b2+b3) = ?'},
 {type:'duo',section:'NTT Roots',
  theory:`<h3>Powers of ω mod 17</h3><p>ω=9 is the primitive 8th root of unity mod 17.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">ROOTS[2] = ω² = 9×9=81 mod 17\n81 = 4×17+13 → ROOTS[2]=13\nAnswer: 13</div>`,
- q:'Compute <strong>ROOTS[3]</strong> = ω³ mod 17 = 9³ mod 17',prefix:'ROOTS[3] =',hint:'ω²=ROOTS[2]=13. ω³=ω²×ω=13×9=117. mod 17: 117 = 6×17 + ? (find the remainder)'},
+ q:'Compute <strong>ROOTS[3]</strong> = ω³ mod 17 = 9³ mod 17',prefix:'ROOTS[3] =',ans:'15',hint:'ω²=ROOTS[2]=13. ω³=ω²×ω=13×9=117. mod 17: 117 = 6×17 + ? (find the remainder)'},
 {type:'duo',section:'NTT Butterfly',
  theory:`<h3>One NTT Butterfly Step</h3><div class="mblock">t     = v × w  mod q\nnew_u = (u + t) mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">u=1,v=2,w=9,q=17\nt=2×9=18≡1\nnew_u=(1+1)=2\nAnswer: new_u=2</div>`,
- q:'Butterfly: <strong>u=3, v=1, w=9, q=17</strong>. What is <strong>new_u</strong>?',prefix:'new_u =',hint:'Step 1: t = v×w mod q = 1×9 = 9. Step 2: new_u = (u+t) mod q = (3+9) mod 17 = ?'},
+ q:'Butterfly: <strong>u=3, v=1, w=9, q=17</strong>. What is <strong>new_u</strong>?',prefix:'new_u =',ans:'12',hint:'Step 1: t = v×w mod q = 1×9 = 9. Step 2: new_u = (u+t) mod q = (3+9) mod 17 = ?'},
 {type:'duo',section:'NTT Butterfly',
  theory:`<h3>Butterfly:new_v</h3><div class="mblock">t     = v × w  mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">WORKED EXAMPLE (different values)</div><div class="eg-box">u=2, v=3, w=9, q=17\nt = 3×9 = 27. mod 17: 27 = 1×17 + 10 → t=10\nnew_v = (2−10) mod 17 = −8 mod 17\nSince −8 &lt; 0: −8 + 17 = 9\nAnswer: new_v = 9</div>`,
- q:'Same butterfly: <strong>u=3, v=1, w=9, q=17</strong>. What is <strong>new_v</strong>?',prefix:'new_v =',hint:'Step 1: t = v×w mod q = 1×9 = 9. Step 2: new_v = (u−t) mod q = (3−9) mod 17 = −6 mod 17. Since −6 < 0: −6 + 17 = ?'},
+ q:'Same butterfly: <strong>u=3, v=1, w=9, q=17</strong>. What is <strong>new_v</strong>?',prefix:'new_v =',ans:'11',hint:'Step 1: t = v×w mod q = 1×9 = 9. Step 2: new_v = (u−t) mod q = (3−9) mod 17 = −6 mod 17. Since −6 < 0: −6 + 17 = ?'},
 {type:'duo',section:'Public Key',
  theory:`<h3>Pointwise Multiply mod q</h3><p>In NTT domain polynomial multiply becomes coefficient-by-coefficient.</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">a[0]=2, b[0]=11, q=17\n2×11=22 mod 17=5\nAnswer: 5</div>`,
- q:'Pointwise multiply: <strong>a[0]=11, b[0]=3, q=17</strong>',prefix:'11 × 3 mod 17 =',hint:'11×3 = 33. mod 17: 33 = 1×17 + ? (find the remainder)'},
+ q:'Pointwise multiply: <strong>a[0]=11, b[0]=3, q=17</strong>',prefix:'11 × 3 mod 17 =',ans:'16',hint:'11×3 = 33. mod 17: 33 = 1×17 + ? (find the remainder)'},
 {type:'duo',section:'Decapsulation',
  theory:`<h3>Message Decoding:Circular Distance</h3><p>Coefficient w → bit 1 if closer to q/2=8 than to 0 (circular).</p><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">w=10, q=17\nd0  = min(10,17−10)=min(10,7)=7\ndq2 = min(|10−8|,17−|10−8|)=min(2,15)=2\n2 < 7 → bit=1\nAnswer: 1</div>`,
- q:'Decode coefficient <strong>w=3, q=17</strong>. Which bit?',prefix:'bit =',hint:'d0=min(w, q−w)=min(3, 17−3). dq2=min(|w−8|, 17−|w−8|)=min(|3−8|, 17−|3−8|). Compare d0 and dq2: bit=1 if dq2 < d0, else bit=0.'},
+ q:'Decode coefficient <strong>w=3, q=17</strong>. Which bit?',prefix:'bit =',ans:'0',hint:'d0=min(w, q−w)=min(3, 17−3). dq2=min(|w−8|, 17−|w−8|)=min(|3−8|, 17−|3−8|). Compare d0 and dq2: bit=1 if dq2 < d0, else bit=0.'},
 ];
 // LEVEL 2:EASY  (15 btns questions)
 const EZ=[
 {type:'btns',section:'Overview',
  theory:`<h3>CRYSTALS-Kyber</h3><p>A <strong>Key Encapsulation Mechanism</strong> based on Module-LWE hardness, standardised as ML-KEM (FIPS 203).</p><div class="mblock">t = A·s + e\nA=public matrix  s=small secret  e=noise</div>`,
- q:'Kyber is standardised by NIST under what name?',opts:['ML-KEM (FIPS 203)','CRYSTALS-DSA','FALCON-512','SPHINCS+']},
+ q:'Kyber is standardised by NIST under what name?',opts:['ML-KEM (FIPS 203)','CRYSTALS-DSA','FALCON-512','SPHINCS+'],cor:0},
 {type:'btns',section:'Parameters',
  theory:`<h3>Toy Parameters</h3><ul><li><strong>q=17</strong> prime modulus</li><li><strong>n=8</strong> polynomial degree</li><li><strong>k=2</strong> module dimension</li><li><strong>η=2</strong> CBD noise bound</li></ul><div class="mblock">N_INV=15 because 8×15=120≡1 mod 17</div>`,
- q:'What is n⁻¹ mod q in our toy parameters (q=17, n=8)?',opts:['13','15','9','2']},
+ q:'What is n⁻¹ mod q in our toy parameters (q=17, n=8)?',opts:['13','15','9','2'],cor:1},
 {type:'btns',section:'Ring',
  theory:`<h3>Negacyclic Ring</h3><div class="mblock">X⁸ ≡ −1 mod (X⁸+1)\nX⁹ → −X,  X¹⁰ → −X²,  X¹⁵ → −X⁷</div>`,
- q:'In Z₁₇[X]/(X⁸+1), what does X⁸ reduce to?',opts:['0','+1','−1 (=16 mod 17)','X']},
+ q:'In Z₁₇[X]/(X⁸+1), what does X⁸ reduce to?',opts:['0','+1','−1 (=16 mod 17)','X'],cor:2},
 {type:'btns',section:'CBD',
  theory:`<h3>CBD Algorithm</h3><div class="mblock">bits = LSB-first from byte\ncoeff = (b₀+b₁)−(b₂+b₃)\nstored as coeff mod q</div>`,
- q:'Byte 0x01 LSB-first:[1,0,0,0,0,0,0,0]. What is coeff[0]?',opts:['+1','0','16 (=−1)','−2']},
+ q:'Byte 0x01 LSB-first:[1,0,0,0,0,0,0,0]. What is coeff[0]?',opts:['+1','0','16 (=−1)','−2'],cor:0},
 {type:'btns',section:'CBD',
  theory:`<h3>Negative CBD Coefficients</h3><p>Negative values become positive representative mod q: −1→16, −2→15.</p>`,
- q:'CBD gives raw value −2. What is the stored coefficient mod 17?',opts:['15','2','16','−2']},
+ q:'CBD gives raw value −2. What is the stored coefficient mod 17?',opts:['15','2','16','−2'],cor:0},
 {type:'btns',section:'Primitive Root',
  theory:`<h3>Generator g mod 17</h3><div class="mblock">g=2: 2⁸ mod 17=1 → order=8 ✗\ng=3: 3⁸ mod 17=16≠1 → order=16 ✓</div>`,
- q:'Why is g=2 rejected as a primitive root mod 17?',opts:['2 is not prime','2⁸ mod 17=1, order is only 8 not 16','2 only generates even numbers','2¹⁶ mod 17≠1']},
+ q:'Why is g=2 rejected as a primitive root mod 17?',opts:['2 is not prime','2⁸ mod 17=1, order is only 8 not 16','2 only generates even numbers','2¹⁶ mod 17≠1'],cor:1},
 {type:'btns',section:'NTT Roots',
  theory:`<h3>ψ, ω derived from g=3</h3><div class="mblock">ψ = 3^((17−1)/(2×8)) = 3¹ = 3\nω = ψ² = 9\nω⁻¹ = 2  (9×2=18≡1 mod 17)</div>`,
- q:'What is ω⁻¹ mod 17 (inverse of ω=9)?',opts:['2','8','15','13']},
+ q:'What is ω⁻¹ mod 17 (inverse of ω=9)?',opts:['2','8','15','13'],cor:0},
 {type:'btns',section:'NTT',
  theory:`<h3>NTT Butterfly Operation</h3><div class="mblock">t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div>`,
- q:'u=1, v=2, w=1, q=17. What is new_v?',opts:['16 (=−1 mod 17)','3','0','2']},
+ q:'u=1, v=2, w=1, q=17. What is new_v?',opts:['16 (=−1 mod 17)','3','0','2'],cor:0},
 {type:'btns',section:'NTT',
  theory:`<h3>Bit-Reversal Permutation for n=8</h3><div class="mblock">index 1=001 → reversed 100=4\nindex 3=011 → reversed 110=6\n→ pairs (1,4) and (3,6) swap</div>`,
- q:'Index 6 binary (3-bit) is 110. What is its bit-reversed index?',opts:['3','6','7','1']},
+ q:'Index 6 binary (3-bit) is 110. What is its bit-reversed index?',opts:['3','6','7','1'],cor:0},
 {type:'btns',section:'INTT',
  theory:`<h3>Inverse NTT</h3><p>Same butterfly as NTT but uses inv_roots, then every coefficient is scaled by n⁻¹.</p><div class="mblock">intt = scale(butterfly(x, inv_roots), n_inv)</div>`,
- q:'After INTT butterfly layers, every coefficient is multiplied by?',opts:['n⁻¹ = 15','ω = 9','q = 17','ψ = 3']},
+ q:'After INTT butterfly layers, every coefficient is multiplied by?',opts:['n⁻¹ = 15','ω = 9','q = 17','ψ = 3'],cor:0},
 {type:'btns',section:'Public Key',
  theory:`<h3>t̂ = Â·ŝ + ê</h3><div class="mblock">t̂[0] = Â[0][0]⊙ŝ[0] + Â[0][1]⊙ŝ[1] + ê[0]</div><p>⊙ = pointwise (coefficient-by-coefficient) multiply.</p>`,
- q:'In NTT domain, polynomial multiplication becomes?',opts:['Pointwise (element-by-element) multiply','Polynomial long multiply','Matrix inversion','Convolution']},
+ q:'In NTT domain, polynomial multiplication becomes?',opts:['Pointwise (element-by-element) multiply','Polynomial long multiply','Matrix inversion','Convolution'],cor:0},
 {type:'btns',section:'Encapsulation',
  theory:`<h3>Why transpose Â^T in encapsulation?</h3><div class="mblock">u = INTT(Â^T·r̂) + e1\nv = INTT(t̂^T·r̂) + e2 + m̂</div><p>The transpose enables exact algebraic cancellation in decapsulation.</p>`,
- q:'Why does Bob use Â^T (not Â) when computing u?',opts:['To enable algebraic cancellation in decapsulation','Because A is symmetric','To reduce ciphertext size','Random design choice']},
+ q:'Why does Bob use Â^T (not Â) when computing u?',opts:['To enable algebraic cancellation in decapsulation','Because A is symmetric','To reduce ciphertext size','Random design choice'],cor:0},
 {type:'btns',section:'Message Encoding',
  theory:`<h3>Encoding bits into Z_q</h3><div class="mblock">bit 0 → 0\nbit 1 → ⌊q/2⌋ = 8</div><p>Maximises circular distance between encodings.</p>`,
- q:'What is the encoded value for bit=1 when q=17?',opts:['8','17','1','16']},
+ q:'What is the encoded value for bit=1 when q=17?',opts:['8','17','1','16'],cor:0},
 {type:'btns',section:'Decapsulation',
  theory:`<h3>Noise Budget</h3><div class="mblock">w = v − INTT(ŝ^T·NTT(u))\nDecryption succeeds if |noise| < q/4 = 4.25</div>`,
- q:'w[i]=10, m̂[i]=8. Does decryption succeed for this coefficient?',opts:['Yes:noise=+2, |2|<4.25','No:noise=+2 exceeds limit','Yes:noise=0','No:noise=10']},
+ q:'w[i]=10, m̂[i]=8. Does decryption succeed for this coefficient?',opts:['Yes:noise=+2, |2|<4.25','No:noise=+2 exceeds limit','Yes:noise=0','No:noise=10'],cor:0},
 {type:'btns',section:'Security',
  theory:`<h3>Post-Quantum Security</h3><div class="mblock">RSA: f(x)=7^x mod 15 → periodic → QFT breaks it\nLWE: t=A·s+e → no periodicity → QFT finds nothing</div>`,
- q:'What makes Kyber resistant to Shor\'s quantum algorithm?',opts:['MLWE is not a period-finding/hidden-subgroup problem, so the QFT has no period to extract','Very large key sizes','Discrete logarithm assumption','Hash functions']},
+ q:'What makes Kyber resistant to Shor\'s quantum algorithm?',opts:['LWE has no periodicity:fresh noise prevents periodic structure','Very large key sizes','Discrete logarithm assumption','Hash functions'],cor:0},
 ];
 // LEVEL 3:MEDIUM  (5 duo + 5 btns + 8 gaps = 18)
 const MED=[
 // 5 duo (harder computations)
 {type:'duo',section:'CBD Hard',
  theory:`<h3>CBD with negative result</h3><div class="mblock">Byte 0x03=00000011 LSB-first:[1,1,0,0,0,0,0,0]\ncoeff[0]=(1+1)−(0+0)=+2</div><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">Byte 0xC0=11000000 LSB-first:[0,0,0,0,0,0,1,1]\ncoeff[1]=(0+0)−(1+1)=−2 → −2 mod 17=15\nAnswer: 15</div>`,
- q:'Byte <code>0x30</code>=<code>00110000</code>. LSB-first:[0,0,0,0,1,1,0,0].<br><strong>coeff[1]</strong> (bits 4–7: b0=1,b1=1,b2=0,b3=0)?',prefix:'coeff[1] =',hint:'bits 4–7 are b0=1,b1=1,b2=0,b3=0. Apply formula: (b0+b1)−(b2+b3) = (1+1)−(0+0) = ?'},
+ q:'Byte <code>0x30</code>=<code>00110000</code>. LSB-first:[0,0,0,0,1,1,0,0].<br><strong>coeff[1]</strong> (bits 4–7: b0=1,b1=1,b2=0,b3=0)?',prefix:'coeff[1] =',ans:'2',hint:'bits 4–7 are b0=1,b1=1,b2=0,b3=0. Apply formula: (b0+b1)−(b2+b3) = (1+1)−(0+0) = ?'},
 {type:'duo',section:'CBD Hard',
  theory:`<h3>CBD negative stored mod q</h3><div class="eg-lbl">WORKED EXAMPLE</div><div class="eg-box">raw coeff = −2\nstored = −2 + 17 = 15</div>`,
- q:'Byte <code>0xC0</code>=<code>11000000</code>. LSB-first:[0,0,0,0,0,0,1,1].<br>coeff[1] raw = −2. What is <strong>stored</strong> (mod 17)?',prefix:'stored coeff[1] =',hint:'Raw value is −2. mod 17: add 17 to bring into {0…q−1}: −2 + 17 = ?'},
+ q:'Byte <code>0xC0</code>=<code>11000000</code>. LSB-first:[0,0,0,0,0,0,1,1].<br>coeff[1] raw = −2. What is <strong>stored</strong> (mod 17)?',prefix:'stored coeff[1] =',ans:'15',hint:'Raw value is −2. mod 17: add 17 to bring into {0…q−1}: −2 + 17 = ?'},
 {type:'duo',section:'NTT Layer',
  theory:`<h3>NTT s[0] Layer 1 result</h3><p>After bit-reversal of s[0]=[1,0,0,1,0,0,0,1] → [1,0,0,0,0,0,1,1]. Layer 1 uses w=1 for all pairs.</p><div class="mblock">Formula: t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div><div class="eg-lbl">WORKED EXAMPLE:Pair [0,1]</div><div class="eg-box">u=r[0]=1, v=r[1]=0, w=1\nt = 0×1 = 0\nnew[0] = (1+0) mod 17 = 1\nnew[1] = (1−0) mod 17 = 1</div>`,
- q:'After NTT Layer 1 on s[0], what is <strong>a[6]</strong>?',prefix:'a[6] after layer1 =',hint:'Pair [6,7]: u=r[6]=1, v=r[7]=1, w=1. Compute t = v×w mod q = 1×1 = 1. Then new[6] = (u+t) mod q = (1+1) mod 17 = ?'},
-{type:'duo',section:'KeyGen',
- theory:`<h3>t̂[0][0] computation (KeyGen: t̂ = Â∘ŝ + ê)</h3><div class="mblock">Â[0][0][0]=2, ŝ[0][0]=3 → 2×3=6\nÂ[0][1][0]=6, ŝ[1][0]=2 → 6×2=12\nê[0][0]=1\n(6+12+1) mod 17=2</div>`,
- q:'Coefficient 1 of t̂[0]: Â[0][0][1]=11, ŝ[0][1]=1, Â[0][1][1]=6, ŝ[1][1]=8, ê[0][1]=1. Compute <strong>t̂[0][1]</strong>.',prefix:'t̂[0][1] =',hint:'Compute each product: 11×1=11, 6×8=48. Add ê: 11+48+1=60. mod 17: 60 = 3×17 + ? (find the remainder)'},
-{type:'duo',section:'Modular Arithmetic',
+ q:'After NTT Layer 1 on s[0], what is <strong>a[6]</strong>?',prefix:'a[6] after layer1 =',ans:'2',hint:'Pair [6,7]: u=r[6]=1, v=r[7]=1, w=1. Compute t = v×w mod q = 1×1 = 1. Then new[6] = (u+t) mod q = (1+1) mod 17 = ?'},
+{type:'duo',section:'Encapsulation',
+ theory:`<h3>t̂[0][0] computation</h3><div class="mblock">Â[0][0][0]=2, ŝ[0][0]=3 → 2×3=6\nÂ[0][1][0]=6, ŝ[1][0]=2 → 6×2=12\nê[0][0]=1\n(6+12+1) mod 17=2</div>`,
+ q:'Coefficient 1 of t̂[0]: Â[0][0][1]=11, ŝ[0][1]=1, Â[0][1][1]=6, ŝ[1][1]=8, ê[0][1]=1. Compute <strong>t̂[0][1]</strong>.',prefix:'t̂[0][1] =',ans:'9',hint:'Compute each product: 11×1=11, 6×8=48. Add ê: 11+48+1=60. mod 17: 60 = 3×17 + ? (find the remainder)'},
+{type:'duo',section:'Encapsulation',
  theory:`<h3>Modular exponentiation:square-and-multiply</h3><div class="mblock">3¹=3, 3²=9, 3⁴=9²=81≡13, 3⁸=13²=169≡16</div>`,
- q:'Compute <strong>3⁸ mod 17</strong> using repeated squaring',prefix:'3⁸ mod 17 =',hint:'3¹=3. 3²=3×3=9. 3⁴=9²=81: 81=4×17+? → find 3⁴. Then 3⁸=(3⁴)²: square that result mod 17.'},
+ q:'Compute <strong>3⁸ mod 17</strong> using repeated squaring',prefix:'3⁸ mod 17 =',ans:'16',hint:'3¹=3. 3²=3×3=9. 3⁴=9²=81: 81=4×17+? → find 3⁴. Then 3⁸=(3⁴)²: square that result mod 17.'},
 // 5 btns (harder theory)
 {type:'btns',section:'CBD Theory',
  theory:`<h3>Why must coefficients be small?</h3><p>The noise budget for decapsulation: |noise| < q/4 = 4.25. CBD with η=2 guarantees coefficients in {−2,…,+2}.</p>`,
- q:'CBD with η=2 produces coefficients in which range?',opts:['{−2,−1,0,+1,+2}','{0,1,…,16}','{−8,…,+8}','{0,1}']},
+ q:'CBD with η=2 produces coefficients in which range?',opts:['{−2,−1,0,+1,+2}','{0,1,…,16}','{−8,…,+8}','{0,1}'],cor:0},
 {type:'btns',section:'NTT Theory',
  theory:`<h3>NTT complexity gain</h3><p>Naive polynomial multiply: O(n²). NTT-based: O(n log n). For n=8 there are exactly log₂8=3 butterfly layers.</p>`,
- q:'How many butterfly layers does the NTT require for n=8?',opts:['3  (log₂8=3)','8','4','2']},
+ q:'How many butterfly layers does the NTT require for n=8?',opts:['3  (log₂8=3)','8','4','2'],cor:0},
 {type:'btns',section:'INTT Property',
  theory:`<h3>Round-trip property</h3><div class="mblock">INTT(NTT(poly)) == poly\nfor all poly in R_q</div>`,
- q:'After INTT butterfly (with inv_roots), what final scaling is applied?',opts:['Multiply every coefficient by n⁻¹=15','Divide by q=17','Add q to negatives','No scaling needed']},
+ q:'After INTT butterfly (with inv_roots), what final scaling is applied?',opts:['Multiply every coefficient by n⁻¹=15','Divide by q=17','Add q to negatives','No scaling needed'],cor:0},
 {type:'btns',section:'Encapsulation',
  theory:`<h3>Message encoding vector</h3><div class="mblock">MSG=[1,0,1,0,1,0,1,0]\nM_HAT=[8,0,8,0,8,0,8,0]\nbit 1→⌊q/2⌋=8,  bit 0→0</div>`,
- q:'After encoding, MSG=[1,0,1,0,1,0,1,0] becomes M_HAT=?',opts:['[8,0,8,0,8,0,8,0]','[1,0,1,0,1,0,1,0]','[17,0,17,0,17,0,17,0]','[8,8,8,8,8,8,8,8]']},
+ q:'After encoding, MSG=[1,0,1,0,1,0,1,0] becomes M_HAT=?',opts:['[8,0,8,0,8,0,8,0]','[1,0,1,0,1,0,1,0]','[17,0,17,0,17,0,17,0]','[8,8,8,8,8,8,8,8]'],cor:0},
 {type:'btns',section:'Decapsulation',
  theory:`<h3>Algebraic cancellation in decapsulation</h3><div class="mblock">v = t̂^T·r̂ + e2 + m̂  (after INTT)\nŝ^T·u ≈ Â^T·r̂ term cancels\nw = v − ŝ^T·u ≈ m̂ + small noise</div>`,
- q:'What cancels exactly during decapsulation?',opts:['INTT(ŝ^T·Â^T·r̂) terms from both v and ŝ^T·u','The message m̂','The error term e2','The matrix A']},
+ q:'What cancels exactly during decapsulation?',opts:['INTT(ŝ^T·Â^T·r̂) terms from both v and ŝ^T·u','The message m̂','The error term e2','The matrix A'],cor:0},
 // 8 gaps (Python)
 {type:'gaps',lang:'python',section:'modpow',
  theory:`<h3>modpow:square-and-multiply</h3><div class="mblock">result=1, b=base%mod\nwhile exp>0:\n  if exp&1: result=result*b%mod\n  b=b*b%mod\n  exp>>=1</div>`,
@@ -498,9 +493,9 @@ const MED=[
   {t:'code',s:'def modpow(base, exp, mod):'},
   {t:'code',s:'    result, b = 1, base % mod'},
   {t:'code',s:'    while exp > 0:'},
-  {t:'gap', pre:'        if exp & 1: result = result * b % ',suf:'',w:45,hc:'the modulus parameter'},
-  {t:'gap', pre:'        b = b * b % ',suf:'',w:45,hc:'the modulus parameter'},
-  {t:'gap', pre:'        exp >>= ',suf:'',w:30,hc:'right-shift by this many bits each iteration'},
+  {t:'gap', pre:'        if exp & 1: result = result * b % ',suf:'',ans:'mod',w:45,hc:'the modulus parameter'},
+  {t:'gap', pre:'        b = b * b % ',suf:'',ans:'mod',w:45,hc:'the modulus parameter'},
+  {t:'gap', pre:'        exp >>= ',suf:'',ans:'1',w:30,hc:'right-shift by this many bits each iteration'},
   {t:'code',s:'    return result'},
  ]},
 {type:'gaps',lang:'python',section:'cbd_sample',
@@ -510,11 +505,11 @@ const MED=[
   {t:'code',s:'def cbd_sample(byte_list, q):'},
   {t:'code',s:'    out = []'},
   {t:'code',s:'    for byte_val in byte_list:'},
-  {t:'gap', pre:'        bits = [(byte_val >> i) & 1 for i in range(',suf:')]',w:25,hc:'number of bits in a byte'},
+  {t:'gap', pre:'        bits = [(byte_val >> i) & 1 for i in range(',suf:')]',ans:'8',w:25,hc:'number of bits in a byte'},
   {t:'code',s:'        for pair in range(2):'},
   {t:'code',s:'            b0,b1,b2,b3 = bits[pair*4:pair*4+4]'},
-  {t:'gap', pre:'            coeff = (b0+b1) - ',suf:'',w:70,hc:'negative half of the η=2 formula'},
-  {t:'gap', pre:'            out.append(coeff % ',suf:')',w:25,hc:'the modulus parameter'},
+  {t:'gap', pre:'            coeff = (b0+b1) - ',suf:'',ans:'(b2+b3)',w:70,hc:'negative half of the η=2 formula'},
+  {t:'gap', pre:'            out.append(coeff % ',suf:')',ans:'q',w:25,hc:'the modulus parameter'},
   {t:'code',s:'    return out'},
  ]},
 {type:'gaps',lang:'python',section:'bit_reverse_permute',
@@ -524,44 +519,44 @@ const MED=[
   {t:'code',s:'import math'},
   {t:'code',s:'def bit_reverse_permute(a):'},
   {t:'code',s:'    n = len(a); r = list(a)'},
-  {t:'gap', pre:'    bits = int(math.log2(',suf:'))',w:25,hc:'the array length variable'},
+  {t:'gap', pre:'    bits = int(math.log2(',suf:'))',ans:'n',w:25,hc:'the array length variable'},
   {t:'code',s:'    for i in range(n):'},
-  {t:'gap', pre:"        rev = int(f'{i:0{bits}b}'",suf:", 2)",w:65,hc:"Python reverse-slice notation (e.g. 'abc'[::-1] == 'cba')"},
-  {t:'gap', pre:'        if rev > ',suf:':',w:25,hc:'the outer loop counter variable'},
+  {t:'gap', pre:"        rev = int(f'{i:0{bits}b}'",suf:", 2)",ans:'[::-1]',w:65,hc:"Python reverse-slice notation (e.g. 'abc'[::-1] == 'cba')"},
+  {t:'gap', pre:'        if rev > ',suf:':',ans:'i',w:25,hc:'the outer loop counter variable'},
   {t:'code',s:'            r[i], r[rev] = r[rev], r[i]'},
   {t:'code',s:'    return r'},
  ]},
 {type:'gaps',lang:'python',section:'NTT core',
- theory:`<h3>NTT butterfly loop</h3><div class="mblock">step=n//length\nw=roots[j*step]\nt=a[s]*w%q\na[f]=(a[f]+t)%q\na[s]=(old_f−t)%q\nlength&lt;&lt;=1</div><p><strong>⚠ Toy simplification:</strong> this pipeline uses a <em>cyclic</em> NTT built only from ω (an 8th root of unity), i.e. it multiplies polynomials mod x⁸−1. Real Kyber works in the <em>negacyclic</em> ring mod x²⁵⁶+1, which needs the 2n-th root ψ (here ψ=3, ψ²=ω) to twist the coefficients — that sign flip on wrap-around is exactly what the Insane level's C code handles. The butterfly mechanics you learn here are identical.</p>`,
+ theory:`<h3>NTT butterfly loop</h3><div class="mblock">step=n//length\nw=roots[j*step]\nt=a[s]*w%q\na[f]=(a[f]+t)%q\na[s]=(old_f−t)%q\nlength&lt;&lt;=1</div>`,
  q:'Complete NTT butterfly loop:',
  tmpl:[
   {t:'code',s:'    length = 2'},
   {t:'code',s:'    while length <= n:'},
-  {t:'gap', pre:'        step = n // ',suf:'',w:55,hc:'the current butterfly stride variable'},
+  {t:'gap', pre:'        step = n // ',suf:'',ans:'length',w:55,hc:'the current butterfly stride variable'},
   {t:'code',s:'        for bs in range(0, n, length):'},
   {t:'code',s:'            for j in range(length // 2):'},
   {t:'code',s:'                f, s = bs+j, bs+j+length//2'},
-  {t:'gap', pre:'                w = roots[j * ',suf:']',w:45,hc:'the step variable computed above'},
+  {t:'gap', pre:'                w = roots[j * ',suf:']',ans:'step',w:45,hc:'the step variable computed above'},
   {t:'code',s:'                t = a[s] * w % q'},
   {t:'code',s:'                a[f], a[s] = (a[f]+t)%q, (a[f]-t)%q'},
-  {t:'gap', pre:'        length ',suf:'',w:55,hc:'double the stride: left-shift-assign by 1'},
+  {t:'gap', pre:'        length ',suf:'',ans:'<<= 1',w:55,hc:'double the stride: left-shift-assign by 1'},
  ]},
 {type:'gaps',lang:'python',section:'INTT',
  theory:`<h3>INTT = NTT(inv_roots) then scale by n⁻¹</h3>`,
  q:'Complete intt:',
  tmpl:[
   {t:'code',s:'def intt(poly, inv_roots, q, n_inv):'},
-  {t:'gap', pre:'    result = ntt(poly, ',suf:', q)',w:75,hc:'2nd parameter to ntt: the inverse roots table'},
-  {t:'gap', pre:'    return [x * ',suf:' % q for x in result]',w:50,hc:'n⁻¹ mod q scalar (last function parameter)'},
+  {t:'gap', pre:'    result = ntt(poly, ',suf:', q)',ans:'inv_roots',w:75,hc:'2nd parameter to ntt: the inverse roots table'},
+  {t:'gap', pre:'    return [x * ',suf:' % q for x in result]',ans:'n_inv',w:50,hc:'n⁻¹ mod q scalar (last function parameter)'},
  ]},
 {type:'gaps',lang:'python',section:'pointwise ops',
  theory:`<h3>Pointwise operations</h3><div class="mblock">mul: a[i]*b[i]%q\nadd: (a[i]+b[i])%q</div>`,
  q:'Complete pointwise_mul and pointwise_add:',
  tmpl:[
   {t:'code',s:'def pointwise_mul(a, b, q):'},
-  {t:'gap', pre:'    return [x*y%q for x,y in ',suf:'(a,b)]',w:35,hc:'built-in that pairs two iterables element-by-element'},
+  {t:'gap', pre:'    return [x*y%q for x,y in ',suf:'(a,b)]',ans:'zip',w:35,hc:'built-in that pairs two iterables element-by-element'},
   {t:'code',s:'def pointwise_add(a, b, q):'},
-  {t:'gap', pre:'    return [(x+y)%q for x,y in zip(',suf:')]',w:50,hc:'the two input list parameters'},
+  {t:'gap', pre:'    return [(x+y)%q for x,y in zip(',suf:')]',ans:'a, b',w:50,hc:'the two input list parameters'},
  ]},
 {type:'gaps',lang:'python',section:'keygen_t',
  theory:`<h3>t̂ = Â·ŝ + ê (NTT domain pointwise)</h3>`,
@@ -573,9 +568,9 @@ const MED=[
   {t:'code',s:'    for row in range(k):'},
   {t:'code',s:'        acc = [0]*n'},
   {t:'code',s:'        for col in range(k):'},
-  {t:'gap', pre:'            prod = pointwise_mul(A_hat[row][col], ',suf:', q)',w:85,hc:'column vector from s_ntt at index col'},
-  {t:'gap', pre:'            acc  = pointwise_add(acc, ',suf:', q)',w:45,hc:'the product computed just above'},
-  {t:'gap', pre:'        t_hat.append(pointwise_add(acc, ',suf:', q))',w:85,hc:'error vector for this row from e_ntt'},
+  {t:'gap', pre:'            prod = pointwise_mul(A_hat[row][col], ',suf:', q)',ans:'s_ntt[col]',w:85,hc:'column vector from s_ntt at index col'},
+  {t:'gap', pre:'            acc  = pointwise_add(acc, ',suf:', q)',ans:'prod',w:45,hc:'the product computed just above'},
+  {t:'gap', pre:'        t_hat.append(pointwise_add(acc, ',suf:', q))',ans:'e_ntt[row]',w:85,hc:'error vector for this row from e_ntt'},
   {t:'code',s:'    return t_hat'},
  ]},
 {type:'gaps',lang:'python',section:'decode_bit',
@@ -583,9 +578,9 @@ const MED=[
  q:'Complete decode_bit:',
  tmpl:[
   {t:'code',s:'def decode_bit(c, q):'},
-  {t:'gap', pre:'    d0  = min(c, ',suf:')',w:50,hc:'circular distance from 0: min(c, q-c)'},
-  {t:'gap', pre:'    dq2 = min(abs(c-q//2), q - ',suf:')',w:90,hc:'circular distance from q/2: |c − q//2| (same form as first arg)'},
-  {t:'gap', pre:'    return 1 if dq2 < ',suf:' else 0',w:35,hc:'distance-from-0 variable computed above'},
+  {t:'gap', pre:'    d0  = min(c, ',suf:')',ans:'q - c',w:50,hc:'circular distance from 0: min(c, q-c)'},
+  {t:'gap', pre:'    dq2 = min(abs(c-q//2), q - ',suf:')',ans:'abs(c-q//2)',w:90,hc:'circular distance from q/2: |c − q//2| (same form as first arg)'},
+  {t:'gap', pre:'    return 1 if dq2 < ',suf:' else 0',ans:'d0',w:35,hc:'distance-from-0 variable computed above'},
  ]},
 ];
 // LEVEL 4:HARD  (8 btns + 13 gaps = 21)
@@ -593,38 +588,38 @@ const HARD=[
 // 8 hard theory btns
 {type:'btns',section:'Module-LWE',
  theory:`<h3>Module-LWE Security Assumption</h3><p>The hardness of Kyber relies on distinguishing (A, As+e) from (A, uniform random), even with quantum resources.</p>`,
- q:'What is the core security assumption of Kyber?',opts:['Module-LWE (MLWE) hardness','Integer factorisation','Discrete logarithm','Shortest vector problem only']},
+ q:'What is the core security assumption of Kyber?',opts:['Module-LWE (MLWE) hardness','Integer factorisation','Discrete logarithm','Shortest vector problem only'],cor:0},
 {type:'btns',section:'Primitive Root',
  theory:`<h3>Order of g mod p</h3><p>g has order d if g^d≡1 mod p and no smaller positive k satisfies g^k≡1. Since 16=2⁴, testing g^8≠1 is sufficient for order 16.</p>`,
- q:'3⁸ mod 17=16. This means the order of 3 mod 17 is?',opts:['16 (3^16≡1 and 3^8≠1)','8','4','32']},
+ q:'3⁸ mod 17=16. This means the order of 3 mod 17 is?',opts:['16 (3^16≡1 and 3^8≠1)','8','4','32'],cor:0},
 {type:'btns',section:'NTT Domain',
  theory:`<h3>NTT domain multiplication</h3><p>Once in NTT domain, polynomial multiplication becomes O(n) pointwise:each coefficient pair multiplied independently.</p>`,
- q:'In NTT domain, polynomial multiplication becomes what?',opts:['Pointwise (element-wise) multiplication','Matrix transpose','Convolution','Polynomial division']},
+ q:'In NTT domain, polynomial multiplication becomes what?',opts:['Pointwise (element-wise) multiplication','Matrix transpose','Convolution','Polynomial division'],cor:0},
 {type:'btns',section:'Encapsulation',
  theory:`<h3>Algebraic cancellation</h3><div class="mblock">v = INTT(t̂^T·r̂)+e2+m̂\nŝ^T·u = INTT(ŝ^T·Â^T·r̂)+INTT(ŝ^T·ê1)\nw = v−ŝ^T·u = m̂ + small noise</div>`,
- q:'Which term cancels exactly between v and ŝ^T·u?',opts:['INTT(ŝ^T·Â^T·r̂)','The message m̂','The noise e2','The public key t̂']},
+ q:'Which term cancels exactly between v and ŝ^T·u?',opts:['INTT(ŝ^T·Â^T·r̂)','The message m̂','The noise e2','The public key t̂'],cor:0},
 {type:'btns',section:'Noise Budget',
  theory:`<h3>Decryption threshold</h3><div class="mblock">bit 1 encoded as q/2=8\nbit 0 encoded as 0\nCorrect if |noise| &lt; q/4 = 4.25</div>`,
- q:'Maximum tolerable noise magnitude for correct decryption (q=17)?',opts:['4 (strictly less than q/4=4.25)','8','17','2']},
+ q:'Maximum tolerable noise magnitude for correct decryption (q=17)?',opts:['4 (strictly less than q/4=4.25)','8','17','2'],cor:0},
 {type:'btns',section:'Security Levels',
- theory:`<h3>Kyber security levels</h3><p>Core-SVP hardness estimates from the Kyber round-3 specification (classical ops):</p><ul><li><strong>Kyber-512</strong>: 2¹¹⁸ (NIST level 1, ≈ AES-128)</li><li><strong>Kyber-768</strong>: 2¹⁸¹ (NIST level 3, ≈ AES-192)</li><li><strong>Kyber-1024</strong>: 2²⁵⁴ (NIST level 5, ≈ AES-256)</li></ul>`,
- q:'Kyber-768 targets approximately how many bits of security (classical core-SVP estimate)?',opts:['181 bits (2¹⁸¹ classical ops)','128 bits','254 bits','64 bits']},
+ theory:`<h3>Kyber security levels</h3><ul><li><strong>Kyber-512</strong>: 2¹¹⁸ post-quantum ops</li><li><strong>Kyber-768</strong>: 2¹⁷⁸ post-quantum ops</li><li><strong>Kyber-1024</strong>: 2²⁵⁴ post-quantum ops</li></ul>`,
+ q:'Kyber-768 targets approximately how many bits of post-quantum security?',opts:['178 bits (2¹⁷⁸ quantum ops)','128 bits','254 bits','64 bits'],cor:0},
 {type:'btns',section:'Matrix Generation',
- theory:`<h3>Generating matrix A</h3><p>A is generated from seed ρ via the SHAKE-128 XOF + rejection sampling to ensure coefficients are uniformly distributed in {0,…,q−1}.</p>`,
- q:'Why is rejection sampling used when generating matrix A?',opts:['To ensure uniform distribution in {0,…,q−1}','To make A invertible','To reduce key size','To add noise']},
+ theory:`<h3>Generating matrix A</h3><p>A is generated from seed ρ via cSHAKE128 + rejection sampling to ensure coefficients are uniformly distributed in {0,…,q−1}.</p>`,
+ q:'Why is rejection sampling used when generating matrix A?',opts:['To ensure uniform distribution in {0,…,q−1}','To make A invertible','To reduce key size','To add noise'],cor:0},
 {type:'btns',section:'FO Transform',
  theory:`<h3>Fujisaki-Okamoto Transform</h3><p>Applied to Kyber's CPA-secure encryption to produce a CCA-secure KEM. On decapsulation mismatch, a pseudo-random key is returned (implicit rejection):never a failure signal.</p>`,
- q:'What security property does the FO transform provide?',opts:['CCA security (chosen-ciphertext attack resistance)','Larger key sizes','Faster decryption','Quantum acceleration']},
+ q:'What security property does the FO transform provide?',opts:['CCA security (chosen-ciphertext attack resistance)','Larger key sizes','Faster decryption','Quantum acceleration'],cor:0},
 // 13 scaling Python gaps
 {type:'gaps',lang:'python',section:'modpow full',
  theory:`<h3>modpow complete</h3>`,q:'Complete modpow entirely:',
  tmpl:[
   {t:'code',s:'def modpow(base, exp, mod):'},
-  {t:'gap', pre:'    result, b = ',suf:', base % mod',w:25,hc:'initial accumulator value'},
+  {t:'gap', pre:'    result, b = ',suf:', base % mod',ans:'1',w:25,hc:'initial accumulator value'},
   {t:'code',s:'    while exp > 0:'},
-  {t:'gap', pre:'        if exp & ',suf:': result = result * b % mod',w:25,hc:'bitmask to test the lowest bit'},
-  {t:'gap', pre:'        b = b * b % ',suf:'',w:40,hc:'the modulus parameter'},
-  {t:'gap', pre:'        exp ',suf:' 1',w:35,hc:'right-shift assignment operator'},
+  {t:'gap', pre:'        if exp & ',suf:': result = result * b % mod',ans:'1',w:25,hc:'bitmask to test the lowest bit'},
+  {t:'gap', pre:'        b = b * b % ',suf:'',ans:'mod',w:40,hc:'the modulus parameter'},
+  {t:'gap', pre:'        exp ',suf:'= 1',ans:'>>=',w:35,hc:'right-shift assignment operator'},
   {t:'code',s:'    return result'},
  ]},
 {type:'gaps',lang:'python',section:'cbd_sample full',
@@ -633,11 +628,11 @@ const HARD=[
   {t:'code',s:'def cbd_sample(byte_list, q):'},
   {t:'code',s:'    out = []'},
   {t:'code',s:'    for byte_val in byte_list:'},
-  {t:'gap', pre:'        bits = [(byte_val >> ',suf:') & 1 for i in range(8)]',w:25,hc:'the loop counter for bit position'},
+  {t:'gap', pre:'        bits = [(byte_val >> ',suf:') & 1 for i in range(8)]',ans:'i',w:25,hc:'the loop counter for bit position'},
   {t:'code',s:'        for pair in range(2):'},
-  {t:'gap', pre:'            b0,b1,b2,b3 = bits[pair*',suf:':pair*4+4]',w:25,hc:'group size: 4 bits per η=2 sample'},
-  {t:'gap', pre:'            coeff = (b0+b1) - (b2+',suf:')',w:25,hc:'4th bit variable in the group'},
-  {t:'gap', pre:'            out.append(coeff % ',suf:')',w:25,hc:'the modulus parameter'},
+  {t:'gap', pre:'            b0,b1,b2,b3 = bits[pair*',suf:':pair*4+4]',ans:'4',w:25,hc:'group size: 4 bits per η=2 sample'},
+  {t:'gap', pre:'            coeff = (b0+b1) - (b2+',suf:')',ans:'b3',w:25,hc:'4th bit variable in the group'},
+  {t:'gap', pre:'            out.append(coeff % ',suf:')',ans:'q',w:25,hc:'the modulus parameter'},
   {t:'code',s:'    return out'},
  ]},
 {type:'gaps',lang:'python',section:'NTT full',
@@ -645,25 +640,25 @@ const HARD=[
  tmpl:[
   {t:'code',s:'def ntt(poly, roots, q):'},
   {t:'code',s:'    n = len(poly)'},
-  {t:'gap', pre:'    a = bit_reverse_permute(',suf:')',w:45,hc:'the input polynomial parameter'},
+  {t:'gap', pre:'    a = bit_reverse_permute(',suf:')',ans:'poly',w:45,hc:'the input polynomial parameter'},
   {t:'code',s:'    length = 2'},
   {t:'code',s:'    while length <= n:'},
-  {t:'gap', pre:'        step = ',suf:' // length',w:25,hc:'total degree variable for stride'},
+  {t:'gap', pre:'        step = ',suf:' // length',ans:'n',w:25,hc:'total degree variable for stride'},
   {t:'code',s:'        for bs in range(0, n, length):'},
   {t:'code',s:'            for j in range(length // 2):'},
-  {t:'gap', pre:'                f,s = bs+j, bs+j+',suf:'//2',w:55,hc:'the butterfly stride variable'},
-  {t:'gap', pre:'                w = roots[',suf:' * step]',w:25,hc:'the inner loop counter variable'},
+  {t:'gap', pre:'                f,s = bs+j, bs+j+',suf:'//2',ans:'length',w:55,hc:'the butterfly stride variable'},
+  {t:'gap', pre:'                w = roots[',suf:' * step]',ans:'j',w:25,hc:'the inner loop counter variable'},
   {t:'code',s:'                t = a[s] * w % q'},
-  {t:'gap', pre:'                a[f],a[s] = (a[f]+t)%q, (',suf:'-t)%q',w:45,hc:'the top butterfly element (index f)'},
-  {t:'gap', pre:'        length ',suf:'',w:55,hc:'double the stride: left-shift-assign by 1'},
+  {t:'gap', pre:'                a[f],a[s] = (a[f]+t)%q, (',suf:'-t)%q',ans:'a[f]',w:45,hc:'the top butterfly element (index f)'},
+  {t:'gap', pre:'        length ',suf:'',ans:'<<= 1',w:55,hc:'double the stride: left-shift-assign by 1'},
   {t:'code',s:'    return a'},
  ]},
 {type:'gaps',lang:'python',section:'INTT full',
  theory:`<h3>INTT:same butterfly + n⁻¹ scaling</h3>`,q:'Complete intt:',
  tmpl:[
   {t:'code',s:'def intt(poly, inv_roots, q, n_inv):'},
-  {t:'gap', pre:'    result = ntt(poly, ',suf:', q)',w:75,hc:'2nd parameter to ntt: inverse roots table'},
-  {t:'gap', pre:'    return [x * n_inv % ',suf:' for x in result]',w:25,hc:'the modulus variable'},
+  {t:'gap', pre:'    result = ntt(poly, ',suf:', q)',ans:'inv_roots',w:75,hc:'2nd parameter to ntt: inverse roots table'},
+  {t:'gap', pre:'    return [x * n_inv % ',suf:' for x in result]',ans:'q',w:25,hc:'the modulus variable'},
  ]},
 {type:'gaps',lang:'python',section:'keygen_t full',
  theory:`<h3>keygen_t full</h3>`,q:'Complete keygen_t:',
@@ -672,11 +667,11 @@ const HARD=[
   {t:'code',s:'    k = len(A_hat); n = len(A_hat[0][0])'},
   {t:'code',s:'    t_hat = []'},
   {t:'code',s:'    for row in range(k):'},
-  {t:'gap', pre:'        acc = [',suf:'] * n',w:25,hc:'initial zero value for accumulator'},
+  {t:'gap', pre:'        acc = [',suf:'] * n',ans:'0',w:25,hc:'initial zero value for accumulator'},
   {t:'code',s:'        for col in range(k):'},
-  {t:'gap', pre:'            prod = pointwise_mul(A_hat[',suf:'][col], s_ntt[col], q)',w:35,hc:'the outer loop row index'},
-  {t:'gap', pre:'            acc = pointwise_add(',suf:', prod, q)',w:35,hc:'the running accumulator variable'},
-  {t:'gap', pre:'        t_hat.append(pointwise_add(acc, e_ntt[',suf:'], q))',w:35,hc:'row index to pick the error vector'},
+  {t:'gap', pre:'            prod = pointwise_mul(A_hat[',suf:'][col], s_ntt[col], q)',ans:'row',w:35,hc:'the outer loop row index'},
+  {t:'gap', pre:'            acc = pointwise_add(',suf:', prod, q)',ans:'acc',w:35,hc:'the running accumulator variable'},
+  {t:'gap', pre:'        t_hat.append(pointwise_add(acc, e_ntt[',suf:'], q))',ans:'row',w:35,hc:'row index to pick the error vector'},
   {t:'code',s:'    return t_hat'},
  ]},
 {type:'gaps',lang:'python',section:'matvec_ntt',
@@ -685,10 +680,10 @@ const HARD=[
   {t:'code',s:'def matvec_ntt(M, v_ntt, q):'},
   {t:'code',s:'    k,n = len(M),len(M[0][0]); res=[]'},
   {t:'code',s:'    for row in range(k):'},
-  {t:'gap', pre:'        acc = [',suf:']*n',w:25,hc:'initial zero value for accumulator'},
+  {t:'gap', pre:'        acc = [',suf:']*n',ans:'0',w:25,hc:'initial zero value for accumulator'},
   {t:'code',s:'        for col in range(k):'},
   {t:'code',s:'            for i in range(n):'},
-  {t:'gap', pre:'                acc[i]=(acc[i]+M[row][col][',suf:']*v_ntt[col][i])%q',w:25,hc:'the coefficient index loop variable'},
+  {t:'gap', pre:'                acc[i]=(acc[i]+M[row][col][',suf:']*v_ntt[col][i])%q',ans:'i',w:25,hc:'the coefficient index loop variable'},
   {t:'code',s:'        res.append(acc)'},
   {t:'code',s:'    return res'},
  ]},
@@ -696,22 +691,22 @@ const HARD=[
  theory:`<h3>Encapsulation: A transpose and u</h3><div class="mblock">A_T[i][j] = A_hat[j][i]\nu = INTT(A_T·r̂) + e1</div>`,
  q:'Complete transpose and u:',
  tmpl:[
-  {t:'gap', pre:'A_T = [[A_hat[',suf:'][i] for j in range(k)] for i in range(k)]',w:25,hc:'transposed row index (swap i and j)'},
-  {t:'gap', pre:'r_ntt = [ntt(',suf:',roots,q) for rr in r]',w:25,hc:'the loop variable from list r'},
+  {t:'gap', pre:'A_T = [[A_hat[',suf:'][i] for j in range(k)] for i in range(k)]',ans:'j',w:25,hc:'transposed row index (swap i and j)'},
+  {t:'gap', pre:'r_ntt = [ntt(',suf:',roots,q) for rr in r]',ans:'rr',w:25,hc:'the loop variable from list r'},
   {t:'code',s:'ATr = matvec_ntt(A_T, r_ntt, q)'},
   {t:'code',s:'u = []'},
   {t:'code',s:'for row in range(k):'},
-  {t:'gap', pre:'    ur = intt(ATr[',suf:'],inv_roots,q,n_inv)',w:35,hc:'the outer loop index variable'},
+  {t:'gap', pre:'    ur = intt(ATr[',suf:'],inv_roots,q,n_inv)',ans:'row',w:35,hc:'the outer loop index variable'},
   {t:'code',s:'    u.append([(ur[i]+e1[row][i])%q for i in range(n)])'},
  ]},
 {type:'gaps',lang:'python',section:'encapsulate v',
  theory:`<h3>Encapsulation: compute v</h3><div class="mblock">v = INTT(t̂^T·r̂) + e2 + m̂</div>`,
  q:'Complete v computation:',
  tmpl:[
-  {t:'gap', pre:'tTr=[sum(th[c][i]*r_ntt[',suf:'][i] for c in range(k))%q for i in range(n)]',w:25,hc:'inner loop counter variable'},
-  {t:'gap', pre:'vp=intt(',suf:',inv_roots,q,n_inv)',w:35,hc:'the t̂^T·r̂ inner product computed above'},
+  {t:'gap', pre:'tTr=[sum(th[c][i]*r_ntt[',suf:'][i] for c in range(k))%q for i in range(n)]',ans:'c',w:25,hc:'inner loop counter variable'},
+  {t:'gap', pre:'vp=intt(',suf:',inv_roots,q,n_inv)',ans:'tTr',w:35,hc:'the t̂^T·r̂ inner product computed above'},
   {t:'code',s:'me=[b*(q//2) for b in msg]'},
-  {t:'gap', pre:'v=[(vp[i]+e2[i]+me[',suf:'])%q for i in range(n)]',w:25,hc:'the coefficient index variable'},
+  {t:'gap', pre:'v=[(vp[i]+e2[i]+me[',suf:'])%q for i in range(n)]',ans:'i',w:25,hc:'the coefficient index variable'},
  ]},
 {type:'gaps',lang:'python',section:'decapsulate',
  theory:`<h3>Decapsulation</h3><div class="mblock">u_ntt=NTT(u)\nstu=ŝ^T·û (inner product)\nw=v−INTT(stu)</div>`,
@@ -719,385 +714,447 @@ const HARD=[
  tmpl:[
   {t:'code',s:'def decapsulate(s_hat, u, v, roots, inv_roots, q, k, n_inv):'},
   {t:'code',s:'    n = len(u[0])'},
-  {t:'gap', pre:'    u_ntt = [ntt(uu, ',suf:',q) for uu in u]',w:55,hc:'forward NTT roots table parameter'},
-  {t:'gap', pre:'    stu=[sum(s_hat[j][i]*u_ntt[',suf:'][i] for j in range(k))%q for i in range(n)]',w:25,hc:'the inner loop counter variable'},
-  {t:'gap', pre:'    stu_n = intt(',suf:',inv_roots,q,n_inv)',w:35,hc:'the ŝ^T·û inner product computed above'},
-  {t:'gap', pre:'    w = [(v[i]-',suf:')%q for i in range(n)]',w:65,hc:'index into stu_n with coefficient i'},
+  {t:'gap', pre:'    u_ntt = [ntt(uu, ',suf:',q) for uu in u]',ans:'roots',w:55,hc:'forward NTT roots table parameter'},
+  {t:'gap', pre:'    stu=[sum(s_hat[j][i]*u_ntt[',suf:'][i] for j in range(k))%q for i in range(n)]',ans:'j',w:25,hc:'the inner loop counter variable'},
+  {t:'gap', pre:'    stu_n = intt(',suf:',inv_roots,q,n_inv)',ans:'stu',w:35,hc:'the ŝ^T·û inner product computed above'},
+  {t:'gap', pre:'    w = [(v[i]-',suf:')%q for i in range(n)]',ans:'stu_n[i]',w:65,hc:'index into stu_n with coefficient i'},
   {t:'code',s:'    return [decode_bit(c,q) for c in w]'},
  ]},
 {type:'gaps',lang:'python',section:'decode_bit full',
  theory:`<h3>Decode by circular distance</h3>`,q:'Complete decode_bit:',
  tmpl:[
   {t:'code',s:'def decode_bit(c, q):'},
-  {t:'gap', pre:'    d0  = min(c, q - ',suf:')',w:25,hc:'the coefficient parameter itself'},
-  {t:'gap', pre:'    dq2 = min(abs(c-q//2), ',suf:'-abs(c-q//2))',w:25,hc:'the modulus variable'},
-  {t:'gap', pre:'    return 1 if ',suf:' < d0 else 0',w:35,hc:'distance-from-q/2 variable computed above'},
+  {t:'gap', pre:'    d0  = min(c, q - ',suf:')',ans:'c',w:25,hc:'the coefficient parameter itself'},
+  {t:'gap', pre:'    dq2 = min(abs(c-q//2), ',suf:'-abs(c-q//2))',ans:'q',w:25,hc:'the modulus variable'},
+  {t:'gap', pre:'    return 1 if ',suf:' < d0 else 0',ans:'dq2',w:35,hc:'distance-from-q/2 variable computed above'},
  ]},
 {type:'gaps',lang:'python',section:'root derivation',
  theory:`<h3>Derive ω from g=3</h3>`,q:'Complete root derivation:',
  tmpl:[
-  {t:'gap', pre:'psi   = modpow(3,(Q-1)//(2*',suf:'),Q)',w:25,hc:'polynomial degree (length of poly)'},
-  {t:'gap', pre:'omega = modpow(',suf:',2,Q)',w:35,hc:'ψ computed on the line above'},
-  {t:'gap', pre:'omega_inv = modpow(omega,Q-',suf:',Q)',w:25,hc:"Fermat's little theorem: a^(p-2) ≡ a^-1 mod p"},
-  {t:'gap', pre:'ROOTS=[modpow(omega,k,Q) for k in range(',suf:')]',w:25,hc:'number of roots to generate'},
-  {t:'gap', pre:'INV_ROOTS=[modpow(omega_inv,k,Q) for k in range(',suf:')]',w:25,hc:'same count as ROOTS'},
+  {t:'gap', pre:'psi   = modpow(3,(Q-1)//(2*',suf:'),Q)',ans:'N',w:25,hc:'polynomial degree (length of poly)'},
+  {t:'gap', pre:'omega = modpow(',suf:',2,Q)',ans:'psi',w:35,hc:'ψ computed on the line above'},
+  {t:'gap', pre:'omega_inv = modpow(omega,Q-',suf:',Q)',ans:'2',w:25,hc:"Fermat's little theorem: a^(p-2) ≡ a^-1 mod p"},
+  {t:'gap', pre:'ROOTS=[modpow(omega,k,Q) for k in range(',suf:')]',ans:'N',w:25,hc:'number of roots to generate'},
+  {t:'gap', pre:'INV_ROOTS=[modpow(omega_inv,k,Q) for k in range(',suf:')]',ans:'N',w:25,hc:'same count as ROOTS'},
  ]},
 {type:'gaps',lang:'python',section:'pipeline KeyGen',
  theory:`<h3>Full KeyGen pipeline</h3>`,q:'Complete KeyGen:',
  tmpl:[
-  {t:'gap', pre:'sn=[ntt(s,',suf:',Q) for s in [S0,S1]]',w:55,hc:'the global forward roots table'},
-  {t:'gap', pre:'en=[ntt(e,ROOTS,',suf:') for e in [E0,E1]]',w:25,hc:'the modulus constant'},
-  {t:'gap', pre:'th=keygen_t(',suf:',sn,en,Q)',w:25,hc:'the public matrix A (first argument)'},
+  {t:'gap', pre:'sn=[ntt(s,',suf:',Q) for s in [S0,S1]]',ans:'ROOTS',w:55,hc:'the global forward roots table'},
+  {t:'gap', pre:'en=[ntt(e,ROOTS,',suf:') for e in [E0,E1]]',ans:'Q',w:25,hc:'the modulus constant'},
+  {t:'gap', pre:'th=keygen_t(',suf:',sn,en,Q)',ans:'A',w:25,hc:'the public matrix A (first argument)'},
  ]},
 {type:'gaps',lang:'python',section:'pipeline Decaps assert',
  theory:`<h3>Full pipeline assertion</h3>`,q:'Complete decapsulation call and assertion:',
  tmpl:[
   {t:'code',s:'u,v=encapsulate(A,th,[R0,R1],[E1_0,E1_1],E2,MSG,ROOTS,INV_ROOTS,Q,K,N_INV)'},
-  {t:'gap', pre:'r=decapsulate(sn,u,v,ROOTS,INV_ROOTS,',suf:',K,N_INV)',w:25,hc:'the modulus constant'},
-  {t:'gap', pre:'assert r==',suf:'',w:35,hc:'the original message variable'},
+  {t:'gap', pre:'r=decapsulate(sn,u,v,ROOTS,INV_ROOTS,',suf:',K,N_INV)',ans:'Q',w:25,hc:'the modulus constant'},
+  {t:'gap', pre:'assert r==',suf:'',ans:'MSG',w:35,hc:'the original message variable'},
  ]},
 ];
 // LEVEL 5:VERY HARD  (27 Python gaps)
 const VH=[
 {type:'gaps',lang:'python',section:'modpow',theory:`<h3>Fast modular exponentiation</h3>`,q:'Complete modpow:',
- tmpl:[{t:'code',s:'def modpow(base,exp,mod):'},{t:'gap',pre:'    result,b=1,base%',suf:'',w:40,hc:'the modulus parameter'},
-  {t:'code',s:'    while exp>0:'},{t:'gap',pre:'        if ',suf:'&1: result=result*b%mod',w:35,hc:'the exponent variable'},
-  {t:'gap',pre:'        b=b*',suf:'%mod',w:25,hc:'same variable being squared'},{t:'gap',pre:'        ',suf:'>>=1',w:35,hc:'the exponent variable to right-shift'},
+ tmpl:[{t:'code',s:'def modpow(base,exp,mod):'},{t:'gap',pre:'    result,b=1,base%',suf:'',ans:'mod',w:40,hc:'the modulus parameter'},
+  {t:'code',s:'    while exp>0:'},{t:'gap',pre:'        if ',suf:'&1: result=result*b%mod',ans:'exp',w:35,hc:'the exponent variable'},
+  {t:'gap',pre:'        b=b*',suf:'%mod',ans:'b',w:25,hc:'same variable being squared'},{t:'gap',pre:'        ',suf:'>>=1',ans:'exp',w:35,hc:'the exponent variable to right-shift'},
   {t:'code',s:'    return result'}]},
 {type:'gaps',lang:'python',section:'cbd_sample',theory:`<h3>CBD η=2 sampler</h3>`,q:'Complete cbd_sample:',
  tmpl:[{t:'code',s:'def cbd_sample(blist,q):'},{t:'code',s:'    out=[]'},
-  {t:'code',s:'    for bv in blist:'},{t:'gap',pre:'        bits=[(bv>>',suf:')&1 for i in range(8)]',w:25,hc:'loop counter for bit position'},
-  {t:'code',s:'        for p in range(2):'},{t:'gap',pre:'            b=bits[p*4:',suf:'*4+4]',w:25,hc:'the pair loop variable'},
-  {t:'gap',pre:'            c=(b[0]+b[1])-',suf:'',w:80,hc:'subtract the second bit pair'},
-  {t:'gap',pre:'            out.append(c%',suf:')',w:25,hc:'the modulus parameter'},{t:'code',s:'    return out'}]},
+  {t:'code',s:'    for bv in blist:'},{t:'gap',pre:'        bits=[(bv>>',suf:')&1 for i in range(8)]',ans:'i',w:25,hc:'loop counter for bit position'},
+  {t:'code',s:'        for p in range(2):'},{t:'gap',pre:'            b=bits[p*4:',suf:'*4+4]',ans:'p',w:25,hc:'the pair loop variable'},
+  {t:'gap',pre:'            c=(b[0]+b[1])-',suf:'',ans:'(b[2]+b[3])',w:80,hc:'subtract the second bit pair'},
+  {t:'gap',pre:'            out.append(c%',suf:')',ans:'q',w:25,hc:'the modulus parameter'},{t:'code',s:'    return out'}]},
 {type:'gaps',lang:'python',section:'bit_reverse_permute',theory:`<h3>Bit-reversal permutation</h3>`,q:'Complete bit_reverse_permute:',
  tmpl:[{t:'code',s:'import math'},{t:'code',s:'def bit_reverse_permute(a):'},
-  {t:'gap',pre:'    n,r=',suf:',list(a)',w:55,hc:'assign length and a copy of the input'},{t:'gap',pre:'    bits=int(math.log2(',suf:'))',w:25,hc:'the length variable'},
+  {t:'gap',pre:'    n,r=',suf:',list(a)',ans:'len(a)',w:55,hc:'assign length and a copy of the input'},{t:'gap',pre:'    bits=int(math.log2(',suf:'))',ans:'n',w:25,hc:'the length variable'},
   {t:'code',s:'    for i in range(n):'},
-  {t:'gap',pre:"        rev=int(f'{i:0{bits}b}'",suf:",2)",w:65,hc:"Python reverse-slice notation (e.g. 'abc'[::-1])"},
-  {t:'gap',pre:'        if rev>i: r[i],r[rev]=r[',suf:'],r[i]',w:35,hc:'the bit-reversed index variable'},
+  {t:'gap',pre:"        rev=int(f'{i:0{bits}b}'",suf:",2)",ans:'[::-1]',w:65,hc:"Python reverse-slice notation (e.g. 'abc'[::-1])"},
+  {t:'gap',pre:'        if rev>i: r[i],r[rev]=r[',suf:'],r[i]',ans:'rev',w:35,hc:'the bit-reversed index variable'},
   {t:'code',s:'    return r'}]},
 {type:'gaps',lang:'python',section:'NTT core',theory:`<h3>NTT Cooley-Tukey core</h3>`,q:'Complete NTT body:',
  tmpl:[{t:'code',s:'def ntt(poly,roots,q):'},{t:'code',s:'    n=len(poly)'},
-  {t:'gap',pre:'    a=bit_reverse_permute(',suf:')',w:45,hc:'the input polynomial parameter'},{t:'gap',pre:'    length=',suf:'',w:25,hc:'initial stride: start at 2'},
-  {t:'code',s:'    while length<=n:'},{t:'gap',pre:'        step=n//',suf:'',w:55,hc:'the current butterfly stride variable'},
+  {t:'gap',pre:'    a=bit_reverse_permute(',suf:')',ans:'poly',w:45,hc:'the input polynomial parameter'},{t:'gap',pre:'    length=',suf:'',ans:'2',w:25,hc:'initial stride: start at 2'},
+  {t:'code',s:'    while length<=n:'},{t:'gap',pre:'        step=n//',suf:'',ans:'length',w:55,hc:'the current butterfly stride variable'},
   {t:'code',s:'        for bs in range(0,n,length):'},
-  {t:'gap',pre:'            for j in range(length//',suf:'):',w:25,hc:'half the stride for butterfly pairs'},
-  {t:'gap',pre:'                f,s=bs+j,bs+j+',suf:'//2',w:55,hc:'the butterfly stride variable'},
-  {t:'gap',pre:'                w=roots[j*',suf:']',w:45,hc:'the step value computed above'},
-  {t:'gap',pre:'                t=a[',suf:']*w%q',w:25,hc:'the second butterfly element index'},
+  {t:'gap',pre:'            for j in range(length//',suf:'):',ans:'2',w:25,hc:'half the stride for butterfly pairs'},
+  {t:'gap',pre:'                f,s=bs+j,bs+j+',suf:'//2',ans:'length',w:55,hc:'the butterfly stride variable'},
+  {t:'gap',pre:'                w=roots[j*',suf:']',ans:'step',w:45,hc:'the step value computed above'},
+  {t:'gap',pre:'                t=a[',suf:']*w%q',ans:'s',w:25,hc:'the second butterfly element index'},
   {t:'code',s:'                a[f],a[s]=(a[f]+t)%q,(a[f]-t)%q'},
-  {t:'gap',pre:'        length',suf:'',w:55,hc:'double the stride: left-shift-assign'},{t:'code',s:'    return a'}]},
+  {t:'gap',pre:'        length',suf:'',ans:'<<=1',w:55,hc:'double the stride: left-shift-assign'},{t:'code',s:'    return a'}]},
 {type:'gaps',lang:'python',section:'INTT',theory:`<h3>INTT</h3>`,q:'Complete intt:',
  tmpl:[{t:'code',s:'def intt(poly,inv_roots,q,n_inv):'},
-  {t:'gap',pre:'    r=ntt(poly,',suf:',q)',w:75,hc:'2nd parameter: inverse roots table'},
-  {t:'gap',pre:'    return [x*',suf:'%q for x in r]',w:50,hc:'n⁻¹ mod q scalar (last parameter)'}]},
+  {t:'gap',pre:'    r=ntt(poly,',suf:',q)',ans:'inv_roots',w:75,hc:'2nd parameter: inverse roots table'},
+  {t:'gap',pre:'    return [x*',suf:'%q for x in r]',ans:'n_inv',w:50,hc:'n⁻¹ mod q scalar (last parameter)'}]},
 {type:'gaps',lang:'python',section:'pointwise ops',theory:`<h3>Pointwise ops</h3>`,q:'Complete pointwise_mul and add:',
  tmpl:[{t:'code',s:'def pointwise_mul(a,b,q):'},
-  {t:'gap',pre:'    return [',suf:'*y%q for x,y in zip(a,b)]',w:25,hc:'first element unpacked from zip'},
+  {t:'gap',pre:'    return [',suf:'*y%q for x,y in zip(a,b)]',ans:'x',w:25,hc:'first element unpacked from zip'},
   {t:'code',s:'def pointwise_add(a,b,q):'},
-  {t:'gap',pre:'    return [(x+y)%q for x,y in zip(',suf:',b)]',w:25,hc:'first input list parameter'}]},
+  {t:'gap',pre:'    return [(x+y)%q for x,y in zip(',suf:',b)]',ans:'a',w:25,hc:'first input list parameter'}]},
 {type:'gaps',lang:'python',section:'keygen_t',theory:`<h3>t̂=Â·ŝ+ê</h3>`,q:'Complete keygen_t:',
  tmpl:[{t:'code',s:'def keygen_t(A,sn,en,q):'},{t:'code',s:'    k,n=len(A),len(A[0][0]);th=[]'},
-  {t:'code',s:'    for row in range(k):'},{t:'gap',pre:'        acc=[0]*',suf:'',w:25,hc:'polynomial degree (list length)'},
+  {t:'code',s:'    for row in range(k):'},{t:'gap',pre:'        acc=[0]*',suf:'',ans:'n',w:25,hc:'polynomial degree (list length)'},
   {t:'code',s:'        for col in range(k):'},
-  {t:'gap',pre:'            p=pointwise_mul(A[row][',suf:'],sn[col],q)',w:35,hc:'inner loop column index'},
-  {t:'gap',pre:'            acc=pointwise_add(acc,',suf:',q)',w:25,hc:'the product just computed above'},
-  {t:'gap',pre:'        th.append(pointwise_add(acc,en[',suf:'],q))',w:35,hc:'outer loop row index for error vector'},
+  {t:'gap',pre:'            p=pointwise_mul(A[row][',suf:'],sn[col],q)',ans:'col',w:35,hc:'inner loop column index'},
+  {t:'gap',pre:'            acc=pointwise_add(acc,',suf:',q)',ans:'p',w:25,hc:'the product just computed above'},
+  {t:'gap',pre:'        th.append(pointwise_add(acc,en[',suf:'],q))',ans:'row',w:35,hc:'outer loop row index for error vector'},
   {t:'code',s:'    return th'}]},
 {type:'gaps',lang:'python',section:'matvec_ntt',theory:`<h3>Matrix-vector multiply NTT domain</h3>`,q:'Complete matvec_ntt:',
  tmpl:[{t:'code',s:'def matvec_ntt(M,v,q):'},{t:'code',s:'    k,n=len(M),len(M[0][0]);res=[]'},
-  {t:'code',s:'    for row in range(k):'},{t:'gap',pre:'        acc=',suf:'',w:50,hc:'zero-initialised list of length n'},
+  {t:'code',s:'    for row in range(k):'},{t:'gap',pre:'        acc=',suf:'',ans:'[0]*n',w:50,hc:'zero-initialised list of length n'},
   {t:'code',s:'        for col in range(k):'},{t:'code',s:'            for i in range(n):'},
-  {t:'gap',pre:'                acc[i]=(acc[i]+M[row][col][',suf:']*v[col][i])%q',w:25,hc:'the coefficient index loop variable'},
+  {t:'gap',pre:'                acc[i]=(acc[i]+M[row][col][',suf:']*v[col][i])%q',ans:'i',w:25,hc:'the coefficient index loop variable'},
   {t:'code',s:'        res.append(acc)'},{t:'code',s:'    return res'}]},
 {type:'gaps',lang:'python',section:'encode_message',theory:`<h3>Message encoding bit→⌊q/2⌋</h3>`,q:'Complete encode_message:',
  tmpl:[{t:'code',s:'def encode_message(msg,q):'},
-  {t:'gap',pre:'    return [bit*(q//',suf:') for bit in msg]',w:25,hc:'bit 1 maps to q//2, bit 0 maps to 0'}]},
+  {t:'gap',pre:'    return [bit*(q//',suf:') for bit in msg]',ans:'2',w:25,hc:'bit 1 maps to q//2, bit 0 maps to 0'}]},
 {type:'gaps',lang:'python',section:'encaps r_ntt+transpose',theory:`<h3>NTT the randomness r</h3>`,q:'Complete r_ntt and A transpose:',
  tmpl:[
-  {t:'gap',pre:'r_ntt=[ntt(rr,',suf:',q) for rr in r]',w:55,hc:'the NTT roots table parameter'},
-  {t:'gap',pre:'A_T=[[A[',suf:'][i] for j in range(k)] for i in range(k)]',w:25,hc:'transposed row index (swap i,j)'}]},
+  {t:'gap',pre:'r_ntt=[ntt(rr,',suf:',q) for rr in r]',ans:'roots',w:55,hc:'the NTT roots table parameter'},
+  {t:'gap',pre:'A_T=[[A[',suf:'][i] for j in range(k)] for i in range(k)]',ans:'j',w:25,hc:'transposed row index (swap i,j)'}]},
 {type:'gaps',lang:'python',section:'encaps u',theory:`<h3>u=INTT(Â^T·r̂)+e1</h3>`,q:'Complete u:',
  tmpl:[{t:'code',s:'ATr=matvec_ntt(A_T,r_ntt,q);u=[]'},
   {t:'code',s:'for row in range(k):'},
-  {t:'gap',pre:'    ur=intt(ATr[',suf:'],inv_roots,q,n_inv)',w:35,hc:'outer loop index variable'},
-  {t:'gap',pre:'    u.append([(ur[i]+e1[',suf:'][i])%q for i in range(n)])',w:35,hc:'same outer loop index for e1'}]},
+  {t:'gap',pre:'    ur=intt(ATr[',suf:'],inv_roots,q,n_inv)',ans:'row',w:35,hc:'outer loop index variable'},
+  {t:'gap',pre:'    u.append([(ur[i]+e1[',suf:'][i])%q for i in range(n)])',ans:'row',w:35,hc:'same outer loop index for e1'}]},
 {type:'gaps',lang:'python',section:'encaps v',theory:`<h3>v=INTT(t̂^T·r̂)+e2+m̂</h3>`,q:'Complete v:',
  tmpl:[
-  {t:'gap',pre:'tTr=[sum(th[c][i]*r_ntt[',suf:'][i] for c in range(k))%q for i in range(n)]',w:25,hc:'inner loop counter variable'},
-  {t:'gap',pre:'vp=intt(',suf:',inv_roots,q,n_inv)',w:35,hc:'t̂^T·r̂ inner product computed above'},
+  {t:'gap',pre:'tTr=[sum(th[c][i]*r_ntt[',suf:'][i] for c in range(k))%q for i in range(n)]',ans:'c',w:25,hc:'inner loop counter variable'},
+  {t:'gap',pre:'vp=intt(',suf:',inv_roots,q,n_inv)',ans:'tTr',w:35,hc:'t̂^T·r̂ inner product computed above'},
   {t:'code',s:'me=[b*(q//2) for b in msg]'},
-  {t:'gap',pre:'v=[(vp[i]+e2[i]+me[',suf:'])%q for i in range(n)]',w:25,hc:'the coefficient index variable'}]},
+  {t:'gap',pre:'v=[(vp[i]+e2[i]+me[',suf:'])%q for i in range(n)]',ans:'i',w:25,hc:'the coefficient index variable'}]},
 {type:'gaps',lang:'python',section:'decaps u_ntt+stu',theory:`<h3>NTT the ciphertext u</h3>`,q:'Complete u_ntt and stu:',
  tmpl:[
-  {t:'gap',pre:'u_ntt=[ntt(uu,',suf:',q) for uu in u]',w:55,hc:'the NTT roots table parameter'},
-  {t:'gap',pre:'stu=[sum(s_hat[j][i]*u_ntt[',suf:'][i] for j in range(k))%q for i in range(n)]',w:25,hc:'the inner loop counter variable'}]},
+  {t:'gap',pre:'u_ntt=[ntt(uu,',suf:',q) for uu in u]',ans:'roots',w:55,hc:'the NTT roots table parameter'},
+  {t:'gap',pre:'stu=[sum(s_hat[j][i]*u_ntt[',suf:'][i] for j in range(k))%q for i in range(n)]',ans:'j',w:25,hc:'the inner loop counter variable'}]},
 {type:'gaps',lang:'python',section:'decaps w',theory:`<h3>w=v−INTT(ŝ^T·û)</h3>`,q:'Complete w recovery:',
  tmpl:[
-  {t:'gap',pre:'stu_n=intt(',suf:',inv_roots,q,n_inv)',w:35,hc:'the ŝ^T·û inner product computed above'},
-  {t:'gap',pre:'w=[(v[i]-stu_n[',suf:'])%q for i in range(n)]',w:25,hc:'the coefficient index variable'}]},
+  {t:'gap',pre:'stu_n=intt(',suf:',inv_roots,q,n_inv)',ans:'stu',w:35,hc:'the ŝ^T·û inner product computed above'},
+  {t:'gap',pre:'w=[(v[i]-stu_n[',suf:'])%q for i in range(n)]',ans:'i',w:25,hc:'the coefficient index variable'}]},
 {type:'gaps',lang:'python',section:'decode_bit',theory:`<h3>Decode by circular distance</h3>`,q:'Complete decode_bit:',
  tmpl:[{t:'code',s:'def decode_bit(c,q):'},
-  {t:'gap',pre:'    d0=min(c,',suf:'-c)',w:25,hc:'the modulus used in circular distance'},
-  {t:'gap',pre:'    dq2=min(abs(c-q//2),',suf:'-abs(c-q//2))',w:25,hc:'the modulus variable (same as above)'},
-  {t:'gap',pre:'    return 1 if dq2<',suf:' else 0',w:35,hc:'distance-from-0 variable'}]},
+  {t:'gap',pre:'    d0=min(c,',suf:'-c)',ans:'q',w:25,hc:'the modulus used in circular distance'},
+  {t:'gap',pre:'    dq2=min(abs(c-q//2),',suf:'-abs(c-q//2))',ans:'q',w:25,hc:'the modulus variable (same as above)'},
+  {t:'gap',pre:'    return 1 if dq2<',suf:' else 0',ans:'d0',w:35,hc:'distance-from-0 variable'}]},
 {type:'gaps',lang:'python',section:'primitive roots',theory:`<h3>Derive ω,ω⁻¹ from g=3</h3>`,q:'Complete root derivation:',
  tmpl:[
-  {t:'gap',pre:'psi=modpow(3,(Q-1)//(2*',suf:'),Q)',w:25,hc:'polynomial degree variable'},
-  {t:'gap',pre:'omega=modpow(',suf:',2,Q)',w:35,hc:'ψ computed on the line above'},
-  {t:'gap',pre:'omega_inv=modpow(omega,',suf:'-2,Q)',w:25,hc:"Fermat: a^(p-2) ≡ a⁻¹ mod p"},
-  {t:'gap',pre:'n_inv=modpow(N,Q-',suf:',Q)',w:25,hc:"same Fermat exponent pattern"}]},
+  {t:'gap',pre:'psi=modpow(3,(Q-1)//(2*',suf:'),Q)',ans:'N',w:25,hc:'polynomial degree variable'},
+  {t:'gap',pre:'omega=modpow(',suf:',2,Q)',ans:'psi',w:35,hc:'ψ computed on the line above'},
+  {t:'gap',pre:'omega_inv=modpow(omega,',suf:'-2,Q)',ans:'Q',w:25,hc:"Fermat: a^(p-2) ≡ a⁻¹ mod p"},
+  {t:'gap',pre:'n_inv=modpow(N,Q-',suf:',Q)',ans:'2',w:25,hc:"same Fermat exponent pattern"}]},
 {type:'gaps',lang:'python',section:'roots tables',theory:`<h3>Build ROOTS and INV_ROOTS</h3>`,q:'Complete root table generation:',
  tmpl:[
-  {t:'gap',pre:'ROOTS=[modpow(omega,k,Q) for k in range(',suf:')]',w:25,hc:'number of roots to generate'},
-  {t:'gap',pre:'INV_ROOTS=[modpow(',suf:',k,Q) for k in range(N)]',w:75,hc:'the inverse omega variable'}]},
+  {t:'gap',pre:'ROOTS=[modpow(omega,k,Q) for k in range(',suf:')]',ans:'N',w:25,hc:'number of roots to generate'},
+  {t:'gap',pre:'INV_ROOTS=[modpow(',suf:',k,Q) for k in range(N)]',ans:'omega_inv',w:75,hc:'the inverse omega variable'}]},
 {type:'gaps',lang:'python',section:'verify roots',theory:`<h3>Verify roots×inv_roots=1</h3>`,q:'Complete verification:',
  tmpl:[
-  {t:'gap',pre:'check=[ROOTS[k]*INV_ROOTS[',suf:']%Q for k in range(N)]',w:25,hc:'same index k to pair each root with its inverse'},
-  {t:'gap',pre:'assert all(x==',suf:' for x in check)',w:25,hc:'root × inv_root should equal 1'}]},
+  {t:'gap',pre:'check=[ROOTS[k]*INV_ROOTS[',suf:']%Q for k in range(N)]',ans:'k',w:25,hc:'same index k to pair each root with its inverse'},
+  {t:'gap',pre:'assert all(x==',suf:' for x in check)',ans:'1',w:25,hc:'root × inv_root should equal 1'}]},
 {type:'gaps',lang:'python',section:'NTT trace loop',theory:`<h3>NTT trace print each layer</h3>`,q:'Complete trace loop:',
  tmpl:[{t:'code',s:'a=bit_reverse_permute(S0); length=2'},
-  {t:'code',s:'while length<=N:'},{t:'gap',pre:'    step=N//',suf:'',w:55,hc:'the current butterfly stride variable'},
+  {t:'code',s:'while length<=N:'},{t:'gap',pre:'    step=N//',suf:'',ans:'length',w:55,hc:'the current butterfly stride variable'},
   {t:'code',s:'    for bs in range(0,N,length):'},
   {t:'code',s:'        for j in range(length//2):'},
-  {t:'gap',pre:'            f,s=bs+j,bs+j+',suf:'//2',w:55,hc:'the stride variable'},
-  {t:'gap',pre:'            w=ROOTS[j*',suf:']',w:45,hc:'the step value computed above'},
+  {t:'gap',pre:'            f,s=bs+j,bs+j+',suf:'//2',ans:'length',w:55,hc:'the stride variable'},
+  {t:'gap',pre:'            w=ROOTS[j*',suf:']',ans:'step',w:45,hc:'the step value computed above'},
   {t:'code',s:'            t=a[s]*w%Q'},
-  {t:'gap',pre:'            a[f],a[s]=(a[f]+t)%Q,(',suf:'-t)%Q',w:45,hc:'the top butterfly element (index f)'},
-  {t:'gap',pre:'    length',suf:' 1',w:35,hc:'left-shift-assign to double the stride'}]},
+  {t:'gap',pre:'            a[f],a[s]=(a[f]+t)%Q,(',suf:'-t)%Q',ans:'a[f]',w:45,hc:'the top butterfly element (index f)'},
+  {t:'gap',pre:'    length',suf:'=1',ans:'<<=',w:35,hc:'left-shift-assign to double the stride'}]},
 {type:'gaps',lang:'python',section:'INTT scale',theory:`<h3>INTT: scale after butterfly</h3>`,q:'Complete INTT scaling:',
  tmpl:[{t:'code',s:'a2=bit_reverse_permute(S0_NTT)'},
   {t:'code',s:'# ... butterfly layers with INV_ROOTS ...'},
-  {t:'gap',pre:'scaled=[x*',suf:'%Q for x in a2]',w:55,hc:'the n⁻¹ mod q constant'},
-  {t:'gap',pre:'assert scaled==',suf:'',w:35,hc:'the original poly before NTT (round-trip check)'}]},
+  {t:'gap',pre:'scaled=[x*',suf:'%Q for x in a2]',ans:'N_INV',w:55,hc:'the n⁻¹ mod q constant'},
+  {t:'gap',pre:'assert scaled==',suf:'',ans:'S0',w:35,hc:'the original poly before NTT (round-trip check)'}]},
 {type:'gaps',lang:'python',section:'keygen assertions',theory:`<h3>Assert t̂ matches</h3>`,q:'Complete assertions:',
  tmpl:[{t:'code',s:'th=keygen_t(A,[S0_NTT,S1_NTT],[E0_NTT,E1_NTT],Q)'},
-  {t:'gap',pre:'assert th[0]==',suf:'',w:25,hc:'expected first t̂ vector'},
-  {t:'gap',pre:'assert th[',suf:']==T1',w:25,hc:'second index'}]},
+  {t:'gap',pre:'assert th[0]==',suf:'',ans:'T0',w:25,hc:'expected first t̂ vector'},
+  {t:'gap',pre:'assert th[',suf:']==T1',ans:'1',w:25,hc:'second index'}]},
 {type:'gaps',lang:'python',section:'encaps assertions',theory:`<h3>Assert ciphertext matches</h3>`,q:'Complete assertions:',
  tmpl:[{t:'code',s:'u,v=encapsulate(A,[T0,T1],[R0,R1],[E1_0,E1_1],E2,MSG,ROOTS,INV_ROOTS,Q,K,N_INV)'},
-  {t:'gap',pre:'assert u[0]==',suf:'',w:25,hc:'expected first ciphertext poly'},
-  {t:'gap',pre:'assert u[1]==',suf:'',w:25,hc:'expected second ciphertext poly'},
-  {t:'gap',pre:'assert v==',suf:'',w:25,hc:'expected v ciphertext polynomial'}]},
+  {t:'gap',pre:'assert u[0]==',suf:'',ans:'U0',w:25,hc:'expected first ciphertext poly'},
+  {t:'gap',pre:'assert u[1]==',suf:'',ans:'U1',w:25,hc:'expected second ciphertext poly'},
+  {t:'gap',pre:'assert v==',suf:'',ans:'V',w:25,hc:'expected v ciphertext polynomial'}]},
 {type:'gaps',lang:'python',section:'decaps assertion',theory:`<h3>Assert message recovered</h3>`,q:'Complete assertion:',
  tmpl:[{t:'code',s:'m=decapsulate([S0_NTT,S1_NTT],[U0,U1],V,ROOTS,INV_ROOTS,Q,K,N_INV)'},
-  {t:'gap',pre:'assert m==',suf:'',w:55,hc:'expected recovered message variable'}]},
+  {t:'gap',pre:'assert m==',suf:'',ans:'DECODED',w:55,hc:'expected recovered message variable'}]},
 {type:'gaps',lang:'python',section:'noise budget',theory:`<h3>Noise budget analysis</h3>`,q:'Complete noise loop:',
  tmpl:[{t:'code',s:'for i in range(N):'},
-  {t:'gap',pre:'    n=(W[i]-M_HAT[',suf:'])%Q',w:25,hc:'the coefficient index variable'},
-  {t:'gap',pre:'    if n>Q//2: ',suf:'-=Q',w:25,hc:'the noise variable being adjusted'},
-  {t:'gap',pre:'    ok=abs(n)<',suf:'/4',w:25,hc:'the modulus: threshold is Q/4'}]},
+  {t:'gap',pre:'    n=(W[i]-M_HAT[',suf:'])%Q',ans:'i',w:25,hc:'the coefficient index variable'},
+  {t:'gap',pre:'    if n>Q//2: ',suf:'-=Q',ans:'n',w:25,hc:'the noise variable being adjusted'},
+  {t:'gap',pre:'    ok=abs(n)<',suf:'/4',ans:'Q',w:25,hc:'the modulus: threshold is Q/4'}]},
 {type:'gaps',lang:'python',section:'CBD edge cases',theory:`<h3>CBD edge case verification</h3>`,q:'Complete edge case assertions:',
  tmpl:[
-  {t:'gap',pre:'assert cbd_sample([0xFF],Q)==',suf:'',w:50,hc:'0xFF → all bits 1 → (2)-(2)=0 for each pair'},
-  {t:'gap',pre:'assert cbd_sample([0x03],Q)==',suf:'',w:50,hc:'0x03 → first pair:(1+1)-(0+0)=2, second pair:0'}]},
+  {t:'gap',pre:'assert cbd_sample([0xFF],Q)==',suf:'',ans:'[0,0]',w:50,hc:'0xFF → all bits 1 → (2)-(2)=0 for each pair'},
+  {t:'gap',pre:'assert cbd_sample([0x0F],Q)==',suf:'',ans:'[2,0]',w:50,hc:'0x0F → first pair:(1+1)-(0+0)=2, second pair:0'}]},
 {type:'gaps',lang:'python',section:'full pipeline',theory:`<h3>Full pipeline one-liner verification</h3>`,q:'Complete full pipeline:',
  tmpl:[{t:'code',s:'sn=[ntt(s,ROOTS,Q) for s in [S0,S1]]'},
   {t:'code',s:'en=[ntt(e,ROOTS,Q) for e in [E0,E1]]'},
-  {t:'gap',pre:'th=keygen_t(A,',suf:',en,Q)',w:25,hc:'NTT-transformed secret key list'},
-  {t:'gap',pre:'u,v=encapsulate(A,th,[R0,R1],[E1_0,E1_1],E2,MSG,',suf:',INV_ROOTS,Q,K,N_INV)',w:55,hc:'the global forward roots table'},
-  {t:'gap',pre:'r=decapsulate(sn,u,v,ROOTS,INV_ROOTS,Q,K,',suf:')',w:55,hc:'n⁻¹ mod q constant (last param)'},
-  {t:'gap',pre:'assert r==',suf:'',w:35,hc:'the original message variable'}]},
+  {t:'gap',pre:'th=keygen_t(A,',suf:',en,Q)',ans:'sn',w:25,hc:'NTT-transformed secret key list'},
+  {t:'gap',pre:'u,v=encapsulate(A,th,[R0,R1],[E1_0,E1_1],E2,MSG,',suf:',INV_ROOTS,Q,K,N_INV)',ans:'ROOTS',w:55,hc:'the global forward roots table'},
+  {t:'gap',pre:'r=decapsulate(sn,u,v,ROOTS,INV_ROOTS,Q,K,',suf:')',ans:'N_INV',w:55,hc:'n⁻¹ mod q constant (last param)'},
+  {t:'gap',pre:'assert r==',suf:'',ans:'MSG',w:35,hc:'the original message variable'}]},,
 {type:'gaps',lang:'python',section:'pointwise_add indexed',theory:`<h3>Pointwise add:indexed form</h3>`,q:'Complete using index loop:',
  tmpl:[{t:'code',s:'def pointwise_add(a,b,q):'},
-  {t:'gap',pre:'    return [(a[',suf:']+b[i])%q for i in range(len(a))]',w:25,hc:'the loop counter variable'}]},
+  {t:'gap',pre:'    return [(a[',suf:']+b[i])%q for i in range(len(a))]',ans:'i',w:25,hc:'the loop counter variable'}]},
 ];
 // LEVEL 6:INSANE  (32 C gaps)
 const INS=[
-{type:'gaps',lang:'c',section:'parameters',theory:`<h3>Kyber parameters</h3><p>Kyber works in the ring of polynomials modulo X to the 256 plus 1, with coefficients modulo the prime q. Every polynomial has 256 coefficients. KYBER_K is the module rank and picks the security level: 2 for ML-KEM-512, 3 for 768, 4 for 1024.</p><div class="mblock">// N = 256 coefficients, q = 3329, k = module rank</div>`,q:'Complete the Kyber parameters and the poly type:',
- tmpl:[{t:'code',s:'#define KYBER_N 256       // coefficients per polynomial'},
-  {t:'gap',pre:'#define KYBER_Q ',suf:'      // the prime modulus',w:50,hc:'the prime modulus every coefficient is reduced by'},
-  {t:'code',s:'#define KYBER_K 2         // module rank: 2 = ML-KEM-512'},
-  {t:'gap',pre:'typedef int16_t poly[',suf:'];   // one ring element',w:60,hc:'a polynomial holds KYBER_N coefficients'}]},
-{type:'gaps',lang:'c',section:'keccak theta',theory:`<h3>Keccak: theta step</h3><p>The Keccak permutation mixes a 5 by 5 array of 64-bit lanes. The theta step takes the parity of each column and folds it back into the state. This is the diffusion step: it makes every output bit depend on many input bits.</p><div class="mblock">// bc[i] = parity of column i</div>`,q:'Complete the theta column parity:',
- tmpl:[{t:'code',s:'for (int r=0; r<KECCAK_ROUNDS; r++) {'},
-  {t:'code',s:'    // theta: parity of each of the 5 columns'},
-  {t:'gap',pre:'    for (int i=0;i<5;i++) bc[i]=A[i]^A[i+5]^A[i+10]^A[i+15]^A[',suf:'];',w:55,hc:'rows are spaced 5 apart, so the last lane in column i is i plus 20'},
-  {t:'code',s:'    for (int i=0; i<5; i++) {'},
-  {t:'gap',pre:'        t=bc[(i+4)%5]^rol64(bc[(i+1)%5],',suf:');',w:30,hc:'rotate the neighbouring column parity left by one bit'},
-  {t:'code',s:'        for (int j=0; j<25; j+=5) A[j+i]^=t;'},
-  {t:'code',s:'    }'}]},
-{type:'gaps',lang:'c',section:'keccak rho and pi',theory:`<h3>Keccak: rho and pi</h3><p>rho rotates each lane by a fixed offset and pi moves it to a new position. The reference threads a single chain: it saves the source lane, then walks it through the permutation one lane at a time. Doing this with a naive copy silently breaks SHA-3.</p><div class="mblock">// chained walk: t holds the lane being moved</div>`,q:'Complete the rho and pi chained walk:',
- tmpl:[{t:'code',s:'t=A[1];   // start the chain at lane 1'},
-  {t:'code',s:'for (int i=0; i<24; i++) {'},
-  {t:'gap',pre:'    int j=PI[i]; uint64_t tt=A[j]; A[j]=rol64(t,RHO[',suf:']); t=tt;',w:30,hc:'index the rotation-offset table with the loop counter'},
+{type:'gaps',lang:'c',section:'barrett_reduce',theory:`<h3>Barrett reduction</h3><div class="mblock">// reduce a mod KYBER_Q without division\nint16_t barrett_reduce(int16_t a);</div>`,q:'Complete barrett_reduce:',
+ tmpl:[{t:'code',s:'#define KYBER_Q 3329'},
+  {t:'code',s:'static int16_t barrett_reduce(int16_t a) {'},
+  {t:'gap',pre:'    int16_t t=((int32_t)a*',suf:'+(1<<25))>>26;',ans:'20159',w:55,hc:'Barrett magic constant ≈ 2^26 / KYBER_Q'},
+  {t:'gap',pre:'    return a-t*',suf:';',ans:'KYBER_Q',w:60,hc:'the modulus constant'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'keccak chi and iota',theory:`<h3>Keccak: chi and iota</h3><p>chi is the only non-linear step: each lane is combined with its two neighbours through a NOT then AND. iota then adds the round constant, which breaks the symmetry between rounds.</p><div class="mblock">// chi: A[i] gets (NOT A[i+1]) AND A[i+2]</div>`,q:'Complete the chi and iota steps:',
- tmpl:[{t:'code',s:'for (int j=0; j<25; j+=5) {'},
-  {t:'code',s:'    for (int i=0; i<5; i++) bc[i]=A[j+i];'},
-  {t:'gap',pre:'    for (int i=0;i<5;i++) A[j+i]^=(~bc[(i+1)%5])&bc[(i+',suf:')%5];',w:30,hc:'chi reaches two lanes ahead for the AND term'},
+{type:'gaps',lang:'c',section:'montgomery_reduce',theory:`<h3>Montgomery reduction</h3><div class="mblock">// a*R^{-1} mod q\nQINV = q^{-1} mod 2^16</div>`,q:'Complete montgomery_reduce:',
+ tmpl:[{t:'code',s:'#define QINV 62209'},
+  {t:'code',s:'static int16_t montgomery_reduce(int32_t a) {'},
+  {t:'gap',pre:'    int16_t t=(int16_t)a*',suf:';',ans:'QINV',w:50,hc:'q⁻¹ mod 2^16 constant defined above'},
+  {t:'gap',pre:'    return (a-(int32_t)t*KYBER_Q)>>',suf:';',ans:'16',w:25,hc:'right-shift by word size (bits in int16_t)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly struct',theory:`<h3>Polynomial struct</h3>`,q:'Complete poly and polyvec typedefs:',
+ tmpl:[{t:'code',s:'#define KYBER_N 256'},
+  {t:'gap',pre:'typedef struct { int16_t ',suf:'[KYBER_N]; } poly;',ans:'coeffs',w:60,hc:'field name for the coefficient array'},
+  {t:'gap',pre:'typedef struct { poly ',suf:'[KYBER_K]; } polyvec;',ans:'vec',w:35,hc:'field name for the poly array'}]},
+{type:'gaps',lang:'c',section:'poly_add',theory:`<h3>Polynomial addition</h3>`,q:'Complete poly_add:',
+ tmpl:[{t:'code',s:'void poly_add(poly *r, const poly *a, const poly *b) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++)'},
+  {t:'gap',pre:'        r->coeffs[i]=a->coeffs[i]+',suf:';',ans:'b->coeffs[i]',w:100,hc:'same coefficient index i of the second poly'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_sub',theory:`<h3>Polynomial subtraction</h3>`,q:'Complete poly_sub:',
+ tmpl:[{t:'code',s:'void poly_sub(poly *r, const poly *a, const poly *b) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++)'},
+  {t:'gap',pre:'        r->coeffs[i]=a->coeffs[i]-',suf:';',ans:'b->coeffs[i]',w:100,hc:'same coefficient index i of the second poly'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'NTT zeta loop',theory:`<h3>NTT with zeta table</h3><div class="mblock">// zetas[k] = ψ^bitrev(k) mod q\n// Cooley-Tukey iterative</div>`,q:'Complete NTT zeta loop:',
+ tmpl:[{t:'code',s:'void ntt(int16_t r[256]) {'},
+  {t:'code',s:'    int len,start,j,k=1; int16_t t,zeta;'},
+  {t:'code',s:'    for (len=128; len>=2; len>>=1) {'},
+  {t:'code',s:'        for (start=0; start<256; start+=2*len) {'},
+  {t:'gap',pre:'            zeta=zetas[',suf:'];',ans:'k++',w:45,hc:'zeta table index, post-increment k'},
+  {t:'code',s:'            for (j=start; j<start+len; j++) {'},
+  {t:'gap',pre:'                t=montgomery_reduce((int32_t)zeta*r[',suf:']);',ans:'j+len',w:55,hc:'second butterfly element: j offset by len'},
+  {t:'gap',pre:'                r[j+len]=r[',suf:']-t;',ans:'j',w:25,hc:'first butterfly element index'},
+  {t:'code',s:'                r[j]=r[j]+t;'},
+  {t:'code',s:'            }'},'',{t:'code',s:'        }'},'',{t:'code',s:'    }'},'',{t:'code',s:'}'}].filter(x=>typeof x==='object')},
+{type:'gaps',lang:'c',section:'INTT scale',theory:`<h3>INTT:Gentleman-Sande + n⁻¹ scale</h3><div class="mblock">// F=KYBER_N^{-1} mod q in Montgomery form</div>`,q:'Complete INTT scaling:',
+ tmpl:[{t:'code',s:'#define F 1441  // mont(n^{-1} mod q)'},
+  {t:'code',s:'void intt(int16_t r[256]) {'},
+  {t:'code',s:'    /* ... butterfly layers (reverse) ... */'},
+  {t:'code',s:'    for (int j=0; j<256; j++)'},
+  {t:'gap',pre:'        r[j]=montgomery_reduce((int32_t)',suf:'*r[j]);',ans:'F',w:25,hc:'n⁻¹ Montgomery constant defined above'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'basemul',theory:`<h3>Basemul:NTT-domain poly multiply</h3><div class="mblock">// r[0]=a[0]*b[0]+a[1]*b[1]*zeta\n// r[1]=a[0]*b[1]+a[1]*b[0]</div>`,q:'Complete basemul:',
+ tmpl:[{t:'code',s:'void basemul(int16_t r[2],const int16_t a[2],const int16_t b[2],int16_t zeta){'},
+  {t:'gap',pre:'    r[0]=montgomery_reduce((int32_t)',suf:'[1]*b[1]);',ans:'a',w:25,hc:'first input array parameter'},
+  {t:'code',s:'    r[0]=montgomery_reduce((int32_t)r[0]*zeta);'},
+  {t:'gap',pre:'    r[0]+=montgomery_reduce((int32_t)a[0]*',suf:'[0]);',ans:'b',w:25,hc:'second input array parameter'},
+  {t:'gap',pre:'    r[1]=montgomery_reduce((int32_t)a[0]*',suf:'[1]);',ans:'b',w:25,hc:'second input array parameter'},
+  {t:'gap',pre:'    r[1]+=montgomery_reduce((int32_t)a[1]*',suf:'[0]);',ans:'b',w:25,hc:'second input array parameter'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_ntt wrapper',theory:`<h3>poly_ntt wrapper</h3>`,q:'Complete poly_ntt and poly_invntt_tomont:',
+ tmpl:[{t:'code',s:'void poly_ntt(poly *r) {'},
+  {t:'gap',pre:'    ntt(',suf:'->coeffs);',ans:'r',w:25,hc:'the poly pointer parameter'},
+  {t:'gap',pre:'    poly_reduce(',suf:');',ans:'r',w:25,hc:'the poly pointer parameter'},
   {t:'code',s:'}'},
-  {t:'gap',pre:'A[0]^=RC[',suf:'];   // iota: add the round constant',w:30,hc:'the round counter selects this round constant'}]},
-{type:'gaps',lang:'c',section:'sponge blocks',theory:`<h3>Sponge: rate blocks</h3><p>The sponge processes data in blocks of rate bytes. While absorbing, each input byte is XORed into the state, and when a full block is reached the permutation runs and the buffer resets. Squeezing is the mirror: read bytes out, and re-permute whenever a block is used up.</p><div class="mblock">// permute once the buffer fills one rate block</div>`,q:'Complete the absorb and squeeze block handling:',
- tmpl:[{t:'code',s:'// absorb: XOR each input byte, permute on a full block'},
-  {t:'code',s:'c->buf[c->pos++]^=in[i];'},
-  {t:'gap',pre:'if (c->pos==c->',suf:') { absorb_block(c); keccakf(c->A); /* reset */ }',w:40,hc:'a block is full when the position reaches the rate'},
-  {t:'code',s:'// squeeze: re-permute when the current block runs out'},
-  {t:'gap',pre:'if (c->pos==c->rate) { keccakf(c->A); extract_block(c); c->pos=',suf:'; }',w:30,hc:'reset the read position to the start of the fresh block'},
-  {t:'code',s:'out[i]=c->buf[c->pos++];'}]},
-{type:'gaps',lang:'c',section:'domain separation',theory:`<h3>Finalize: domain separation</h3><p>Padding marks the end of input and tells the hash roles apart. SHAKE uses the domain byte 0x1F and the SHA-3 hashes use 0x06. The last byte of the block always takes the 0x80 pad bit. This one byte is the only difference between SHAKE and SHA-3.</p><div class="mblock">// SHAKE = 0x1F, SHA3 = 0x06, end pad = 0x80</div>`,q:'Complete the sponge finalize padding:',
- tmpl:[{t:'code',s:'static void xof_finalize(Keccak *c, uint8_t domain) {'},
-  {t:'gap',pre:'    c->buf[c->pos]^=',suf:';   // 0x1F for SHAKE, 0x06 for SHA3',w:55,hc:'the caller passes the role specific domain byte'},
-  {t:'gap',pre:'    c->buf[c->rate-1]^=',suf:';   // final pad bit',w:45,hc:'the high pad bit placed in the last byte of the block'},
-  {t:'code',s:'    absorb_block(c); keccakf(c->A); extract_block(c);'},
+  {t:'code',s:'void poly_invntt_tomont(poly *r) {'},
+  {t:'gap',pre:'    intt(',suf:'->coeffs);',ans:'r',w:25,hc:'the poly pointer parameter'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'hash roles',theory:`<h3>The five hash roles</h3><p>Every Kyber hash is the same sponge with a different rate and domain. SHAKE128 at rate 168 expands the public matrix A. SHAKE256 at rate 136 is the noise PRF. SHA3-256 binds the public key. SHA3-512 at rate 72 is the function G that derives the shared key and the coins.</p><div class="mblock">// rate: SHAKE128=168, SHAKE256/SHA3-256=136, SHA3-512=72</div>`,q:'Complete the rates of the hash roles:',
- tmpl:[{t:'code',s:'// SHAKE128 expands matrix A'},
-  {t:'gap',pre:'void shake128(...) { xof_init(&c,',suf:'); /* ... */ xof_finalize(&c,0x1F); }',w:40,hc:'the SHAKE128 rate in bytes'},
-  {t:'code',s:'// G = SHA3-512 derives the shared key K and coins r'},
-  {t:'gap',pre:'void sha3_512(...) { xof_init(&c,',suf:'); /* ... */ xof_finalize(&c,0x06); }',w:40,hc:'the SHA3-512 rate in bytes'}]},
-{type:'gaps',lang:'c',section:'ntt loop',theory:`<h3>Forward NTT: loop shape</h3><p>The NTT moves a polynomial into a frequency-like domain where multiplication is cheap. It runs 7 layers of butterflies. The layer width len starts at 128 and halves each layer, and the zetas table holds the twiddle factors in the normal domain.</p><div class="mblock">// 7 layers, len = 128, 64, 32, ... 2</div>`,q:'Complete the NTT loop structure:',
- tmpl:[{t:'code',s:'static void poly_ntt(poly f) {'},
-  {t:'code',s:'    int k=1;'},
-  {t:'gap',pre:'    for (int len=',suf:'; len>=2; len>>=1)',w:40,hc:'the first layer pairs coefficients 128 apart'},
-  {t:'gap',pre:'        for (int start=0; start<KYBER_N; start+=',suf:')',w:45,hc:'each block spans two halves, so step by twice the width'},
-  {t:'code',s:'            int z=zetas[k++];'},
-  {t:'code',s:'            // ... butterfly over j ...'},
+{type:'gaps',lang:'c',section:'polyvec_ntt',theory:`<h3>polyvec_ntt: apply NTT to each element</h3>`,q:'Complete polyvec_ntt:',
+ tmpl:[{t:'code',s:'void polyvec_ntt(polyvec *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_ntt(&r->',suf:'[i]);',ans:'vec',w:35,hc:'poly array field name (from struct typedef)'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'ntt butterfly',theory:`<h3>Forward NTT: butterfly</h3><p>Inside each block the butterfly combines a low coefficient f[j] with a high one f[j+len] using the twiddle z, reducing each result modulo q. Adding q before the subtraction keeps the value non-negative, so the plain mod q stays correct.</p><div class="mblock">// t = z * f[j+len] mod q</div>`,q:'Complete the forward butterfly:',
- tmpl:[{t:'code',s:'for (int j=start; j<start+len; j++) {'},
-  {t:'gap',pre:'    int t=(int)z*f[j+len]%',suf:';',w:60,hc:'reduce the twiddle product modulo the prime q'},
-  {t:'gap',pre:'    f[j+len]=(int16_t)((f[j]-t+',suf:')%KYBER_Q);',w:60,hc:'add the modulus so the difference stays non-negative before reducing'},
-  {t:'code',s:'    f[j]=(int16_t)((f[j]+t)%KYBER_Q);'},
+{type:'gaps',lang:'c',section:'polyvec_pointwise_acc',theory:`<h3>Inner product of two polyvecs</h3><div class="mblock">// r = Σ a[i] ⊙ b[i]</div>`,q:'Complete polyvec_pointwise_acc_montgomery:',
+ tmpl:[{t:'code',s:'void polyvec_pointwise_acc_montgomery(poly *r,const polyvec *a,const polyvec *b){'},
+  {t:'code',s:'    poly t;'},
+  {t:'gap',pre:'    poly_basemul_montgomery(r,&a->vec[',suf:'],&b->vec[0]);',ans:'0',w:25,hc:'first element index to initialise r'},
+  {t:'code',s:'    for (int i=1; i<KYBER_K; i++) {'},
+  {t:'gap',pre:'        poly_basemul_montgomery(&t,&a->vec[',suf:'],&b->vec[i]);',ans:'i',w:25,hc:'the loop counter variable'},
+  {t:'code',s:'        poly_add(r,r,&t);'},
+  {t:'code',s:'    }'},
+  {t:'gap',pre:'    poly_reduce(',suf:');',ans:'r',w:25,hc:'the result poly pointer'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'intt loop',theory:`<h3>Inverse NTT: loop shape</h3><p>The inverse NTT runs the same butterflies in reverse. The layer width grows from 2 up to 128, and the twiddle index walks backwards from 127. This undoes the forward transform layer by layer.</p><div class="mblock">// reverse: len = 2, 4, ... 128; k counts down from 127</div>`,q:'Complete the inverse NTT loop:',
- tmpl:[{t:'code',s:'static void poly_intt(poly f) {'},
-  {t:'gap',pre:'    int k=',suf:';   // walk the twiddle table backwards',w:40,hc:'the inverse starts at the last twiddle index'},
-  {t:'gap',pre:'    for (int len=2; len<=',suf:'; len<<=1)',w:40,hc:'the last inverse layer pairs coefficients 128 apart'},
-  {t:'code',s:'        for (int start=0; start<KYBER_N; start+=2*len)'},
-  {t:'code',s:'            int z=zetas[k--];'},
-  {t:'code',s:'            // ... inverse butterfly ...'},
+{type:'gaps',lang:'c',section:'poly_reduce',theory:`<h3>poly_reduce: Barrett reduce all coeffs</h3>`,q:'Complete poly_reduce:',
+ tmpl:[{t:'code',s:'void poly_reduce(poly *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++)'},
+  {t:'gap',pre:'        r->coeffs[i]=barrett_reduce(r->',suf:'[i]);',ans:'coeffs',w:60,hc:'coefficient array field name (from struct)'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'intt scaling',theory:`<h3>Inverse NTT: final scaling</h3><p>After the butterflies every coefficient is too large by a factor of 128. Multiplying by the inverse of 128 modulo q rescales the output. That constant is 3303.</p><div class="mblock">// N_INV = inverse of 128 mod q = 3303</div>`,q:'Complete the INTT final scaling:',
- tmpl:[{t:'code',s:'#define N_INV 3303   // inverse of 128 mod q'},
-  {t:'code',s:'// after the butterfly layers:'},
-  {t:'gap',pre:'for (int i=0;i<KYBER_N;i++) f[i]=(int16_t)((int)f[i]*',suf:'%KYBER_Q);',w:50,hc:'scale each coefficient by the inverse-of-128 constant'}]},
-{type:'gaps',lang:'c',section:'basemul',theory:`<h3>Base multiplication</h3><p>Because X to the 256 plus 1 factors into 128 quadratics modulo q, NTT multiplication is 128 small degree-one products, not plain pointwise products. Each product is taken modulo X squared minus gamma, where gamma alternates between plus and minus a twiddle. The intermediates widen to 64-bit because gamma times a times b can reach about q cubed.</p><div class="mblock">// (a0 + a1 X)(b0 + b1 X) mod (X^2 - gamma)</div>`,q:'Complete the base multiplication:',
- tmpl:[{t:'code',s:'for (int g=0; g<64; g++) {'},
-  {t:'gap',pre:'    long gp=zetas[',suf:'+g], gn=KYBER_Q-gp; int i=4*g;',w:35,hc:'the basemul twiddles start at table index 64'},
-  {t:'code',s:'    // r[i] = a[i]*b[i] + gamma * a[i+1]*b[i+1]'},
-  {t:'gap',pre:'    r[i]=(int16_t)(((long)a[i]*b[i]+gp*a[i+1]%KYBER_Q*b[i+1])%',suf:');',w:60,hc:'reduce the combined product modulo the prime q'},
-  {t:'code',s:'    r[i+1]=(int16_t)(((long)a[i]*b[i+1]+(long)a[i+1]*b[i])%KYBER_Q);'},
+{type:'gaps',lang:'c',section:'poly_compress',theory:`<h3>poly_compress: Compress(x,d)</h3><div class="mblock">// round(2^d/q * x) mod 2^d</div>`,q:'Complete poly_compress (d=4):',
+ tmpl:[{t:'code',s:'void poly_compress(uint8_t r[],const poly *a) {'},
+  {t:'code',s:'    uint16_t t[8]; int i,j=0;'},
+  {t:'code',s:'    for (i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        for (int k=0; k<8; k++) {'},
+  {t:'gap',pre:'            t[k]=((uint32_t)a->coeffs[8*i+k]<<4)+',suf:'/2;',ans:'KYBER_Q',w:60,hc:'modulus for rounding offset q/2'},
+  {t:'gap',pre:'            t[k]=(t[k]/KYBER_Q)&',suf:';',ans:'0xf',w:35,hc:'4-bit mask for d=4 compression'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'        r[j]=t[0]|(t[1]<<4); j++;'},
+  {t:'code',s:'    }'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'poly add and sub',theory:`<h3>Polynomial add and subtract</h3><p>Addition and subtraction act coefficient by coefficient, with each result reduced modulo q. Subtraction adds q first, so the result never goes negative under the plain mod q arithmetic.</p><div class="mblock">// add: (a+b) mod q    sub: (a-b+q) mod q</div>`,q:'Complete poly_add and poly_sub:',
- tmpl:[{t:'code',s:'void poly_add(poly r, const poly a, const poly b) {'},
-  {t:'gap',pre:'    for (int i=0;i<KYBER_N;i++) r[i]=(int16_t)((a[i]+b[i])%',suf:');',w:60,hc:'reduce the sum modulo the prime q'},
+{type:'gaps',lang:'c',section:'poly_decompress',theory:`<h3>poly_decompress: Decompress(x,d)</h3><div class="mblock">// round(q/2^d * x)</div>`,q:'Complete poly_decompress (d=4):',
+ tmpl:[{t:'code',s:'void poly_decompress(poly *r,const uint8_t a[]) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N/2; i++) {'},
+  {t:'gap',pre:'        r->coeffs[2*i]=  (((a[i]&0xf)*KYBER_Q)+',suf:')>>4;',ans:'8',w:25,hc:'rounding offset = half the divisor (>>4 divides by 16, so add 16/2 = 8)'},
+  {t:'gap',pre:'        r->coeffs[2*i+1]=(((a[i]>>4)*KYBER_Q)+',suf:')>>4;',ans:'8',w:25,hc:'same rounding offset as the line above (8 = 16/2)'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'cbd_eta2',theory:`<h3>CBD η=2 in C (popcount trick)</h3><div class="mblock">// d=t&0x55... + (t>>1)&0x55...\n// a=(d>>(4j))&3  b=(d>>(4j+2))&3</div>`,q:'Complete cbd_eta2:',
+ tmpl:[{t:'code',s:'static void cbd_eta2(poly *r,const uint8_t buf[]) {'},
+  {t:'code',s:'    uint32_t t,d; int16_t a,b;'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        t=load32_littleendian(buf+4*i);'},
+  {t:'gap',pre:'        d =t&',suf:';',ans:'0x55555555',w:80,hc:'alternating-bit mask 0x55555555 = 0101…: isolates even-position bits for popcount'},
+  {t:'gap',pre:'        d+=(t>>1)&',suf:';',ans:'0x55555555',w:80,hc:'same alternating-bit mask applied to the right-shifted bits (odd positions)'},
+  {t:'code',s:'        for (int j=0; j<8; j++) {'},
+  {t:'gap',pre:'            a=(d>>(4*j+0))&',suf:';',ans:'0x3',w:35,hc:'2-bit mask 0x3 = 0b11: η=2 means each popcount fits in 2 bits'},
+  {t:'gap',pre:'            b=(d>>(4*j+',suf:'))&0x3;',ans:'2',w:25,hc:'bit offset for the second pair within each 4-bit group (bits 2–3)'},
+  {t:'gap',pre:'            r->coeffs[8*i+j]=a-',suf:';',ans:'b',w:25,hc:'the subtracted popcount variable b (declared just above)'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'gen_matrix',theory:`<h3>Matrix A from seed</h3>`,q:'Complete gen_matrix:',
+ tmpl:[{t:'code',s:'void gen_matrix(polyvec a[KYBER_K],const uint8_t seed[32]) {'},
+  {t:'code',s:'    uint8_t extseed[34];'},
+  {t:'gap',pre:'    memcpy(extseed,',suf:',32);',ans:'seed',w:35,hc:'the 32-byte seed parameter of gen_matrix (public matrix seed ρ)'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++) {'},
+  {t:'code',s:'        for (int j=0; j<KYBER_K; j++) {'},
+  {t:'gap',pre:'            extseed[32]=',suf:';',ans:'i',w:25,hc:'outer loop index i: byte 32 selects the matrix row'},
+  {t:'gap',pre:'            extseed[33]=',suf:';',ans:'j',w:25,hc:'inner loop index j: byte 33 selects the matrix column'},
+  {t:'code',s:'            poly_uniform(&a[i].vec[j],extseed);'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'indcpa_keypair',theory:`<h3>IND-CPA key generation</h3>`,q:'Complete indcpa_keypair:',
+ tmpl:[{t:'code',s:'void indcpa_keypair(uint8_t pk[],uint8_t sk[]) {'},
+  {t:'code',s:'    polyvec a[KYBER_K],e,pkpv,skpv; uint8_t seed[64],nonce=0;'},
+  {t:'gap',pre:'    randombytes(',suf:',KYBER_SYMBYTES);',ans:'seed',w:35,hc:'the local 64-byte seed buffer declared above (fill first 32 bytes with randomness)'},
+  {t:'code',s:'    hash_g(seed,seed,KYBER_SYMBYTES); gen_matrix(a,seed);'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_getnoise_eta1(&skpv.vec[i],seed+KYBER_SYMBYTES,',suf:'++);',ans:'nonce',w:55,hc:'the nonce variable declared above (post-increment to give each poly a unique nonce)'},
+  {t:'gap',pre:'    polyvec_ntt(',suf:');',ans:'&skpv',w:45,hc:'address-of the secret key polyvec skpv (prefix & operator)'},
+  {t:'code',s:'    /* compute pkpv=A*skpv+e, pack keys */'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'indcpa_enc u',theory:`<h3>IND-CPA encryption:u</h3><div class="mblock">// u = A^T*r + e1</div>`,q:'Complete u computation:',
+ tmpl:[{t:'code',s:'/* r_ntt already computed */'},
+  {t:'code',s:'polyvec_pointwise_acc_montgomery(&b.vec[0],&at[0],&r_ntt);'},
+  {t:'gap',pre:'poly_invntt_tomont(&b.vec[',suf:']);',ans:'0',w:25,hc:'index 0: this snippet handles only the first element of ciphertext vector b'},
+  {t:'gap',pre:'poly_add(&b.vec[0],&b.vec[0],&',suf:');',ans:'e1.vec[0]',w:70,hc:'e1.vec[0]: first element of the error polyvec e1 (struct field vec)'},
+  {t:'gap',pre:'poly_reduce(&b.vec[',suf:']);',ans:'0',w:25,hc:'same index 0 as the two lines above'}]},
+{type:'gaps',lang:'c',section:'indcpa_dec',theory:`<h3>IND-CPA decryption</h3><div class="mblock">// w = v - s^T*u</div>`,q:'Complete indcpa_dec:',
+ tmpl:[{t:'code',s:'void indcpa_dec(uint8_t m[],const uint8_t c[],const uint8_t sk[]) {'},
+  {t:'code',s:'    polyvec bp,skpv; poly v,mp;'},
+  {t:'code',s:'    unpackciphertext(&bp,&v,c); unpack_sk(&skpv,sk);'},
+  {t:'gap',pre:'    polyvec_ntt(',suf:');',ans:'&bp',w:35,hc:'address-of the unpacked ciphertext polyvec bp (prefix & operator)'},
+  {t:'gap',pre:'    polyvec_pointwise_acc_montgomery(&mp,&',suf:',&bp);',ans:'skpv',w:45,hc:'the unpacked secret key polyvec variable skpv'},
+  {t:'gap',pre:'    poly_invntt_tomont(&',suf:');',ans:'mp',w:25,hc:'the intermediate poly mp holding s̃^T·u so far'},
+  {t:'code',s:'    poly_sub(&mp,&v,&mp); poly_reduce(&mp);'},
+  {t:'gap',pre:'    poly_tomsg(',suf:',&mp);',ans:'m',w:25,hc:'the output message byte array m (first function parameter)'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_tomsg',theory:`<h3>poly_tomsg: recover message bits</h3><div class="mblock">// bit=(coeff+q/4)/(q/2) mod 2</div>`,q:'Complete poly_tomsg:',
+ tmpl:[{t:'code',s:'void poly_tomsg(uint8_t msg[32],const poly *a) {'},
+  {t:'code',s:'    uint16_t t; int i;'},
+  {t:'code',s:'    for (i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        msg[i]=0;'},
+  {t:'code',s:'        for (int j=0; j<8; j++) {'},
+  {t:'gap',pre:'            t=a->coeffs[8*i+j]; t+=(',suf:'>>15)&KYBER_Q;',ans:'t',w:25,hc:'the coefficient variable t just loaded above (sign-extend: adds q if negative)'},
+  {t:'gap',pre:'            t=(((t<<1)+KYBER_Q/2)/',suf:')&1;',ans:'KYBER_Q',w:60,hc:'the modulus constant: divide by KYBER_Q to normalise then mask to 1 bit'},
+  {t:'gap',pre:'            msg[i]|=t<<',suf:';',ans:'j',w:25,hc:'the inner loop variable j: bit position within the current output byte'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'poly_frommsg',theory:`<h3>poly_frommsg: encode message into poly</h3><div class="mblock">// bit=1→coeff=q/2  bit=0→coeff=0</div>`,q:'Complete poly_frommsg:',
+ tmpl:[{t:'code',s:'void poly_frommsg(poly *r,const uint8_t msg[32]) {'},
+  {t:'code',s:'    int16_t mask;'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N/8; i++) {'},
+  {t:'code',s:'        for (int j=0; j<8; j++) {'},
+  {t:'gap',pre:'            mask=-(int16_t)((msg[i]>>',suf:')&1);',ans:'j',w:25,hc:'inner loop variable j: bit position within the message byte'},
+  {t:'gap',pre:'            r->coeffs[8*i+j]=mask&((KYBER_Q+1)/',suf:');',ans:'2',w:25,hc:'bit 1 encodes as (KYBER_Q+1)/2 ≈ q/2: divide by 2 here'},
+  {t:'code',s:'        }'},
+  {t:'code',s:'    }'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'crypto_kem_keypair',theory:`<h3>KEM keypair wrapper</h3>`,q:'Complete crypto_kem_keypair:',
+ tmpl:[{t:'code',s:'int crypto_kem_keypair(uint8_t *pk,uint8_t *sk) {'},
+  {t:'gap',pre:'    indcpa_keypair(',suf:',sk);',ans:'pk',w:25,hc:'the public key output buffer (first function parameter)'},
+  {t:'gap',pre:'    memcpy(sk+KYBER_INDCPA_SECRETKEYBYTES,',suf:',KYBER_INDCPA_PUBLICKEYBYTES);',ans:'pk',w:25,hc:'same pk: the KEM secret key embeds a copy of the public key'},
+  {t:'code',s:'    hash_h(sk+KYBER_SECRETKEYBYTES-2*KYBER_SYMBYTES,pk,KYBER_INDCPA_PUBLICKEYBYTES);'},
+  {t:'gap',pre:'    randombytes(sk+KYBER_SECRETKEYBYTES-KYBER_SYMBYTES,',suf:');',ans:'KYBER_SYMBYTES',w:90,hc:'the size constant for the implicit-rejection random value (32 bytes)'},
+  {t:'code',s:'    return 0;'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'crypto_kem_enc',theory:`<h3>KEM encapsulation</h3>`,q:'Complete crypto_kem_enc:',
+ tmpl:[{t:'code',s:'int crypto_kem_enc(uint8_t *ct,uint8_t *ss,const uint8_t *pk) {'},
+  {t:'code',s:'    uint8_t buf[2*KYBER_SYMBYTES],kr[2*KYBER_SYMBYTES];'},
+  {t:'gap',pre:'    randombytes(',suf:',KYBER_SYMBYTES);',ans:'buf',w:35,hc:'the local randomness buffer declared above (fill first 32 bytes)'},
+  {t:'gap',pre:'    hash_h(',suf:',buf,KYBER_SYMBYTES);',ans:'buf',w:35,hc:'same buf: hash it in-place for domain separation (FO transform step)'},
+  {t:'code',s:'    hash_g(kr,buf,2*KYBER_SYMBYTES);'},
+  {t:'gap',pre:'    indcpa_enc(',suf:',buf,pk,kr+KYBER_SYMBYTES);',ans:'ct',w:25,hc:'the ciphertext output buffer (first function parameter)'},
+  {t:'gap',pre:'    hash_h(kr+KYBER_SYMBYTES,',suf:',KYBER_CIPHERTEXTBYTES);',ans:'ct',w:25,hc:'same ct: hash the ciphertext to bind it cryptographically to the shared secret'},
+  {t:'gap',pre:'    kdf(',suf:',kr,2*KYBER_SYMBYTES);',ans:'ss',w:25,hc:'the shared secret output buffer ss (second function parameter)'},
+  {t:'code',s:'    return 0;'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'crypto_kem_dec',theory:`<h3>KEM decapsulation (FO implicit rejection)</h3>`,q:'Complete crypto_kem_dec:',
+ tmpl:[{t:'code',s:'int crypto_kem_dec(uint8_t *ss,const uint8_t *ct,const uint8_t *sk) {'},
+  {t:'code',s:'    uint8_t buf[2*KYBER_SYMBYTES],kr[2*KYBER_SYMBYTES];'},
+  {t:'code',s:'    uint8_t cmp[KYBER_CIPHERTEXTBYTES]; int fail;'},
+  {t:'gap',pre:'    indcpa_dec(',suf:',ct,sk);',ans:'buf',w:35,hc:'local buffer to receive the decrypted message (declared above as buf[])'},
+  {t:'code',s:'    memcpy(buf+KYBER_SYMBYTES,sk+KYBER_SECRETKEYBYTES-2*KYBER_SYMBYTES,KYBER_SYMBYTES);'},
+  {t:'code',s:'    hash_g(kr,buf,2*KYBER_SYMBYTES);'},
+  {t:'gap',pre:'    indcpa_enc(cmp,buf,sk+KYBER_INDCPA_SECRETKEYBYTES,',suf:'+KYBER_SYMBYTES);',ans:'kr',w:35,hc:'re-encryption coins from kr (derived key material, second 32 bytes)'},
+  {t:'gap',pre:'    fail=verify(',suf:',ct,KYBER_CIPHERTEXTBYTES);',ans:'cmp',w:35,hc:'the re-encrypted ciphertext buffer cmp to compare against the received ct'},
+  {t:'code',s:'    hash_h(kr+KYBER_SYMBYTES,ct,KYBER_CIPHERTEXTBYTES);'},
+  {t:'code',s:'    cmov(kr,sk+KYBER_SECRETKEYBYTES-KYBER_SYMBYTES,KYBER_SYMBYTES,fail);'},
+  {t:'gap',pre:'    kdf(',suf:',kr,2*KYBER_SYMBYTES);',ans:'ss',w:25,hc:'the shared secret output buffer ss (first function parameter)'},
+  {t:'code',s:'    return 0;'},
+  {t:'code',s:'}'}]},
+{type:'gaps',lang:'c',section:'verify + cmov',theory:`<h3>Constant-time verify and conditional move</h3>`,q:'Complete verify and cmov:',
+ tmpl:[{t:'code',s:'static int verify(const uint8_t *a,const uint8_t *b,size_t len) {'},
+  {t:'code',s:'    uint8_t r=0;'},
+  {t:'code',s:'    for (size_t i=0; i<len; i++)'},
+  {t:'gap',pre:'        r|=a[i]^',suf:';',ans:'b[i]',w:45,hc:'XOR with the corresponding byte of buffer b at index i'},
+  {t:'gap',pre:'    return -(1&((r-1)>>',suf:'));',ans:'8',w:25,hc:'right-shift by 8 (byte width) to propagate the borrow from (r-1) into the sign bit'},
   {t:'code',s:'}'},
-  {t:'code',s:'void poly_sub(poly r, const poly a, const poly b) {'},
-  {t:'gap',pre:'    for (int i=0;i<KYBER_N;i++) r[i]=(int16_t)((a[i]-b[i]+',suf:')%KYBER_Q);',w:60,hc:'add the modulus so the difference stays non-negative'},
+  {t:'code',s:'static void cmov(uint8_t *r,const uint8_t *b,size_t len,uint8_t mask) {'},
+  {t:'code',s:'    mask=-mask;'},
+  {t:'code',s:'    for (size_t i=0; i<len; i++)'},
+  {t:'gap',pre:'        r[i]^=mask&(r[i]^',suf:');',ans:'b[i]',w:45,hc:'source byte b[i] to conditionally move into r[i] when mask is all-1s'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'gen_a_entry seed',theory:`<h3>Matrix entry: seed setup</h3><p>Each entry of the public matrix A is generated on demand from the public seed rho. The seed is extended with the column and row indices, then fed to SHAKE128 at rate 168. The result already lives in the NTT domain.</p><div class="mblock">// seed = rho, then column C, then row R</div>`,q:'Complete the matrix-entry seed setup:',
- tmpl:[{t:'code',s:'uint8_t seed[SEED_BYTES+2];'},
-  {t:'gap',pre:'memcpy(seed,',suf:',SEED_BYTES);   // copy the public seed rho',w:40,hc:'the public matrix seed passed into this function'},
-  {t:'code',s:'seed[SEED_BYTES]=(uint8_t)C;      // column index'},
-  {t:'gap',pre:'seed[SEED_BYTES+1]=(uint8_t)',suf:';   // row index',w:30,hc:'the row index selects which matrix row this entry is in'},
-  {t:'code',s:'Keccak c; xof_init(&c,168); xof_absorb(&c,seed,SEED_BYTES+2);'}]},
-{type:'gaps',lang:'c',section:'rejection sampling',theory:`<h3>Rejection sampling</h3><p>SHAKE128 streams bytes, and every three bytes give two 12-bit candidates. A candidate is kept only if it is below q, otherwise it is rejected. This makes each accepted coefficient uniform on 0 up to q minus 1.</p><div class="mblock">// 3 bytes give two 12-bit values; keep those below q</div>`,q:'Complete the rejection sampling:',
- tmpl:[{t:'code',s:'int d1=b0|((b1&0x0F)<<8), d2=(b1>>4)|((int)b2<<4);'},
-  {t:'gap',pre:'if (d1<',suf:' && count<KYBER_N) out[count++]=(int16_t)d1;',w:60,hc:'accept the candidate only when it is below the prime q'},
-  {t:'gap',pre:'if (d2<KYBER_Q && count<',suf:') out[count++]=(int16_t)d2;',w:60,hc:'stop once the polynomial has all its coefficients'}]},
-{type:'gaps',lang:'c',section:'cbd',theory:`<h3>Centered binomial noise</h3><p>The noise comes from a centered binomial distribution. For each coefficient, take 2 eta random bits, count the ones in the first half, and subtract the count in the second half. The result is a small value centered on zero.</p><div class="mblock">// coeff = popcount(first eta bits) - popcount(next eta bits)</div>`,q:'Complete the centered binomial sampler:',
- tmpl:[{t:'code',s:'int base=2*eta*i, a=0, b=0;'},
-  {t:'gap',pre:'for (int j=0; j<eta; j++) a+=getbit(buf,base+',suf:');',w:30,hc:'first half: read bit j of this coefficient group'},
-  {t:'gap',pre:'for (int j=0; j<eta; j++) b+=getbit(buf,base+eta+',suf:');',w:30,hc:'second half: the same bit j, offset past the first eta bits'},
-  {t:'gap',pre:'int v=a-',suf:';   // small centered value',w:30,hc:'subtract the second popcount from the first'}]},
-{type:'gaps',lang:'c',section:'sample_poly',theory:`<h3>Noise PRF</h3><p>One noise polynomial is sampled by a PRF: SHAKE256 over the secret seed and a one-byte nonce makes 64 times eta fresh bytes, which the binomial sampler turns into coefficients. The nonce keeps each polynomial independent.</p><div class="mblock">// PRF = SHAKE256(seed, then nonce)</div>`,q:'Complete the noise PRF:',
- tmpl:[{t:'code',s:'uint8_t in[SEED_BYTES+1]; memcpy(in,seed,SEED_BYTES);'},
-  {t:'gap',pre:'in[SEED_BYTES]=',suf:';   // one-byte domain separator',w:50,hc:'the per-polynomial nonce makes each sample independent'},
-  {t:'code',s:'uint8_t buf[64*3];'},
-  {t:'gap',pre:'shake256(in,SEED_BYTES+1,buf,(size_t)64*',suf:');',w:30,hc:'the byte count scales with the noise width eta'},
-  {t:'code',s:'cbd(f,buf,eta);'}]},
-{type:'gaps',lang:'c',section:'compress_c',theory:`<h3>Compress and decompress</h3><p>Compression keeps only the top d bits of a coefficient to shrink ciphertexts. It scales by 2 to the d over q with rounding, then masks to d bits. Decompression is the inverse rounding back toward the original range.</p><div class="mblock">// compress: round(2^d / q * x) mod 2^d</div>`,q:'Complete compress and decompress:',
- tmpl:[{t:'code',s:'int compress_c(int x, int d) {'},
-  {t:'gap',pre:'    return (int)(((((long)x)<<d)+KYBER_Q/2)/',suf:')&((1<<d)-1);',w:60,hc:'divide by the prime q to scale into the d-bit range'},
-  {t:'code',s:'}'},
-  {t:'code',s:'int decompress_c(int y, int d) {'},
-  {t:'gap',pre:'    return (int)(((long)KYBER_Q*y+(1<<(d-1)))>>',suf:');',w:30,hc:'shift back down by the same bit width d'},
+{type:'gaps',lang:'c',section:'polyvec_add',theory:`<h3>polyvec_add: element-wise poly add</h3>`,q:'Complete polyvec_add:',
+ tmpl:[{t:'code',s:'void polyvec_add(polyvec *r,const polyvec *a,const polyvec *b) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_add(&r->vec[i],&a->vec[',suf:'],&b->vec[i]);',ans:'i',w:25,hc:'same loop counter i (mirrors the r and b indices on either side)'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'byte_encode',theory:`<h3>Byte encode</h3><p>Encoding packs the coefficients into a byte string, d bits each, least significant bit first. Each set bit is placed at its position in the output buffer.</p><div class="mblock">// pack 256 coefficients at d bits each, LSB first</div>`,q:'Complete byte_encode:',
- tmpl:[{t:'code',s:'for (int i=0; i<KYBER_N; i++) {'},
-  {t:'gap',pre:'    int v=f[i]&((1<<d)-',suf:');   // keep the low d bits',w:30,hc:'the mask for d bits is two to the d minus one'},
-  {t:'code',s:'    for (int b=0; b<d; b++)'},
-  {t:'gap',pre:'        if ((v>>b)&1) out[(i*d+b)>>3]|=1<<((i*d+b)&',suf:');',w:30,hc:'the bit position inside a byte is the low three bits, so mask with seven'},
+{type:'gaps',lang:'c',section:'polyvec_reduce',theory:`<h3>polyvec_reduce: reduce all polys</h3>`,q:'Complete polyvec_reduce:',
+ tmpl:[{t:'code',s:'void polyvec_reduce(polyvec *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_reduce(&r->vec[',suf:']);',ans:'i',w:25,hc:'loop counter i: reduce each element of the polyvec in turn'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'byte_decode',theory:`<h3>Byte decode</h3><p>Decoding reverses the packing: it reads d bits per coefficient back out. When d is 12 the value is also reduced modulo q, since 12-bit values can reach above q.</p><div class="mblock">// d = 12 also reduces the value mod q</div>`,q:'Complete byte_decode:',
- tmpl:[{t:'code',s:'for (int i=0; i<KYBER_N; i++) {'},
-  {t:'code',s:'    int v=0;'},
-  {t:'gap',pre:'    for (int b=0; b<',suf:'; b++) v|=getbit(in,i*d+b)<<b;',w:30,hc:'read d bits, one per coefficient'},
-  {t:'gap',pre:'    if (d==12) { v%=',suf:'; }   // 12-bit values can exceed q',w:60,hc:'reduce the unpacked value modulo the prime q'},
-  {t:'code',s:'    f[i]=(int16_t)v;'},
+{type:'gaps',lang:'c',section:'poly_csubq',theory:`<h3>poly_csubq: conditional subtract q</h3><div class="mblock">// Bring [0,2q) → [0,q)</div>`,q:'Complete poly_csubq:',
+ tmpl:[{t:'code',s:'void poly_csubq(poly *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_N; i++) {'},
+  {t:'gap',pre:'        r->coeffs[i]-=',suf:';',ans:'KYBER_Q',w:60,hc:'subtract the modulus: tentatively brings [0,2q) down to [−q,q)'},
+  {t:'gap',pre:'        r->coeffs[i]+=(r->coeffs[i]>>15)&',suf:';',ans:'KYBER_Q',w:60,hc:'add KYBER_Q back if the subtraction made it negative (>>15 extracts the sign bit)'},
+  {t:'code',s:'    }'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'poly_compress wrappers',theory:`<h3>Compress and decompress wrappers</h3><p>These wrappers apply the per-coefficient compress, then pack with byte_encode; and unpack with byte_decode, then decompress. They are the bridge between polynomials and the bytes on the wire.</p><div class="mblock">// compress then encode; decode then decompress</div>`,q:'Complete the compress and decompress wrappers:',
- tmpl:[{t:'code',s:'void poly_compress(uint8_t *out, const poly f, int d) {'},
-  {t:'gap',pre:'    poly t; for(int i=0;i<KYBER_N;i++) t[i]=(int16_t)compress_c(f[i],d); byte_encode(out,',suf:',d);',w:30,hc:'encode the compressed temporary polynomial t'},
-  {t:'code',s:'}'},
-  {t:'code',s:'void poly_decompress(poly f, const uint8_t *in, int d) {'},
-  {t:'gap',pre:'    byte_decode(f,in,d); for(int i=0;i<KYBER_N;i++) f[i]=(int16_t)decompress_c(f[i],',suf:');',w:30,hc:'decompress with the same bit width d'},
+{type:'gaps',lang:'c',section:'pack_pk',theory:`<h3>pack_pk: serialise public key</h3><div class="mblock">// pk = compress(t) || rho</div>`,q:'Complete pack_pk:',
+ tmpl:[{t:'code',s:'void pack_pk(uint8_t r[],const polyvec *pk,const uint8_t seed[]) {'},
+  {t:'gap',pre:'    polyvec_compress(r,',suf:');',ans:'pk',w:25,hc:'the public key polyvec parameter (second function argument)'},
+  {t:'gap',pre:'    memcpy(r+KYBER_POLYVECCOMPRESSEDBYTES,',suf:',KYBER_SYMBYTES);',ans:'seed',w:45,hc:'the seed (ρ) parameter appended after the compressed polyvec bytes'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'wire sizes',theory:`<h3>Serialized sizes</h3><p>The serialized objects are what travel on the wire. The public key is the packed vector t followed by the seed rho. The ciphertext is compressed u followed by compressed v. A polynomial at 12 bits each is 384 bytes.</p><div class="mblock">// pk = k polys + seed;  ct = compressed u + compressed v</div>`,q:'Complete the size definitions:',
- tmpl:[{t:'code',s:'#define POLY_BYTES 384   // 256 coeffs at 12 bits'},
-  {t:'gap',pre:'#define PKE_PK_BYTES (KYBER_K*POLY_BYTES + ',suf:')   // t, then rho',w:90,hc:'the public key appends the 32-byte seed after the packed vector'},
-  {t:'gap',pre:'#define CT_BYTES (CT_C1_BYTES + ',suf:')   // u part, then v part',w:100,hc:'the ciphertext is the compressed u bytes followed by the compressed v bytes'}]},
-{type:'gaps',lang:'c',section:'kpke_keygen seeds',theory:`<h3>K-PKE keygen: seeds and sampling</h3><p>K-PKE key generation derives two seeds from the input with G, which is SHA3-512. The first half rho is public and seeds the matrix; the second half sigma is secret and seeds the noise. The secret s and error e are sampled, then moved to the NTT domain.</p><div class="mblock">// G = SHA3-512 gives rho (public) and sigma (secret)</div>`,q:'Complete the keygen seed and sampling:',
- tmpl:[{t:'code',s:'uint8_t rs[64];'},
-  {t:'gap',pre:'',suf:'(de,SEED_BYTES+1,rs);   // G derives rho and sigma',w:80,hc:'G is SHA3-512: it splits into the public and secret seeds'},
-  {t:'code',s:'uint8_t *rho=rs, *sigma=rs+32;'},
-  {t:'code',s:'for (int i=0; i<KYBER_K; i++) {'},
-  {t:'gap',pre:'    sample_poly(s[i],',suf:',(uint8_t)i,KYBER_ETA1);   // secret noise',w:50,hc:'the secret seed sigma drives both s and e'},
-  {t:'code',s:'    sample_poly(e[i],sigma,(uint8_t)(KYBER_K+i),KYBER_ETA1);'},
-  {t:'gap',pre:'    poly_ntt(s[i]); poly_ntt(',suf:');   // move to NTT domain',w:40,hc:'both the secret and the error move into the NTT domain'},
+{type:'gaps',lang:'c',section:'pack_ciphertext',theory:`<h3>pack_ciphertext: serialise (u,v)</h3>`,q:'Complete pack_ciphertext:',
+ tmpl:[{t:'code',s:'void pack_ciphertext(uint8_t r[],const polyvec *b,const poly *v) {'},
+  {t:'gap',pre:'    polyvec_compress(r,',suf:');',ans:'b',w:25,hc:'the u ciphertext polyvec b (second function parameter)'},
+  {t:'gap',pre:'    poly_compress(r+KYBER_POLYVECCOMPRESSEDBYTES,',suf:');',ans:'v',w:25,hc:'the v ciphertext poly v (third function parameter)'},
   {t:'code',s:'}'}]},
-{type:'gaps',lang:'c',section:'kpke_keygen public key',theory:`<h3>K-PKE keygen: t = A s + e</h3><p>The public vector is t equals A times s plus e. Each entry sums the matrix row times the secret, then adds the error. The hard MLWE problem is that e hides s, so t looks random. Finally t and s are packed, and rho is appended to the public key.</p><div class="mblock">// t_i = sum over j of A[i][j] * s[j], plus e_i</div>`,q:'Complete the public-key computation:',
- tmpl:[{t:'code',s:'for (int j=0; j<KYBER_K; j++) {'},
-  {t:'gap',pre:'    gen_a_entry(a,rho,i,j); poly_basemul(tmp,a,s[j]); poly_add(acc,acc,',suf:');',w:40,hc:'accumulate the matrix-times-secret product into acc'},
-  {t:'code',s:'}'},
-  {t:'gap',pre:'poly_add(t[i],acc,',suf:');   // add the error',w:40,hc:'add this row error to finish t'},
-  {t:'code',s:'byte_encode(ek+i*POLY_BYTES,t[i],12);'},
-  {t:'gap',pre:'memcpy(ek+KYBER_K*POLY_BYTES,',suf:',SEED_BYTES);   // append rho',w:40,hc:'the public key ends with the matrix seed rho'}]},
-{type:'gaps',lang:'c',section:'kpke_encrypt u',theory:`<h3>K-PKE encrypt: u</h3><p>Encryption samples fresh randomness r and small errors. It computes u from the transposed matrix times r, brings it back from the NTT domain, and adds the error e1. The transpose is why the indices on the matrix entry are swapped.</p><div class="mblock">// u = inverse_NTT(A_transpose * r) + e1</div>`,q:'Complete the u computation:',
- tmpl:[{t:'code',s:'for (int j=0; j<KYBER_K; j++) {'},
-  {t:'gap',pre:'    gen_a_entry(a,rho,j,',suf:'); poly_basemul(tmp,a,rhat[j]); poly_add(acc,acc,tmp);',w:30,hc:'transpose means the row uses j and the column uses i'},
-  {t:'code',s:'}'},
-  {t:'gap',pre:'poly_intt(acc); poly_add(u[i],acc,',suf:');   // add error e1',w:50,hc:'add the encryption error e1 for this component'}]},
-{type:'gaps',lang:'c',section:'kpke_encrypt v',theory:`<h3>K-PKE encrypt: v</h3><p>The second ciphertext part v is t transpose times r, brought back from the NTT domain, plus the error e2 and the message. The message bit becomes 0 or about q over 2 so it stays far from the noise. Both u and v are then compressed.</p><div class="mblock">// v = inverse_NTT(t^T r) + e2 + decompress(m)</div>`,q:'Complete v and the compression:',
- tmpl:[{t:'code',s:'for(int j=0;j<KYBER_K;j++){ poly_basemul(tmp,t[j],rhat[j]); poly_add(acc,acc,tmp); }'},
-  {t:'code',s:'poly_intt(acc); poly mu; poly_decompress(mu,m,1);'},
-  {t:'gap',pre:'poly_add(v,acc,e2); poly_add(v,v,',suf:');   // add the message',w:30,hc:'add the message polynomial: each bit is 0 or about half of q'},
-  {t:'gap',pre:'poly_compress(c+CT_C1_BYTES,v,',suf:');   // compress v',w:60,hc:'v is compressed with the dv bit width'}]},
-{type:'gaps',lang:'c',section:'kpke_decrypt',theory:`<h3>K-PKE decrypt</h3><p>Decryption computes w equals v minus s transpose times u. The two noise terms nearly cancel, leaving the message plus a small error. Rounding each coefficient back to 0 or q over 2 recovers the bit, as long as the total noise stayed below q over 4.</p><div class="mblock">// w = v - inverse_NTT(s^T * NTT(u))</div>`,q:'Complete decryption:',
- tmpl:[{t:'code',s:'for (int j=0; j<KYBER_K; j++) {'},
-  {t:'gap',pre:'    poly_ntt(u[j]); poly_basemul(tmp,s[j],u[j]); poly_add(acc,acc,',suf:');',w:40,hc:'accumulate the secret-times-u product'},
-  {t:'code',s:'}'},
-  {t:'gap',pre:'poly_intt(acc); poly w; poly_sub(w,',suf:',acc);',w:30,hc:'subtract the accumulated term from v'},
-  {t:'gap',pre:'poly_compress(m,w,',suf:');   // round back to message bits',w:30,hc:'one bit per coefficient recovers the message'}]},
-{type:'gaps',lang:'c',section:'mlkem_keygen',theory:`<h3>ML-KEM keygen: bundle dk</h3><p>ML-KEM wraps K-PKE with the Fujisaki-Okamoto transform. The decapsulation key bundles four parts: the K-PKE secret, the public key, a hash of the public key, and a secret value z used for implicit rejection.</p><div class="mblock">// dk = dkPKE, then ek, then H(ek), then z</div>`,q:'Complete the decapsulation-key bundle:',
- tmpl:[{t:'code',s:'memcpy(dk,dkpke,PKE_SK_BYTES);'},
-  {t:'gap',pre:'memcpy(dk+PKE_SK_BYTES,',suf:',PKE_PK_BYTES);   // embed the public key',w:30,hc:'the decapsulation key carries a copy of the public key'},
-  {t:'gap',pre:'',suf:'(ek,PKE_PK_BYTES,dk+PKE_SK_BYTES+PKE_PK_BYTES);   // H(ek)',w:80,hc:'H is SHA3-256: it binds the public key into the transform'},
-  {t:'gap',pre:'memcpy(dk+PKE_SK_BYTES+PKE_PK_BYTES+32,',suf:',SEED_BYTES);   // z',w:30,hc:'the implicit-rejection secret z is stored last'}]},
-{type:'gaps',lang:'c',section:'mlkem_encaps',theory:`<h3>ML-KEM encapsulation</h3><p>Encapsulation picks a message m, then derives the shared key K and the encryption coins r together from G of m and the hash of the public key. Because the coins come from m, the ciphertext is a deterministic function of m. The sender sends c and keeps K.</p><div class="mblock">// (K, r) = G(m, then H(ek))</div>`,q:'Complete encapsulation:',
- tmpl:[{t:'code',s:'uint8_t g_in[64]; memcpy(g_in,m,32);'},
-  {t:'gap',pre:'sha3_256(ek,PKE_PK_BYTES,g_in+',suf:');   // append H(ek) after m',w:30,hc:'the hash of the public key goes after the 32-byte message'},
-  {t:'gap',pre:'uint8_t Kr[64]; ',suf:'(g_in,64,Kr);   // G derives K and r',w:80,hc:'G is SHA3-512: it yields the key K and the coins r'},
-  {t:'code',s:'memcpy(K,Kr,32);'},
-  {t:'gap',pre:'kpke_encrypt(ek,m,Kr+',suf:',c);   // coins r = second half',w:30,hc:'the encryption coins r are the second 32 bytes of the G output'}]},
-{type:'gaps',lang:'c',section:'mlkem_decaps re-encrypt',theory:`<h3>ML-KEM decapsulation: re-encrypt</h3><p>Decapsulation first decrypts to a candidate message m prime, then re-derives the key and coins with G using the stored public-key hash. It then re-encrypts m prime with those coins to rebuild the ciphertext.</p><div class="mblock">// mp = Decrypt(c);  (K', r') = G(mp, then H(ek))</div>`,q:'Complete the recover and re-encrypt step:',
- tmpl:[{t:'code',s:'uint8_t mp[32]; kpke_decrypt(dkpke,c,mp);'},
-  {t:'gap',pre:'uint8_t g_in[64]; memcpy(g_in,mp,32); memcpy(g_in+32,',suf:',32);   // stored H(ek)',w:30,hc:'the second half is the stored hash of the public key'},
-  {t:'code',s:'uint8_t Kr[64]; sha3_512(g_in,64,Kr);'},
-  {t:'gap',pre:'uint8_t cprime[CT_BYTES]; kpke_encrypt(ek,',suf:',Kr+32,cprime);   // re-encrypt',w:30,hc:'re-encrypt the recovered candidate message'}]},
-{type:'gaps',lang:'c',section:'mlkem_decaps reject',theory:`<h3>ML-KEM decapsulation: implicit rejection</h3><p>The transform compares the rebuilt ciphertext with the received one. If they match, the sender was honest and K prime is the shared key. If not, the function returns a pseudo-random reject key from the secret z and the ciphertext, so a tampered ciphertext leaks nothing. This implicit rejection is what stops chosen-ciphertext attacks.</p><div class="mblock">// match: use Kr    mismatch: use J(z, then c)</div>`,q:'Complete the implicit rejection:',
- tmpl:[{t:'code',s:'// Kbar is the reject key J(z, then c)'},
-  {t:'gap',pre:'shake256(zc,SEED_BYTES+CT_BYTES,',suf:',32);   // J = SHAKE256',w:45,hc:'the reject key is written into Kbar'},
-  {t:'code',s:'int diff=0; for(int i=0;i<CT_BYTES;i++) diff|=c[i]^cprime[i];'},
-  {t:'gap',pre:'if (diff==0) memcpy(K,',suf:',32); else memcpy(K,Kbar,32);',w:30,hc:'on a match, the real key comes from the G output Kr'}]},
-{type:'gaps',lang:'c',section:'KEM round-trip',theory:`<h3>End to end</h3><p>The whole KEM exchange ends with both sides holding the same 32-byte shared secret. For ML-KEM-512 the public key is 800 bytes and the ciphertext is 768 bytes. The round-trip self-test checks that decapsulation recovers exactly what encapsulation produced.</p><div class="mblock">// ML-KEM-512: ek = 800, ct = 768, shared secret = 32</div>`,q:'Complete the shared-secret size and the round-trip check:',
- tmpl:[{t:'code',s:'#define SS_BYTES 32   // shared secret length'},
-  {t:'gap',pre:'uint8_t Ka[',suf:'], Kb[SS_BYTES];   // keys for both sides',w:70,hc:'the shared secret is SS_BYTES long on both sides'},
-  {t:'code',s:'mlkem_encaps(ek,m,Ka,ct);'},
-  {t:'code',s:'mlkem_decaps(dk,ct,Kb);'},
-  {t:'gap',pre:'assert(memcmp(Ka,Kb,',suf:')==0);   // keys must match',w:70,hc:'compare all SS_BYTES of the two shared secrets'}]},
+{type:'gaps',lang:'c',section:'polyvec_invntt_tomont',theory:`<h3>polyvec_invntt_tomont: INTT each poly</h3>`,q:'Complete polyvec_invntt_tomont:',
+ tmpl:[{t:'code',s:'void polyvec_invntt_tomont(polyvec *r) {'},
+  {t:'code',s:'    for (int i=0; i<KYBER_K; i++)'},
+  {t:'gap',pre:'        poly_invntt_tomont(&r->vec[',suf:']);',ans:'i',w:25,hc:'loop counter i: apply INTT to each poly in the vector'},
+  {t:'code',s:'}'}]},,
+{type:'gaps',lang:'c',section:'poly_getnoise',theory:`<h3>poly_getnoise_eta1: noise from PRF</h3>`,q:'Complete poly_getnoise_eta1:',
+ tmpl:[{t:'code',s:'void poly_getnoise_eta1(poly *r,const uint8_t seed[32],uint8_t nonce) {'},
+  {t:'code',s:'    uint8_t buf[KYBER_ETA1*KYBER_N/4];'},
+  {t:'gap',pre:'    prf(buf,sizeof(buf),',suf:',nonce);',ans:'seed',w:35,hc:'the 32-byte PRF seed parameter (function argument after poly *r)'},
+  {t:'gap',pre:'    cbd_eta1(r,',suf:');',ans:'buf',w:35,hc:'the PRF output buffer buf used as the CBD input bytes'},
+  {t:'code',s:'}'}]},
 ];
 // INTERNATIONALISATION
 let LANG = localStorage.getItem('kyber_lang') || 'en';
@@ -1122,10 +1179,6 @@ const T = {
     fbAllOk:'✓ All gaps correct!',
     fbSomeWrong:'✗ Some gaps wrong:correct answers shown.',
     fbFillFirst:'Fill all gaps before submitting.',
-    fbChecking:'Checking with server…',
-    fbNetErr:'✗ Could not reach the server:answer not checked. Try again.',
-    fbAlreadyCorrect:'✓ Already answered correctly, 0 pts awarded.',
-    btnLocked:'🔒 LOCKED',
     hintLabel:'Hint: ',
     gameOverMsg:'You ran out of lives.',
     gradeMsgs:{S:'Perfect execution.',A:'Excellent.',B:'Good:review the errors.',C:'Partial understanding.',F:'Study the theory and retry.'},
@@ -1153,8 +1206,8 @@ const T = {
        desc:'Pure Python. Twenty-seven fill-the-gap challenges covering every function in the Kyber pipeline end-to-end. No theory. No multiple choice.',
        meta:['<b>27</b> Python fill-the-gap only','Full pipeline coverage','3 lives']},
       {key:'insane',label:'LEVEL 06',name:'INSANE',
-       desc:'Raw C from a real FIPS 203 implementation:Keccak sponge, rejection sampling, negacyclic NTT, compression, KEM encaps/decaps with FO transform.',
-       meta:['<b>32</b> C fill-the-gap only','Keccak · NTT · KEM in C','3 lives']},
+       desc:'Raw C. Thirty-two fill-the-gap challenges:Barrett reduction, Montgomery multiplication, NTT zeta tables, KEM encaps/decaps with FO transform.',
+       meta:['<b>32</b> C fill-the-gap only','Barrett · Montgomery · KEM in C','3 lives']},
     ],
   },
   el: {
@@ -1176,10 +1229,6 @@ const T = {
     fbAllOk:'✓ Όλα τα κενά σωστά!',
     fbSomeWrong:'✗ Κάποια κενά λάθος:εμφανίζονται οι σωστές απαντήσεις.',
     fbFillFirst:'Συμπλήρωσε όλα τα κενά πριν υποβάλεις.',
-    fbChecking:'Έλεγχος στον διακομιστή…',
-    fbNetErr:'✗ Αδυναμία σύνδεσης με τον διακομιστή:η απάντηση δεν ελέγχθηκε. Προσπάθησε ξανά.',
-    fbAlreadyCorrect:'✓ Έχει ήδη απαντηθεί σωστά, 0 πόντοι.',
-    btnLocked:'🔒 ΚΛΕΙΔΩΜΕΝΟ',
     hintLabel:'Υπόδειξη: ',
     gameOverMsg:'Εξαντλήσατε τις ζωές σας.',
     gradeMsgs:{S:'Τέλεια εκτέλεση.',A:'Εξαιρετικά.',B:'Καλά:μελέτησε τα λάθη.',C:'Μερική κατανόηση.',F:'Μελέτα τη θεωρία και ξαναπροσπάθα.'},
@@ -1207,8 +1256,8 @@ const T = {
        desc:'Αμιγώς Python. Είκοσι επτά προκλήσεις που καλύπτουν κάθε συνάρτηση της αλυσίδας Kyber από άκρο σε άκρο. Χωρίς θεωρία. Χωρίς πολλαπλή επιλογή.',
        meta:['<b>27</b> Python:συμπλήρωσε τα κενά μόνο','Πλήρης κάλυψη αλυσίδας','3 ζωές']},
       {key:'insane',label:'ΕΠΙΠΕΔΟ 06',name:'ΤΡΕΛΟ',
-       desc:'Αμιγώς C από πραγματική υλοποίηση FIPS 203:σφουγγάρι Keccak, δειγματοληψία απόρριψης, negacyclic NTT, συμπίεση, KEM encaps/decaps με μετασχηματισμό FO.',
-       meta:['<b>32</b> C:συμπλήρωσε τα κενά μόνο','Keccak · NTT · KEM σε C','3 ζωές']},
+       desc:'Αμιγώς C. Τριάντα δύο προκλήσεις:αναγωγή Barrett, πολλαπλασιασμός Montgomery, πίνακες zeta NTT, KEM encaps/decaps με μετασχηματισμό FO.',
+       meta:['<b>32</b> C:συμπλήρωσε τα κενά μόνο','Barrett · Montgomery · KEM σε C','3 ζωές']},
     ],
   },
 };
@@ -1219,119 +1268,119 @@ const T = {
 const VE_EL=[
 {type:'duo',section:'Αριθμητική Δακτυλίου',
  theory:`<h3>Αναγωγή Modulo</h3><p>Όλοι οι συντελεστές Kyber ανήκουν στο Z_q = {0…q−1}. Μετά από κάθε πράξη, κάνε αναγωγή mod q.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">q = 17\n19 mod 17  →  19 − 17 = 2\nΑπάντηση: 2</div>`,
- q:'Υπολόγισε: <strong>25 mod 17</strong>',prefix:'25 mod 17 =',hint:'mod είναι το υπόλοιπο ακεραίας διαίρεσης. 25 = 1×17 + ? (ποιο είναι το υπόλοιπο;)'},
+ q:'Υπολόγισε: <strong>25 mod 17</strong>',prefix:'25 mod 17 =',ans:'8',hint:'mod είναι το υπόλοιπο ακεραίας διαίρεσης. 25 = 1×17 + ? (ποιο είναι το υπόλοιπο;)'},
 {type:'duo',section:'Αριθμητική Δακτυλίου',
  theory:`<h3>Αρνητικοί Συντελεστές mod q</h3><p>Οι αρνητικές τιμές αποθηκεύονται ως θετικοί αντιπρόσωποι. Πρόσθεσε q μέχρι η τιμή να ανήκει στο {0…q−1}.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">−1 mod 17  →  −1 + 17 = 16\nΑπάντηση: 16</div>`,
- q:'Υπολόγισε: <strong>−2 mod 17</strong>',prefix:'−2 mod 17 =',hint:'Αρνητική τιμή: πρόσθεσε q μέχρι να μπεις στο {0…q−1}. −2 + 17 = ?'},
+ q:'Υπολόγισε: <strong>−2 mod 17</strong>',prefix:'−2 mod 17 =',ans:'15',hint:'Αρνητική τιμή: πρόσθεσε q μέχρι να μπεις στο {0…q−1}. −2 + 17 = ?'},
 {type:'duo',section:'Αριθμητική Δακτυλίου',
  theory:`<h3>Αρνητικά Κυκλική Αναγωγή:X⁸ ≡ −1</h3><p>Στο Z₁₇[X]/(X⁸+1) οποιοδήποτε X^k με k≥8 αναδιπλώνεται: X⁸→−1.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">3·X⁹: X⁹=X⁸·X=(−1)·X=−X\n3·X⁹ → −3·X ≡ 14·X mod 17\nΣυντελεστής του X: 14</div>`,
- q:'Συντελεστής του X όταν το <strong>2·X⁹</strong> αναχθεί στο Z₁₇[X]/(X⁸+1);',prefix:'συντελ. X =',hint:'X⁸≡−1, οπότε X⁹=X⁸·X=−X. Τότε 2·X⁹=−2·X. Συντελεστής X: −2. Τώρα −2 mod 17: −2 + 17 = ?'},
+ q:'Συντελεστής του X όταν το <strong>2·X⁹</strong> αναχθεί στο Z₁₇[X]/(X⁸+1);',prefix:'συντελ. X =',ans:'15',hint:'X⁸≡−1, οπότε X⁹=X⁸·X=−X. Τότε 2·X⁹=−2·X. Συντελεστής X: −2. Τώρα −2 mod 17: −2 + 17 = ?'},
 {type:'duo',section:'Δειγματοληψία CBD',
  theory:`<h3>Υπολογισμός CBD</h3><p>Για bits b₀…b₃ (LSB πρώτα):</p><div class="mblock">coeff = (b₀+b₁) − (b₂+b₃)</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">Byte 0x01 = 00000001 (LSB-first: 1,0,0,0,0,0,0,0)\ncoeff[0]: (1+0)−(0+0) = +1  → αποθηκεύεται: 1\nΑπάντηση: 1</div>`,
- q:'Byte <code>0xF0</code>=<code>11110000</code>. LSB-first:[0,0,0,0,1,1,1,1].<br>Ποιο είναι το <strong>coeff[0]</strong>; (bits 0–3: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[0] =',hint:'Τύπος: coeff=(b0+b1)−(b2+b3). Bits 0–3 είναι μηδέν: (0+0)−(0+0) = ?'},
+ q:'Byte <code>0xF0</code>=<code>11110000</code>. LSB-first:[0,0,0,0,1,1,1,1].<br>Ποιο είναι το <strong>coeff[0]</strong>; (bits 0–3: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[0] =',ans:'0',hint:'Τύπος: coeff=(b0+b1)−(b2+b3). Bits 0–3 είναι μηδέν: (0+0)−(0+0) = ?'},
 {type:'duo',section:'Δειγματοληψία CBD',
  theory:`<h3>CBD:Δεύτερος Συντελεστής</h3><p>Κάθε byte δίνει 2 συντελεστές. Ο δεύτερος χρησιμοποιεί τα bits 4–7.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">Byte 0xF0 LSB-first:[0,0,0,0,1,1,1,1]\ncoeff[1]: bits4-7=(1,1,1,1)\n(b0+b1)−(b2+b3)=(1+1)−(1+1)=0\nΑπάντηση: 0</div>`,
- q:'Byte <code>0x0F</code>=<code>00001111</code>. LSB-first:[1,1,1,1,0,0,0,0].<br>Ποιο είναι το <strong>coeff[1]</strong>; (bits 4–7: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[1] =',hint:'bits 4–7 είναι (0,0,0,0). Τύπος: (b0+b1)−(b2+b3) = ?'},
+ q:'Byte <code>0x0F</code>=<code>00001111</code>. LSB-first:[1,1,1,1,0,0,0,0].<br>Ποιο είναι το <strong>coeff[1]</strong>; (bits 4–7: b0=0,b1=0,b2=0,b3=0)',prefix:'coeff[1] =',ans:'0',hint:'bits 4–7 είναι (0,0,0,0). Τύπος: (b0+b1)−(b2+b3) = ?'},
 {type:'duo',section:'Ρίζες NTT',
  theory:`<h3>Δυνάμεις του ω mod 17</h3><p>ω=9 είναι η πρωτεύουσα 8η ρίζα της μονάδας mod 17.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">ROOTS[2] = ω² = 9×9=81 mod 17\n81 = 4×17+13 → ROOTS[2]=13\nΑπάντηση: 13</div>`,
- q:'Υπολόγισε <strong>ROOTS[3]</strong> = ω³ mod 17 = 9³ mod 17',prefix:'ROOTS[3] =',hint:'ω²=ROOTS[2]=13. ω³=ω²×ω=13×9=117. mod 17: 117 = 6×17 + ? (βρες το υπόλοιπο)'},
+ q:'Υπολόγισε <strong>ROOTS[3]</strong> = ω³ mod 17 = 9³ mod 17',prefix:'ROOTS[3] =',ans:'15',hint:'ω²=ROOTS[2]=13. ω³=ω²×ω=13×9=117. mod 17: 117 = 6×17 + ? (βρες το υπόλοιπο)'},
 {type:'duo',section:'Πεταλούδα NTT',
  theory:`<h3>Ένα Βήμα Πεταλούδας NTT</h3><div class="mblock">t     = v × w  mod q\nnew_u = (u + t) mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">u=1,v=2,w=9,q=17\nt=2×9=18≡1\nnew_u=(1+1)=2\nΑπάντηση: new_u=2</div>`,
- q:'Πεταλούδα: <strong>u=3, v=1, w=9, q=17</strong>. Ποιο είναι το <strong>new_u</strong>;',prefix:'new_u =',hint:'Βήμα 1: t = v×w mod q = 1×9 = 9. Βήμα 2: new_u = (u+t) mod q = (3+9) mod 17 = ?'},
+ q:'Πεταλούδα: <strong>u=3, v=1, w=9, q=17</strong>. Ποιο είναι το <strong>new_u</strong>;',prefix:'new_u =',ans:'12',hint:'Βήμα 1: t = v×w mod q = 1×9 = 9. Βήμα 2: new_u = (u+t) mod q = (3+9) mod 17 = ?'},
 {type:'duo',section:'Πεταλούδα NTT',
  theory:`<h3>Πεταλούδα:new_v</h3><div class="mblock">t     = v × w  mod q\nnew_v = (u − t) mod q</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ (διαφορετικές τιμές)</div><div class="eg-box">u=2, v=3, w=9, q=17\nt = 3×9 = 27. mod 17: 27 = 1×17 + 10 → t=10\nnew_v = (2−10) mod 17 = −8 mod 17\nΑφού −8 &lt; 0: −8 + 17 = 9\nΑπάντηση: new_v = 9</div>`,
- q:'Ίδια πεταλούδα: <strong>u=3, v=1, w=9, q=17</strong>. Ποιο είναι το <strong>new_v</strong>;',prefix:'new_v =',hint:'Βήμα 1: t = v×w mod q = 1×9 = 9. Βήμα 2: new_v = (u−t) mod q = (3−9) mod 17 = −6 mod 17. Αφού −6 < 0: −6 + 17 = ?'},
+ q:'Ίδια πεταλούδα: <strong>u=3, v=1, w=9, q=17</strong>. Ποιο είναι το <strong>new_v</strong>;',prefix:'new_v =',ans:'11',hint:'Βήμα 1: t = v×w mod q = 1×9 = 9. Βήμα 2: new_v = (u−t) mod q = (3−9) mod 17 = −6 mod 17. Αφού −6 < 0: −6 + 17 = ?'},
 {type:'duo',section:'Δημόσιο Κλειδί',
  theory:`<h3>Πολλαπλασιασμός Κατά Σημεία mod q</h3><p>Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται ανά συντελεστή.</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">a[0]=2, b[0]=11, q=17\n2×11=22 mod 17=5\nΑπάντηση: 5</div>`,
- q:'Πολλαπλασιασμός κατά σημεία: <strong>a[0]=11, b[0]=3, q=17</strong>',prefix:'11 × 3 mod 17 =',hint:'11×3 = 33. mod 17: 33 = 1×17 + ? (βρες το υπόλοιπο)'},
+ q:'Πολλαπλασιασμός κατά σημεία: <strong>a[0]=11, b[0]=3, q=17</strong>',prefix:'11 × 3 mod 17 =',ans:'16',hint:'11×3 = 33. mod 17: 33 = 1×17 + ? (βρες το υπόλοιπο)'},
 {type:'duo',section:'Αποθυλάκωση',
  theory:`<h3>Αποκωδικοποίηση Μηνύματος:Κυκλική Απόσταση</h3><p>Συντελεστής w → bit 1 αν είναι πιο κοντά στο q/2=8 από το 0 (κυκλικά).</p><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">w=10, q=17\nd0  = min(10,17−10)=min(10,7)=7\ndq2 = min(|10−8|,17−|10−8|)=min(2,15)=2\n2 < 7 → bit=1\nΑπάντηση: 1</div>`,
- q:'Αποκωδικοποίησε συντελεστή <strong>w=3, q=17</strong>. Ποιο bit;',prefix:'bit =',hint:'d0=min(w, q−w)=min(3, 17−3). dq2=min(|w−8|, 17−|w−8|)=min(|3−8|, 17−|3−8|). Σύγκρινε d0 και dq2: bit=1 αν dq2 < d0, αλλιώς bit=0.'},
+ q:'Αποκωδικοποίησε συντελεστή <strong>w=3, q=17</strong>. Ποιο bit;',prefix:'bit =',ans:'0',hint:'d0=min(w, q−w)=min(3, 17−3). dq2=min(|w−8|, 17−|w−8|)=min(|3−8|, 17−|3−8|). Σύγκρινε d0 και dq2: bit=1 αν dq2 < d0, αλλιώς bit=0.'},
 ];
 const EZ_EL=[
 {type:'btns',section:'Επισκόπηση',
  theory:`<h3>CRYSTALS-Kyber</h3><p>Ένας <strong>Μηχανισμός Ενθυλάκωσης Κλειδιών</strong> (KEM) βασισμένος στη δυσκολία Module-LWE, τυποποιημένος ως ML-KEM (FIPS 203).</p><div class="mblock">t = A·s + e\nA=δημόσιος πίνακας  s=μικρό μυστικό  e=θόρυβος</div>`,
- q:'Ο Kyber έχει τυποποιηθεί από το NIST με ποιο όνομα;',opts:['ML-KEM (FIPS 203)','CRYSTALS-DSA','FALCON-512','SPHINCS+']},
+ q:'Ο Kyber έχει τυποποιηθεί από το NIST με ποιο όνομα;',opts:['ML-KEM (FIPS 203)','CRYSTALS-DSA','FALCON-512','SPHINCS+'],cor:0},
 {type:'btns',section:'Παράμετροι',
  theory:`<h3>Παράμετροι Παιχνιδιού</h3><ul><li><strong>q=17</strong> πρώτος modulus</li><li><strong>n=8</strong> βαθμός πολυωνύμου</li><li><strong>k=2</strong> διάσταση module</li><li><strong>η=2</strong> όριο θορύβου CBD</li></ul><div class="mblock">N_INV=15 γιατί 8×15=120≡1 mod 17</div>`,
- q:'Ποιο είναι το n⁻¹ mod q στις παραμέτρους παιχνιδιού μας (q=17, n=8);',opts:['13','15','9','2']},
+ q:'Ποιο είναι το n⁻¹ mod q στις παραμέτρους παιχνιδιού μας (q=17, n=8);',opts:['13','15','9','2'],cor:1},
 {type:'btns',section:'Δακτύλιος',
  theory:`<h3>Αρνητικά Κυκλικός Δακτύλιος</h3><div class="mblock">X⁸ ≡ −1 mod (X⁸+1)\nX⁹ → −X,  X¹⁰ → −X²,  X¹⁵ → −X⁷</div>`,
- q:'Στο Z₁₇[X]/(X⁸+1), σε τι αναχθεί το X⁸;',opts:['0','+1','−1 (=16 mod 17)','X']},
+ q:'Στο Z₁₇[X]/(X⁸+1), σε τι αναχθεί το X⁸;',opts:['0','+1','−1 (=16 mod 17)','X'],cor:2},
 {type:'btns',section:'CBD',
  theory:`<h3>Αλγόριθμος CBD</h3><div class="mblock">bits = LSB-first από byte\ncoeff = (b₀+b₁)−(b₂+b₃)\nαποθηκεύεται ως coeff mod q</div>`,
- q:'Byte 0x01 LSB-first:[1,0,0,0,0,0,0,0]. Ποιο είναι το coeff[0];',opts:['+1','0','16 (=−1)','−2']},
+ q:'Byte 0x01 LSB-first:[1,0,0,0,0,0,0,0]. Ποιο είναι το coeff[0];',opts:['+1','0','16 (=−1)','−2'],cor:0},
 {type:'btns',section:'CBD',
  theory:`<h3>Αρνητικοί Συντελεστές CBD</h3><p>Αρνητικές τιμές γίνονται θετικοί αντιπρόσωποι mod q: −1→16, −2→15.</p>`,
- q:'Το CBD δίνει ακατέργαστη τιμή −2. Ποιος είναι ο αποθηκευμένος συντελεστής mod 17;',opts:['15','2','16','−2']},
+ q:'Το CBD δίνει ακατέργαστη τιμή −2. Ποιος είναι ο αποθηκευμένος συντελεστής mod 17;',opts:['15','2','16','−2'],cor:0},
 {type:'btns',section:'Πρωτεύουσα Ρίζα',
  theory:`<h3>Γεννήτρια g mod 17</h3><div class="mblock">g=2: 2⁸ mod 17=1 → τάξη=8 ✗\ng=3: 3⁸ mod 17=16≠1 → τάξη=16 ✓</div>`,
- q:'Γιατί το g=2 απορρίπτεται ως πρωτεύουσα ρίζα mod 17;',opts:['Το 2 δεν είναι πρώτος','2⁸ mod 17=1, η τάξη είναι μόνο 8 και όχι 16','Το 2 παράγει μόνο ζυγούς αριθμούς','2¹⁶ mod 17≠1']},
+ q:'Γιατί το g=2 απορρίπτεται ως πρωτεύουσα ρίζα mod 17;',opts:['Το 2 δεν είναι πρώτος','2⁸ mod 17=1, η τάξη είναι μόνο 8 και όχι 16','Το 2 παράγει μόνο ζυγούς αριθμούς','2¹⁶ mod 17≠1'],cor:1},
 {type:'btns',section:'Ρίζες NTT',
  theory:`<h3>ψ, ω από g=3</h3><div class="mblock">ψ = 3^((17−1)/(2×8)) = 3¹ = 3\nω = ψ² = 9\nω⁻¹ = 2  (9×2=18≡1 mod 17)</div>`,
- q:'Ποιο είναι το ω⁻¹ mod 17 (αντίστροφο του ω=9);',opts:['2','8','15','13']},
+ q:'Ποιο είναι το ω⁻¹ mod 17 (αντίστροφο του ω=9);',opts:['2','8','15','13'],cor:0},
 {type:'btns',section:'NTT',
  theory:`<h3>Πράξη Πεταλούδας NTT</h3><div class="mblock">t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div>`,
- q:'u=1, v=2, w=1, q=17. Ποιο είναι το new_v;',opts:['16 (=−1 mod 17)','3','0','2']},
+ q:'u=1, v=2, w=1, q=17. Ποιο είναι το new_v;',opts:['16 (=−1 mod 17)','3','0','2'],cor:0},
 {type:'btns',section:'NTT',
  theory:`<h3>Μετάθεση Αντιστροφής Bit για n=8</h3><div class="mblock">δείκτης 1=001 → ανεστραμμένος 100=4\nδείκτης 3=011 → ανεστραμμένος 110=6\n→ ζεύγη (1,4) και (3,6) ανταλλάσσονται</div>`,
- q:'Ο δείκτης 6 σε δυαδικό (3-bit) είναι 110. Ποιος είναι ο δείκτης με ανεστραμμένα bits;',opts:['3','6','7','1']},
+ q:'Ο δείκτης 6 σε δυαδικό (3-bit) είναι 110. Ποιος είναι ο δείκτης με ανεστραμμένα bits;',opts:['3','6','7','1'],cor:0},
 {type:'btns',section:'INTT',
  theory:`<h3>Αντίστροφο NTT</h3><p>Ίδια πεταλούδα με NTT αλλά χρησιμοποιεί inv_roots, μετά κάθε συντελεστής πολλαπλασιάζεται με n⁻¹.</p><div class="mblock">intt = scale(butterfly(x, inv_roots), n_inv)</div>`,
- q:'Μετά τα στρώματα πεταλούδας INTT, κάθε συντελεστής πολλαπλασιάζεται με;',opts:['n⁻¹ = 15','ω = 9','q = 17','ψ = 3']},
+ q:'Μετά τα στρώματα πεταλούδας INTT, κάθε συντελεστής πολλαπλασιάζεται με;',opts:['n⁻¹ = 15','ω = 9','q = 17','ψ = 3'],cor:0},
 {type:'btns',section:'Δημόσιο Κλειδί',
  theory:`<h3>t̂ = Â·ŝ + ê</h3><div class="mblock">t̂[0] = Â[0][0]⊙ŝ[0] + Â[0][1]⊙ŝ[1] + ê[0]</div><p>⊙ = πολλαπλασιασμός κατά σημεία (ανά συντελεστή).</p>`,
- q:'Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται;',opts:['Πολλαπλασιασμός κατά σημεία (στοιχείο-προς-στοιχείο)','Μακρύς πολλαπλασιασμός πολυωνύμων','Αντιστροφή πίνακα','Συνέλιξη']},
+ q:'Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται;',opts:['Πολλαπλασιασμός κατά σημεία (στοιχείο-προς-στοιχείο)','Μακρύς πολλαπλασιασμός πολυωνύμων','Αντιστροφή πίνακα','Συνέλιξη'],cor:0},
 {type:'btns',section:'Ενθυλάκωση',
  theory:`<h3>Γιατί Â^T στην ενθυλάκωση;</h3><div class="mblock">u = INTT(Â^T·r̂) + e1\nv = INTT(t̂^T·r̂) + e2 + m̂</div><p>Ο ανάστροφος επιτρέπει ακριβή αλγεβρική ακύρωση στην αποθυλάκωση.</p>`,
- q:'Γιατί ο Bob χρησιμοποιεί Â^T (και όχι Â) κατά τον υπολογισμό του u;',opts:['Για αλγεβρική ακύρωση στην αποθυλάκωση','Γιατί το A είναι συμμετρικό','Για μείωση μεγέθους κρυπτοκειμένου','Τυχαία σχεδιαστική επιλογή']},
+ q:'Γιατί ο Bob χρησιμοποιεί Â^T (και όχι Â) κατά τον υπολογισμό του u;',opts:['Για αλγεβρική ακύρωση στην αποθυλάκωση','Γιατί το A είναι συμμετρικό','Για μείωση μεγέθους κρυπτοκειμένου','Τυχαία σχεδιαστική επιλογή'],cor:0},
 {type:'btns',section:'Κωδικοποίηση Μηνύματος',
  theory:`<h3>Κωδικοποίηση bits σε Z_q</h3><div class="mblock">bit 0 → 0\nbit 1 → ⌊q/2⌋ = 8</div><p>Μεγιστοποιεί την κυκλική απόσταση μεταξύ κωδικοποιήσεων.</p>`,
- q:'Ποια είναι η κωδικοποιημένη τιμή για bit=1 όταν q=17;',opts:['8','17','1','16']},
+ q:'Ποια είναι η κωδικοποιημένη τιμή για bit=1 όταν q=17;',opts:['8','17','1','16'],cor:0},
 {type:'btns',section:'Αποθυλάκωση',
  theory:`<h3>Προϋπολογισμός Θορύβου</h3><div class="mblock">w = v − INTT(ŝ^T·NTT(u))\nΑποκρυπτογράφηση επιτυχής αν |θόρυβος| &lt; q/4 = 4.25</div>`,
- q:'w[i]=10, m̂[i]=8. Πετυχαίνει η αποκρυπτογράφηση για αυτόν τον συντελεστή;',opts:['Ναι:θόρυβος=+2, |2|<4.25','Όχι:θόρυβος=+2 υπερβαίνει το όριο','Ναι:θόρυβος=0','Όχι:θόρυβος=10']},
+ q:'w[i]=10, m̂[i]=8. Πετυχαίνει η αποκρυπτογράφηση για αυτόν τον συντελεστή;',opts:['Ναι:θόρυβος=+2, |2|<4.25','Όχι:θόρυβος=+2 υπερβαίνει το όριο','Ναι:θόρυβος=0','Όχι:θόρυβος=10'],cor:0},
 {type:'btns',section:'Ασφάλεια',
  theory:`<h3>Post-Quantum Ασφάλεια</h3><div class="mblock">RSA: f(x)=7^x mod 15 → περιοδική → QFT τη σπάει\nLWE: t=A·s+e → χωρίς περιοδικότητα → QFT δεν βρίσκει τίποτα</div>`,
- q:'Τι κάνει τον Kyber ανθεκτικό στον κβαντικό αλγόριθμο Shor;',opts:['Το MLWE δεν είναι πρόβλημα εύρεσης περιόδου/κρυφής υποομάδας, οπότε ο QFT δεν έχει περίοδο να εξαγάγει','Πολύ μεγάλα μεγέθη κλειδιών','Παραδοχή διακριτού λογαρίθμου','Συναρτήσεις κατακερματισμού']},
+ q:'Τι κάνει τον Kyber ανθεκτικό στον κβαντικό αλγόριθμο Shor;',opts:['Το LWE δεν έχει περιοδικότητα:ο θόρυβος αποτρέπει περιοδική δομή','Πολύ μεγάλα μεγέθη κλειδιών','Παραδοχή διακριτού λογαρίθμου','Συναρτήσεις κατακερματισμού'],cor:0},
 ];
 // MED_EL: translate duo/btns; gaps inherit English tmpl
 const MED_EL=[
 {type:'duo',section:'CBD Δύσκολο',
  theory:`<h3>CBD με αρνητικό αποτέλεσμα</h3><div class="mblock">Byte 0x03=00000011 LSB-first:[1,1,0,0,0,0,0,0]\ncoeff[0]=(1+1)−(0+0)=+2</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">Byte 0xC0=11000000 LSB-first:[0,0,0,0,0,0,1,1]\ncoeff[1]=(0+0)−(1+1)=−2 → −2 mod 17=15\nΑπάντηση: 15</div>`,
- q:'Byte <code>0x30</code>=<code>00110000</code>. LSB-first:[0,0,0,0,1,1,0,0].<br><strong>coeff[1]</strong> (bits 4–7: b0=1,b1=1,b2=0,b3=0);',prefix:'coeff[1] =',hint:'bits 4–7: b0=1,b1=1,b2=0,b3=0. Τύπος: (b0+b1)−(b2+b3) = (1+1)−(0+0) = ?'},
+ q:'Byte <code>0x30</code>=<code>00110000</code>. LSB-first:[0,0,0,0,1,1,0,0].<br><strong>coeff[1]</strong> (bits 4–7: b0=1,b1=1,b2=0,b3=0);',prefix:'coeff[1] =',ans:'2',hint:'bits 4–7: b0=1,b1=1,b2=0,b3=0. Τύπος: (b0+b1)−(b2+b3) = (1+1)−(0+0) = ?'},
 {type:'duo',section:'CBD Δύσκολο',
  theory:`<h3>Αρνητικός CBD αποθηκευμένος mod q</h3><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ</div><div class="eg-box">raw coeff = −2\nαποθηκευμένο = −2 + 17 = 15</div>`,
- q:'Byte <code>0xC0</code>=<code>11000000</code>. LSB-first:[0,0,0,0,0,0,1,1].<br>coeff[1] raw = −2. Ποιο είναι το <strong>αποθηκευμένο</strong> (mod 17);',prefix:'αποθηκ. coeff[1] =',hint:'Ακατέργαστη τιμή: −2. mod 17: πρόσθεσε 17 για να μπεις στο {0…q−1}: −2 + 17 = ?'},
+ q:'Byte <code>0xC0</code>=<code>11000000</code>. LSB-first:[0,0,0,0,0,0,1,1].<br>coeff[1] raw = −2. Ποιο είναι το <strong>αποθηκευμένο</strong> (mod 17);',prefix:'αποθηκ. coeff[1] =',ans:'15',hint:'Ακατέργαστη τιμή: −2. mod 17: πρόσθεσε 17 για να μπεις στο {0…q−1}: −2 + 17 = ?'},
 {type:'duo',section:'Στρώμα NTT',
  theory:`<h3>Αποτέλεσμα NTT s[0] Στρώμα 1</h3><p>Μετά αντιστροφή bit του s[0]=[1,0,0,1,0,0,0,1] → [1,0,0,0,0,0,1,1]. Στρώμα 1 χρησιμοποιεί w=1 για όλα τα ζεύγη.</p><div class="mblock">Τύπος: t = v×w mod q\nnew_u = (u+t) mod q\nnew_v = (u−t) mod q</div><div class="eg-lbl">ΠΑΡΑΔΕΙΓΜΑ:Ζεύγος [0,1]</div><div class="eg-box">u=r[0]=1, v=r[1]=0, w=1\nt = 0×1 = 0\nnew[0] = (1+0) mod 17 = 1\nnew[1] = (1−0) mod 17 = 1</div>`,
- q:'Μετά το NTT Στρώμα 1 στο s[0], ποιο είναι το <strong>a[6]</strong>;',prefix:'a[6] μετά στρώμα1 =',hint:'Ζεύγος [6,7]: u=r[6]=1, v=r[7]=1, w=1. Υπολόγισε t = v×w mod q = 1×1 = 1. Τότε new[6] = (u+t) mod q = (1+1) mod 17 = ?'},
-{type:'duo',section:'Δημιουργία Κλειδιών',
- theory:`<h3>Υπολογισμός t̂[0][0] (KeyGen: t̂ = Â∘ŝ + ê)</h3><div class="mblock">Â[0][0][0]=2, ŝ[0][0]=3 → 2×3=6\nÂ[0][1][0]=6, ŝ[1][0]=2 → 6×2=12\nê[0][0]=1\n(6+12+1) mod 17=2</div>`,
- q:'Συντελεστής 1 του t̂[0]: Â[0][0][1]=11, ŝ[0][1]=1, Â[0][1][1]=6, ŝ[1][1]=8, ê[0][1]=1. Υπολόγισε <strong>t̂[0][1]</strong>.',prefix:'t̂[0][1] =',hint:'Υπολόγισε κάθε γινόμενο: 11×1=11, 6×8=48. Πρόσθεσε ê: 11+48+1=60. mod 17: 60 = 3×17 + ? (βρες το υπόλοιπο)'},
-{type:'duo',section:'Αρθρωτή Αριθμητική',
+ q:'Μετά το NTT Στρώμα 1 στο s[0], ποιο είναι το <strong>a[6]</strong>;',prefix:'a[6] μετά στρώμα1 =',ans:'2',hint:'Ζεύγος [6,7]: u=r[6]=1, v=r[7]=1, w=1. Υπολόγισε t = v×w mod q = 1×1 = 1. Τότε new[6] = (u+t) mod q = (1+1) mod 17 = ?'},
+{type:'duo',section:'Ενθυλάκωση',
+ theory:`<h3>Υπολογισμός t̂[0][0]</h3><div class="mblock">Â[0][0][0]=2, ŝ[0][0]=3 → 2×3=6\nÂ[0][1][0]=6, ŝ[1][0]=2 → 6×2=12\nê[0][0]=1\n(6+12+1) mod 17=2</div>`,
+ q:'Συντελεστής 1 του t̂[0]: Â[0][0][1]=11, ŝ[0][1]=1, Â[0][1][1]=6, ŝ[1][1]=8, ê[0][1]=1. Υπολόγισε <strong>t̂[0][1]</strong>.',prefix:'t̂[0][1] =',ans:'9',hint:'Υπολόγισε κάθε γινόμενο: 11×1=11, 6×8=48. Πρόσθεσε ê: 11+48+1=60. mod 17: 60 = 3×17 + ? (βρες το υπόλοιπο)'},
+{type:'duo',section:'Ενθυλάκωση',
  theory:`<h3>Υπολογισμός ύψωσης σε δύναμη mod:τετραγωνισμός</h3><div class="mblock">3¹=3, 3²=9, 3⁴=9²=81≡13, 3⁸=13²=169≡16</div>`,
- q:'Υπολόγισε <strong>3⁸ mod 17</strong> με επαναλαμβανόμενο τετραγωνισμό',prefix:'3⁸ mod 17 =',hint:'3¹=3. 3²=3×3=9. 3⁴=9²=81: 81=4×17+? → βρες 3⁴. Μετά 3⁸=(3⁴)²: τετραγώνισε αυτό το αποτέλεσμα mod 17.'},
+ q:'Υπολόγισε <strong>3⁸ mod 17</strong> με επαναλαμβανόμενο τετραγωνισμό',prefix:'3⁸ mod 17 =',ans:'16',hint:'3¹=3. 3²=3×3=9. 3⁴=9²=81: 81=4×17+? → βρες 3⁴. Μετά 3⁸=(3⁴)²: τετραγώνισε αυτό το αποτέλεσμα mod 17.'},
 {type:'btns',section:'Θεωρία CBD',
  theory:`<h3>Γιατί πρέπει οι συντελεστές να είναι μικροί;</h3><p>Ο προϋπολογισμός θορύβου για αποθυλάκωση: |θόρυβος| < q/4 = 4.25. CBD με η=2 εγγυάται συντελεστές στο {−2,…,+2}.</p>`,
- q:'Το CBD με η=2 παράγει συντελεστές σε ποιο εύρος;',opts:['{−2,−1,0,+1,+2}','{0,1,…,16}','{−8,…,+8}','{0,1}']},
+ q:'Το CBD με η=2 παράγει συντελεστές σε ποιο εύρος;',opts:['{−2,−1,0,+1,+2}','{0,1,…,16}','{−8,…,+8}','{0,1}'],cor:0},
 {type:'btns',section:'Θεωρία NTT',
  theory:`<h3>Πλεονέκτημα πολυπλοκότητας NTT</h3><p>Αφελής πολλαπλασιασμός πολυωνύμων: O(n²). Με NTT: O(n log n). Για n=8 υπάρχουν ακριβώς log₂8=3 στρώματα πεταλούδας.</p>`,
- q:'Πόσα στρώματα πεταλούδας χρειάζεται το NTT για n=8;',opts:['3  (log₂8=3)','8','4','2']},
+ q:'Πόσα στρώματα πεταλούδας χρειάζεται το NTT για n=8;',opts:['3  (log₂8=3)','8','4','2'],cor:0},
 {type:'btns',section:'Ιδιότητα INTT',
  theory:`<h3>Ιδιότητα μετ'επιστροφής</h3><div class="mblock">INTT(NTT(poly)) == poly\nγια όλα τα poly στο R_q</div>`,
- q:'Μετά την πεταλούδα INTT (με inv_roots), ποια τελική κλιμάκωση εφαρμόζεται;',opts:['Πολλαπλασιασμός κάθε συντελεστή με n⁻¹=15','Διαίρεση με q=17','Πρόσθεση q στα αρνητικά','Καμία κλιμάκωση']},
+ q:'Μετά την πεταλούδα INTT (με inv_roots), ποια τελική κλιμάκωση εφαρμόζεται;',opts:['Πολλαπλασιασμός κάθε συντελεστή με n⁻¹=15','Διαίρεση με q=17','Πρόσθεση q στα αρνητικά','Καμία κλιμάκωση'],cor:0},
 {type:'btns',section:'Ενθυλάκωση',
  theory:`<h3>Διάνυσμα κωδικοποίησης μηνύματος</h3><div class="mblock">MSG=[1,0,1,0,1,0,1,0]\nM_HAT=[8,0,8,0,8,0,8,0]\nbit 1→⌊q/2⌋=8,  bit 0→0</div>`,
- q:'Μετά κωδικοποίηση, MSG=[1,0,1,0,1,0,1,0] γίνεται M_HAT=;',opts:['[8,0,8,0,8,0,8,0]','[1,0,1,0,1,0,1,0]','[17,0,17,0,17,0,17,0]','[8,8,8,8,8,8,8,8]']},
+ q:'Μετά κωδικοποίηση, MSG=[1,0,1,0,1,0,1,0] γίνεται M_HAT=;',opts:['[8,0,8,0,8,0,8,0]','[1,0,1,0,1,0,1,0]','[17,0,17,0,17,0,17,0]','[8,8,8,8,8,8,8,8]'],cor:0},
 {type:'btns',section:'Αποθυλάκωση',
  theory:`<h3>Αλγεβρική ακύρωση στην αποθυλάκωση</h3><div class="mblock">v = t̂^T·r̂ + e2 + m̂  (μετά INTT)\nŝ^T·u ≈ Â^T·r̂ ακυρώνεται\nw = v − ŝ^T·u ≈ m̂ + μικρός θόρυβος</div>`,
- q:'Τι ακυρώνεται ακριβώς κατά την αποθυλάκωση;',opts:['Οι όροι INTT(ŝ^T·Â^T·r̂) από v και ŝ^T·u','Το μήνυμα m̂','Ο όρος σφάλματος e2','Ο πίνακας A']},
+ q:'Τι ακυρώνεται ακριβώς κατά την αποθυλάκωση;',opts:['Οι όροι INTT(ŝ^T·Â^T·r̂) από v και ŝ^T·u','Το μήνυμα m̂','Ο όρος σφάλματος e2','Ο πίνακας A'],cor:0},
 // gaps:inherit English tmpl, translate only theory/q/section
 {...MED[10],section:'modpow',theory:`<h3>modpow:τετραγωνισμός</h3><div class="mblock">result=1, b=base%mod\nwhile exp>0:\n  if exp&1: result=result*b%mod\n  b=b*b%mod\n  exp>>=1</div>`,q:'Συμπλήρωσε το modpow:'},
 {...MED[11],section:'cbd_sample',theory:`<h3>Δειγματολήπτης CBD</h3><div class="mblock">bits LSB-first\ncoeff=(b0+b1)−(b2+b3)\nappend coeff%q</div>`,q:'Συμπλήρωσε το cbd_sample:'},
 {...MED[12],section:'bit_reverse_permute',theory:`<h3>Μετάθεση αντιστροφής bit</h3><div class="mblock">bits=int(log2(n))\nrev=int(f\'{i:0{bits}b}\'[::-1],2)\nif rev>i: swap r[i],r[rev]</div>`,q:'Συμπλήρωσε το bit_reverse_permute:'},
-{...MED[13],section:'Πυρήνας NTT',theory:`<h3>Βρόχος πεταλούδας NTT</h3><div class="mblock">step=n//length\nw=roots[j*step]\nt=a[s]*w%q\na[f]=(a[f]+t)%q\na[s]=(old_f−t)%q\nlength&lt;&lt;=1</div><p><strong>⚠ Απλοποίηση παιχνιδιού:</strong> αυτό το pipeline χρησιμοποιεί <em>κυκλικό</em> NTT μόνο με το ω (8η ρίζα της μονάδας), δηλαδή πολλαπλασιάζει πολυώνυμα mod x⁸−1. Το πραγματικό Kyber δουλεύει στον <em>negacyclic</em> δακτύλιο mod x²⁵⁶+1, που χρειάζεται τη 2n-οστή ρίζα ψ (εδώ ψ=3, ψ²=ω) για στρέβλωση των συντελεστών — αυτή η αλλαγή προσήμου στο «τύλιγμα» είναι ακριβώς ό,τι χειρίζεται ο κώδικας C του επιπέδου Insane. Η μηχανική της πεταλούδας που μαθαίνεις εδώ είναι πανομοιότυπη.</p>`,q:'Συμπλήρωσε τον βρόχο πεταλούδας NTT:'},
+{...MED[13],section:'Πυρήνας NTT',theory:`<h3>Βρόχος πεταλούδας NTT</h3><div class="mblock">step=n//length\nw=roots[j*step]\nt=a[s]*w%q\na[f]=(a[f]+t)%q\na[s]=(old_f−t)%q\nlength&lt;&lt;=1</div>`,q:'Συμπλήρωσε τον βρόχο πεταλούδας NTT:'},
 {...MED[14],section:'INTT',theory:`<h3>INTT = NTT(inv_roots) και κλιμάκωση με n⁻¹</h3>`,q:'Συμπλήρωσε το intt:'},
 {...MED[15],section:'Πράξεις κατά σημεία',theory:`<h3>Πράξεις κατά σημεία</h3><div class="mblock">mul: a[i]*b[i]%q\nadd: (a[i]+b[i])%q</div>`,q:'Συμπλήρωσε τα pointwise_mul και pointwise_add:'},
 {...MED[16],section:'keygen_t',theory:`<h3>t̂ = Â·ŝ + ê (πεδίο NTT κατά σημεία)</h3>`,q:'Συμπλήρωσε τον εσωτερικό βρόχο keygen_t:'},
@@ -1340,28 +1389,28 @@ const MED_EL=[
 const HARD_EL=[
 {type:'btns',section:'Module-LWE',
  theory:`<h3>Παραδοχή Ασφάλειας Module-LWE</h3><p>Η δυσκολία του Kyber βασίζεται στη διάκριση (A, As+e) από (A, τυχαία ομοιόμορφη), ακόμη και με κβαντικούς πόρους.</p>`,
- q:'Ποια είναι η κεντρική παραδοχή ασφάλειας του Kyber;',opts:['Δυσκολία Module-LWE (MLWE)','Παραγοντοποίηση ακεραίων','Διακριτός λογάριθμος','Μόνο πρόβλημα συντομότερου διανύσματος']},
+ q:'Ποια είναι η κεντρική παραδοχή ασφάλειας του Kyber;',opts:['Δυσκολία Module-LWE (MLWE)','Παραγοντοποίηση ακεραίων','Διακριτός λογάριθμος','Μόνο πρόβλημα συντομότερου διανύσματος'],cor:0},
 {type:'btns',section:'Πρωτεύουσα Ρίζα',
  theory:`<h3>Τάξη του g mod p</h3><p>Το g έχει τάξη d αν g^d≡1 mod p και καμία μικρότερη θετική k δεν ικανοποιεί g^k≡1. Αφού 16=2⁴, αρκεί να ελέγξουμε g^8≠1 για τάξη 16.</p>`,
- q:'3⁸ mod 17=16. Τι σημαίνει αυτό για την τάξη του 3 mod 17;',opts:['16 (3^16≡1 και 3^8≠1)','8','4','32']},
+ q:'3⁸ mod 17=16. Τι σημαίνει αυτό για την τάξη του 3 mod 17;',opts:['16 (3^16≡1 και 3^8≠1)','8','4','32'],cor:0},
 {type:'btns',section:'Πεδίο NTT',
  theory:`<h3>Πολλαπλασιασμός στο πεδίο NTT</h3><p>Μόλις βρισκόμαστε στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται O(n) κατά σημεία:κάθε ζεύγος συντελεστών πολλαπλασιάζεται ανεξάρτητα.</p>`,
- q:'Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται τι;',opts:['Πολλαπλασιασμός κατά σημεία (στοιχείο-προς-στοιχείο)','Ανάστροφος πίνακα','Συνέλιξη','Διαίρεση πολυωνύμων']},
+ q:'Στο πεδίο NTT, ο πολλαπλασιασμός πολυωνύμων γίνεται τι;',opts:['Πολλαπλασιασμός κατά σημεία (στοιχείο-προς-στοιχείο)','Ανάστροφος πίνακα','Συνέλιξη','Διαίρεση πολυωνύμων'],cor:0},
 {type:'btns',section:'Ενθυλάκωση',
  theory:`<h3>Αλγεβρική ακύρωση</h3><div class="mblock">v = INTT(t̂^T·r̂)+e2+m̂\nŝ^T·u = INTT(ŝ^T·Â^T·r̂)+INTT(ŝ^T·ê1)\nw = v−ŝ^T·u = m̂ + μικρός θόρυβος</div>`,
- q:'Ποιος όρος ακυρώνεται ακριβώς μεταξύ v και ŝ^T·u;',opts:['INTT(ŝ^T·Â^T·r̂)','Το μήνυμα m̂','Ο θόρυβος e2','Το δημόσιο κλειδί t̂']},
+ q:'Ποιος όρος ακυρώνεται ακριβώς μεταξύ v και ŝ^T·u;',opts:['INTT(ŝ^T·Â^T·r̂)','Το μήνυμα m̂','Ο θόρυβος e2','Το δημόσιο κλειδί t̂'],cor:0},
 {type:'btns',section:'Προϋπολογισμός Θορύβου',
  theory:`<h3>Κατώφλι αποκρυπτογράφησης</h3><div class="mblock">bit 1 κωδικοποιείται ως q/2=8\nbit 0 κωδικοποιείται ως 0\nΣωστό αν |θόρυβος| &lt; q/4 = 4.25</div>`,
- q:'Μέγιστη ανεκτή ένταση θορύβου για σωστή αποκρυπτογράφηση (q=17);',opts:['4 (αυστηρά μικρότερο από q/4=4.25)','8','17','2']},
+ q:'Μέγιστη ανεκτή ένταση θορύβου για σωστή αποκρυπτογράφηση (q=17);',opts:['4 (αυστηρά μικρότερο από q/4=4.25)','8','17','2'],cor:0},
 {type:'btns',section:'Επίπεδα Ασφάλειας',
- theory:`<h3>Επίπεδα ασφάλειας Kyber</h3><p>Εκτιμήσεις δυσκολίας core-SVP από την προδιαγραφή Kyber round-3 (κλασικές πράξεις):</p><ul><li><strong>Kyber-512</strong>: 2¹¹⁸ (NIST επίπεδο 1, ≈ AES-128)</li><li><strong>Kyber-768</strong>: 2¹⁸¹ (NIST επίπεδο 3, ≈ AES-192)</li><li><strong>Kyber-1024</strong>: 2²⁵⁴ (NIST επίπεδο 5, ≈ AES-256)</li></ul>`,
- q:'Το Kyber-768 στοχεύει σε περίπου πόσα bits ασφάλειας (κλασική εκτίμηση core-SVP);',opts:['181 bits (2¹⁸¹ κλασικές πράξεις)','128 bits','254 bits','64 bits']},
+ theory:`<h3>Επίπεδα ασφάλειας Kyber</h3><ul><li><strong>Kyber-512</strong>: 2¹¹⁸ post-quantum πράξεις</li><li><strong>Kyber-768</strong>: 2¹⁷⁸ post-quantum πράξεις</li><li><strong>Kyber-1024</strong>: 2²⁵⁴ post-quantum πράξεις</li></ul>`,
+ q:'Το Kyber-768 στοχεύει σε περίπου πόσα bits post-quantum ασφάλειας;',opts:['178 bits (2¹⁷⁸ κβαντικές πράξεις)','128 bits','254 bits','64 bits'],cor:0},
 {type:'btns',section:'Δημιουργία Πίνακα',
- theory:`<h3>Δημιουργία πίνακα A</h3><p>Ο A παράγεται από σπόρο ρ μέσω του XOF SHAKE-128 + απόρριψη-δειγματοληψίας ώστε οι συντελεστές να είναι ομοιόμορφα κατανεμημένοι στο {0,…,q−1}.</p>`,
- q:'Γιατί χρησιμοποιείται δειγματοληψία απόρριψης κατά τη δημιουργία του πίνακα A;',opts:['Για ομοιόμορφη κατανομή στο {0,…,q−1}','Για να είναι ο A αντιστρέψιμος','Για μείωση μεγέθους κλειδιού','Για προσθήκη θορύβου']},
+ theory:`<h3>Δημιουργία πίνακα A</h3><p>Ο A παράγεται από σπόρο ρ μέσω cSHAKE128 + απόρριψη-δειγματοληψίας ώστε οι συντελεστές να είναι ομοιόμορφα κατανεμημένοι στο {0,…,q−1}.</p>`,
+ q:'Γιατί χρησιμοποιείται δειγματοληψία απόρριψης κατά τη δημιουργία του πίνακα A;',opts:['Για ομοιόμορφη κατανομή στο {0,…,q−1}','Για να είναι ο A αντιστρέψιμος','Για μείωση μεγέθους κλειδιού','Για προσθήκη θορύβου'],cor:0},
 {type:'btns',section:'Μετασχηματισμός FO',
  theory:`<h3>Μετασχηματισμός Fujisaki-Okamoto</h3><p>Εφαρμόζεται στην CPA-ασφαλή κρυπτογράφηση του Kyber για παραγωγή CCA-ασφαλούς KEM. Σε αναντιστοιχία αποθυλάκωσης επιστρέφεται ψευδοτυχαίο κλειδί (υπονοούμενη απόρριψη):ποτέ σήμα αποτυχίας.</p>`,
- q:'Ποια ιδιότητα ασφάλειας παρέχει ο μετασχηματισμός FO;',opts:['Ασφάλεια CCA (αντίσταση σε επιθέσεις επιλεγμένου κρυπτοκειμένου)','Μεγαλύτερα μεγέθη κλειδιών','Ταχύτερη αποκρυπτογράφηση','Κβαντική επιτάχυνση']},
+ q:'Ποια ιδιότητα ασφάλειας παρέχει ο μετασχηματισμός FO;',opts:['Ασφάλεια CCA (αντίσταση σε επιθέσεις επιλεγμένου κρυπτοκειμένου)','Μεγαλύτερα μεγέθη κλειδιών','Ταχύτερη αποκρυπτογράφηση','Κβαντική επιτάχυνση'],cor:0},
 // gaps:inherit English tmpl
 {...HARD[8],section:'modpow πλήρες',theory:`<h3>modpow πλήρες</h3>`,q:'Συμπλήρωσε το modpow εντελώς:'},
 {...HARD[9],section:'cbd_sample πλήρες',theory:`<h3>cbd_sample πλήρες</h3>`,q:'Συμπλήρωσε το cbd_sample:'},
@@ -1410,38 +1459,38 @@ const VH_EL_META=[
 const VH_EL=VH.map((ch,i)=>({...ch,...VH_EL_META[i]}));
 
 const INS_EL_META=[
- {section:'παράμετροι',theory:`<h3>Παράμετροι Kyber</h3><p>Το Kyber δουλεύει στον δακτύλιο πολυωνύμων modulo X στην 256 συν 1, με συντελεστές modulo τον πρώτο q. Κάθε πολυώνυμο έχει 256 συντελεστές. Το KYBER_K είναι η τάξη του module και επιλέγει το επίπεδο ασφάλειας: 2 για ML-KEM-512, 3 για 768, 4 για 1024.</p><div class="mblock">// N = 256 συντελεστές, q = 3329, k = τάξη module</div>`,q:'Συμπλήρωσε τις παραμέτρους Kyber και τον τύπο poly:'},
- {section:'Keccak theta',theory:`<h3>Keccak: βήμα theta</h3><p>Η μετάθεση Keccak αναμειγνύει έναν πίνακα 5 επί 5 από lanes των 64 bit. Το βήμα theta παίρνει την ισοτιμία κάθε στήλης και την επιστρέφει στην κατάσταση. Είναι το βήμα διάχυσης: κάνει κάθε bit εξόδου να εξαρτάται από πολλά bit εισόδου.</p><div class="mblock">// bc[i] = ισοτιμία της στήλης i</div>`,q:'Συμπλήρωσε την ισοτιμία στηλών του theta:'},
- {section:'Keccak rho και pi',theory:`<h3>Keccak: rho και pi</h3><p>Το rho περιστρέφει κάθε lane κατά μια σταθερή μετατόπιση και το pi το μετακινεί σε νέα θέση. Η αναφορά ακολουθεί μια αλυσίδα: αποθηκεύει το lane πηγής και το περνά μέσα από τη μετάθεση ένα lane κάθε φορά. Αν γίνει με απλό αντίγραφο, σπάει σιωπηλά το SHA-3.</p><div class="mblock">// αλυσίδα: το t κρατά το lane που μετακινείται</div>`,q:'Συμπλήρωσε την αλυσίδα rho και pi:'},
- {section:'Keccak chi και iota',theory:`<h3>Keccak: chi και iota</h3><p>Το chi είναι το μόνο μη γραμμικό βήμα: κάθε lane συνδυάζεται με τα δύο γειτονικά του μέσα από ένα NOT και μετά AND. Το iota προσθέτει τη σταθερά του γύρου, που σπάει τη συμμετρία μεταξύ των γύρων.</p><div class="mblock">// chi: το A[i] παίρνει (NOT A[i+1]) AND A[i+2]</div>`,q:'Συμπλήρωσε τα βήματα chi και iota:'},
- {section:'sponge blocks',theory:`<h3>Sponge: μπλοκ rate</h3><p>Το sponge επεξεργάζεται δεδομένα σε μπλοκ των rate byte. Στην απορρόφηση, κάθε byte εισόδου γίνεται XOR στην κατάσταση, και όταν γεμίσει ένα μπλοκ τρέχει η μετάθεση και ο buffer μηδενίζεται. Το στύψιμο είναι το κάτοπτρο: διάβασε byte έξω, και ξανα-μετάθεσε κάθε φορά που τελειώνει ένα μπλοκ.</p><div class="mblock">// μετάθεση μόλις ο buffer γεμίσει ένα μπλοκ rate</div>`,q:'Συμπλήρωσε τον χειρισμό των μπλοκ απορρόφησης και στυψίματος:'},
- {section:'διαχωρισμός domain',theory:`<h3>Finalize: διαχωρισμός domain</h3><p>Το padding σημαδεύει το τέλος της εισόδου και ξεχωρίζει τους ρόλους hash. Το SHAKE χρησιμοποιεί το byte domain 0x1F και τα SHA-3 το 0x06. Το τελευταίο byte του μπλοκ παίρνει πάντα το pad bit 0x80. Αυτό το ένα byte είναι η μόνη διαφορά μεταξύ SHAKE και SHA-3.</p><div class="mblock">// SHAKE = 0x1F, SHA3 = 0x06, τέλος pad = 0x80</div>`,q:'Συμπλήρωσε το padding του finalize:'},
- {section:'ρόλοι hash',theory:`<h3>Οι πέντε ρόλοι hash</h3><p>Κάθε hash του Kyber είναι το ίδιο sponge με διαφορετικό rate και domain. Το SHAKE128 με rate 168 επεκτείνει τον δημόσιο πίνακα A. Το SHAKE256 με rate 136 είναι το PRF θορύβου. Το SHA3-256 δεσμεύει το δημόσιο κλειδί. Το SHA3-512 με rate 72 είναι η συνάρτηση G που παράγει το κοινό κλειδί και τα coins.</p><div class="mblock">// rate: SHAKE128=168, SHAKE256/SHA3-256=136, SHA3-512=72</div>`,q:'Συμπλήρωσε τα rate των ρόλων hash:'},
- {section:'βρόχος NTT',theory:`<h3>Ευθεία NTT: σχήμα βρόχου</h3><p>Το NTT μεταφέρει ένα πολυώνυμο σε ένα πεδίο συχνότητας όπου ο πολλαπλασιασμός είναι φθηνός. Τρέχει 7 επίπεδα από butterflies. Το πλάτος len ξεκινά από 128 και υποδιπλασιάζεται κάθε επίπεδο, και ο πίνακας zetas κρατά τους συντελεστές στροφής στο κανονικό πεδίο.</p><div class="mblock">// 7 επίπεδα, len = 128, 64, 32, ... 2</div>`,q:'Συμπλήρωσε τη δομή του βρόχου NTT:'},
- {section:'butterfly NTT',theory:`<h3>Ευθεία NTT: butterfly</h3><p>Μέσα σε κάθε μπλοκ το butterfly συνδυάζει έναν χαμηλό συντελεστή f[j] με έναν υψηλό f[j+len] με τη στροφή z, ανάγοντας κάθε αποτέλεσμα modulo q. Η προσθήκη του q πριν την αφαίρεση κρατά την τιμή μη αρνητική, άρα το απλό mod q παραμένει σωστό.</p><div class="mblock">// t = z * f[j+len] mod q</div>`,q:'Συμπλήρωσε το ευθεία butterfly:'},
- {section:'βρόχος INTT',theory:`<h3>Αντίστροφο NTT: σχήμα βρόχου</h3><p>Το αντίστροφο NTT τρέχει τα ίδια butterflies ανάποδα. Το πλάτος μεγαλώνει από 2 έως 128, και ο δείκτης στροφής περπατά ανάποδα από το 127. Έτσι αναιρεί τον ευθύ μετασχηματισμό επίπεδο με επίπεδο.</p><div class="mblock">// ανάποδα: len = 2, 4, ... 128; το k μετρά προς τα κάτω από 127</div>`,q:'Συμπλήρωσε τον βρόχο του αντίστροφου NTT:'},
- {section:'κλιμάκωση INTT',theory:`<h3>Αντίστροφο NTT: τελική κλιμάκωση</h3><p>Μετά τα butterflies κάθε συντελεστής είναι μεγαλύτερος κατά παράγοντα 128. Ο πολλαπλασιασμός με το αντίστροφο του 128 modulo q ξανα-κλιμακώνει την έξοδο. Αυτή η σταθερά είναι 3303.</p><div class="mblock">// N_INV = αντίστροφο του 128 mod q = 3303</div>`,q:'Συμπλήρωσε την τελική κλιμάκωση INTT:'},
- {section:'basemul',theory:`<h3>Βασικός πολλαπλασιασμός</h3><p>Επειδή το X στην 256 συν 1 παραγοντοποιείται σε 128 τετραγωνικά modulo q, ο πολλαπλασιασμός NTT είναι 128 μικρά γινόμενα πρώτου βαθμού, όχι απλά pointwise. Κάθε γινόμενο παίρνεται modulo X τετράγωνο μείον gamma, όπου το gamma εναλλάσσεται μεταξύ συν και μείον μιας στροφής. Τα ενδιάμεσα πλαταίνουν σε 64 bit γιατί gamma επί a επί b φτάνει περίπου q στην τρίτη.</p><div class="mblock">// (a0 + a1 X)(b0 + b1 X) mod (X^2 - gamma)</div>`,q:'Συμπλήρωσε τον βασικό πολλαπλασιασμό:'},
- {section:'poly add και sub',theory:`<h3>Πρόσθεση και αφαίρεση poly</h3><p>Η πρόσθεση και η αφαίρεση δρουν συντελεστή προς συντελεστή, με κάθε αποτέλεσμα αναγόμενο modulo q. Η αφαίρεση προσθέτει πρώτα το q, άρα το αποτέλεσμα δεν γίνεται ποτέ αρνητικό στο απλό mod q.</p><div class="mblock">// add: (a+b) mod q    sub: (a-b+q) mod q</div>`,q:'Συμπλήρωσε τα poly_add και poly_sub:'},
- {section:'gen_a_entry seed',theory:`<h3>Στοιχείο πίνακα: ρύθμιση seed</h3><p>Κάθε στοιχείο του δημόσιου πίνακα A παράγεται κατ απαίτηση από το δημόσιο seed rho. Το seed επεκτείνεται με τους δείκτες στήλης και γραμμής, και μετά τροφοδοτείται στο SHAKE128 με rate 168. Το αποτέλεσμα είναι ήδη στο πεδίο NTT.</p><div class="mblock">// seed = rho, μετά στήλη C, μετά γραμμή R</div>`,q:'Συμπλήρωσε τη ρύθμιση του seed του στοιχείου:'},
- {section:'rejection sampling',theory:`<h3>Δειγματοληψία απόρριψης</h3><p>Το SHAKE128 βγάζει byte, και κάθε τρία byte δίνουν δύο υποψηφίους των 12 bit. Ένας υποψήφιος κρατιέται μόνο αν είναι κάτω από το q, αλλιώς απορρίπτεται. Έτσι κάθε αποδεκτός συντελεστής είναι ομοιόμορφος στο 0 έως q μείον 1.</p><div class="mblock">// 3 byte δίνουν δύο τιμές 12 bit; κράτα όσες είναι κάτω από q</div>`,q:'Συμπλήρωσε τη δειγματοληψία απόρριψης:'},
- {section:'cbd',theory:`<h3>Κεντραρισμένος διωνυμικός θόρυβος</h3><p>Ο θόρυβος προέρχεται από κεντραρισμένη διωνυμική κατανομή. Για κάθε συντελεστή, πάρε 2 eta τυχαία bit, μέτρησε τους άσσους στο πρώτο μισό, και αφαίρεσε το μέτρημα του δεύτερου μισού. Το αποτέλεσμα είναι μια μικρή τιμή κεντραρισμένη στο μηδέν.</p><div class="mblock">// συντελεστής = popcount(πρώτα eta bit) - popcount(επόμενα eta bit)</div>`,q:'Συμπλήρωσε τον κεντραρισμένο διωνυμικό δειγματολήπτη:'},
- {section:'sample_poly',theory:`<h3>PRF θορύβου</h3><p>Ένα πολυώνυμο θορύβου παράγεται με ένα PRF: το SHAKE256 πάνω στο μυστικό seed και ένα byte nonce βγάζει 64 επί eta νέα byte, που ο διωνυμικός δειγματολήπτης μετατρέπει σε συντελεστές. Το nonce κρατά κάθε πολυώνυμο ανεξάρτητο.</p><div class="mblock">// PRF = SHAKE256(seed, μετά nonce)</div>`,q:'Συμπλήρωσε το PRF θορύβου:'},
- {section:'compress_c',theory:`<h3>Συμπίεση και αποσυμπίεση</h3><p>Η συμπίεση κρατά μόνο τα υψηλά d bit ενός συντελεστή για να μικρύνει το κρυπτοκείμενο. Κλιμακώνει κατά 2 στην d δια q με στρογγυλοποίηση, και μετά μασκάρει σε d bit. Η αποσυμπίεση είναι η αντίστροφη στρογγυλοποίηση προς την αρχική περιοχή.</p><div class="mblock">// compress: round(2^d / q * x) mod 2^d</div>`,q:'Συμπλήρωσε τα compress και decompress:'},
- {section:'byte_encode',theory:`<h3>Κωδικοποίηση byte</h3><p>Η κωδικοποίηση πακετάρει τους συντελεστές σε μια συμβολοσειρά byte, d bit ο καθένας, με το λιγότερο σημαντικό bit πρώτα. Κάθε αναμμένο bit τοποθετείται στη θέση του στον buffer εξόδου.</p><div class="mblock">// πακετάρισμα 256 συντελεστών σε d bit, LSB πρώτα</div>`,q:'Συμπλήρωσε το byte_encode:'},
- {section:'byte_decode',theory:`<h3>Αποκωδικοποίηση byte</h3><p>Η αποκωδικοποίηση αναστρέφει το πακετάρισμα: διαβάζει d bit ανά συντελεστή. Όταν το d είναι 12 η τιμή ανάγεται επίσης modulo q, αφού τιμές των 12 bit μπορούν να ξεπεράσουν το q.</p><div class="mblock">// d = 12 ανάγει επίσης την τιμή mod q</div>`,q:'Συμπλήρωσε το byte_decode:'},
- {section:'poly_compress wrappers',theory:`<h3>Wrappers compress και decompress</h3><p>Αυτά τα wrappers εφαρμόζουν το compress ανά συντελεστή και μετά πακετάρουν με byte_encode; και αποπακετάρουν με byte_decode και μετά αποσυμπιέζουν. Είναι η γέφυρα μεταξύ πολυωνύμων και των byte στο κανάλι.</p><div class="mblock">// compress μετά encode; decode μετά decompress</div>`,q:'Συμπλήρωσε τα wrappers compress και decompress:'},
- {section:'μεγέθη καναλιού',theory:`<h3>Μεγέθη serialized</h3><p>Τα serialized αντικείμενα είναι αυτά που ταξιδεύουν στο κανάλι. Το δημόσιο κλειδί είναι το πακεταρισμένο διάνυσμα t ακολουθούμενο από το seed rho. Το κρυπτοκείμενο είναι συμπιεσμένο u ακολουθούμενο από συμπιεσμένο v. Ένα πολυώνυμο σε 12 bit είναι 384 byte.</p><div class="mblock">// pk = k poly + seed;  ct = συμπιεσμένο u + συμπιεσμένο v</div>`,q:'Συμπλήρωσε τους ορισμούς μεγεθών:'},
- {section:'kpke_keygen seeds',theory:`<h3>K-PKE keygen: seeds και δειγματοληψία</h3><p>Η δημιουργία κλειδιών K-PKE παράγει δύο seeds από την είσοδο με το G, που είναι SHA3-512. Το πρώτο μισό rho είναι δημόσιο και σπέρνει τον πίνακα; το δεύτερο μισό sigma είναι μυστικό και σπέρνει τον θόρυβο. Το μυστικό s και το σφάλμα e δειγματοληπτούνται και μετά μεταφέρονται στο πεδίο NTT.</p><div class="mblock">// G = SHA3-512 δίνει rho (δημόσιο) και sigma (μυστικό)</div>`,q:'Συμπλήρωσε το seed και τη δειγματοληψία του keygen:'},
- {section:'kpke_keygen δημόσιο κλειδί',theory:`<h3>K-PKE keygen: t = A s + e</h3><p>Το δημόσιο διάνυσμα είναι t ισούται A επί s συν e. Κάθε στοιχείο αθροίζει τη γραμμή του πίνακα επί το μυστικό και μετά προσθέτει το σφάλμα. Το δύσκολο πρόβλημα MLWE είναι ότι το e κρύβει το s, άρα το t φαίνεται τυχαίο. Τέλος τα t και s πακετάρονται και το rho προστίθεται στο δημόσιο κλειδί.</p><div class="mblock">// t_i = άθροισμα για j του A[i][j] * s[j], συν e_i</div>`,q:'Συμπλήρωσε τον υπολογισμό του δημόσιου κλειδιού:'},
- {section:'kpke_encrypt u',theory:`<h3>K-PKE encrypt: u</h3><p>Η κρυπτογράφηση δειγματοληπτεί φρέσκο τυχαίο r και μικρά σφάλματα. Υπολογίζει το u από τον ανάστροφο πίνακα επί r, το επιστρέφει από το πεδίο NTT και προσθέτει το σφάλμα e1. Η αναστροφή είναι ο λόγος που οι δείκτες στο στοιχείο του πίνακα εναλλάσσονται.</p><div class="mblock">// u = inverse_NTT(A_transpose * r) + e1</div>`,q:'Συμπλήρωσε τον υπολογισμό του u:'},
- {section:'kpke_encrypt v',theory:`<h3>K-PKE encrypt: v</h3><p>Το δεύτερο μέρος του κρυπτοκειμένου v είναι t ανάστροφο επί r, επιστραμμένο από το πεδίο NTT, συν το σφάλμα e2 και το μήνυμα. Το bit του μηνύματος γίνεται 0 ή περίπου q δια 2 άρα μένει μακριά από τον θόρυβο. Μετά τα u και v συμπιέζονται.</p><div class="mblock">// v = inverse_NTT(t^T r) + e2 + decompress(m)</div>`,q:'Συμπλήρωσε το v και τη συμπίεση:'},
- {section:'kpke_decrypt',theory:`<h3>K-PKE decrypt</h3><p>Η αποκρυπτογράφηση υπολογίζει w ισούται v μείον s ανάστροφο επί u. Οι δύο όροι θορύβου σχεδόν αλληλο-αναιρούνται, αφήνοντας το μήνυμα συν ένα μικρό σφάλμα. Η στρογγυλοποίηση κάθε συντελεστή πίσω σε 0 ή q δια 2 ανακτά το bit, εφόσον ο συνολικός θόρυβος έμεινε κάτω από q δια 4.</p><div class="mblock">// w = v - inverse_NTT(s^T * NTT(u))</div>`,q:'Συμπλήρωσε την αποκρυπτογράφηση:'},
- {section:'mlkem_keygen',theory:`<h3>ML-KEM keygen: πακέτο dk</h3><p>Το ML-KEM τυλίγει το K-PKE με τον μετασχηματισμό Fujisaki-Okamoto. Το κλειδί αποθυλάκωσης πακετάρει τέσσερα μέρη: το μυστικό K-PKE, το δημόσιο κλειδί, ένα hash του δημόσιου κλειδιού, και μια μυστική τιμή z για την έμμεση απόρριψη.</p><div class="mblock">// dk = dkPKE, μετά ek, μετά H(ek), μετά z</div>`,q:'Συμπλήρωσε το πακέτο του κλειδιού αποθυλάκωσης:'},
- {section:'mlkem_encaps',theory:`<h3>ML-KEM ενθυλάκωση</h3><p>Η ενθυλάκωση διαλέγει ένα μήνυμα m, και μετά παράγει το κοινό κλειδί K και τα coins r μαζί από το G του m και του hash του δημόσιου κλειδιού. Επειδή τα coins έρχονται από το m, το κρυπτοκείμενο είναι ντετερμινιστική συνάρτηση του m. Ο αποστολέας στέλνει το c και κρατά το K.</p><div class="mblock">// (K, r) = G(m, μετά H(ek))</div>`,q:'Συμπλήρωσε την ενθυλάκωση:'},
- {section:'mlkem_decaps re-encrypt',theory:`<h3>ML-KEM αποθυλάκωση: ξανα-κρυπτογράφηση</h3><p>Η αποθυλάκωση πρώτα αποκρυπτογραφεί σε ένα υποψήφιο μήνυμα m τόνος, και μετά ξανα-παράγει το κλειδί και τα coins με το G χρησιμοποιώντας το αποθηκευμένο hash του δημόσιου κλειδιού. Μετά ξανα-κρυπτογραφεί το m τόνος με αυτά τα coins για να ξαναφτιάξει το κρυπτοκείμενο.</p><div class="mblock">// mp = Decrypt(c);  (K', r') = G(mp, μετά H(ek))</div>`,q:'Συμπλήρωσε το βήμα ανάκτησης και ξανα-κρυπτογράφησης:'},
- {section:'mlkem_decaps απόρριψη',theory:`<h3>ML-KEM αποθυλάκωση: έμμεση απόρριψη</h3><p>Ο μετασχηματισμός συγκρίνει το ξαναφτιαγμένο κρυπτοκείμενο με αυτό που λήφθηκε. Αν ταιριάζουν, ο αποστολέας ήταν ειλικρινής και το K τόνος είναι το κοινό κλειδί. Αν όχι, η συνάρτηση επιστρέφει ένα ψευδοτυχαίο κλειδί απόρριψης από το μυστικό z και το κρυπτοκείμενο, άρα ένα πειραγμένο κρυπτοκείμενο δεν διαρρέει τίποτα. Αυτή η έμμεση απόρριψη είναι που σταματά τις επιθέσεις επιλεγμένου κρυπτοκειμένου.</p><div class="mblock">// ταίριασμα: χρήση Kr    μη ταίριασμα: χρήση J(z, μετά c)</div>`,q:'Συμπλήρωσε την έμμεση απόρριψη:'},
- {section:'KEM round-trip',theory:`<h3>Από άκρο σε άκρο</h3><p>Όλη η ανταλλαγή KEM τελειώνει με τις δύο πλευρές να κρατούν το ίδιο κοινό μυστικό των 32 byte. Για το ML-KEM-512 το δημόσιο κλειδί είναι 800 byte και το κρυπτοκείμενο 768 byte. Το self-test round-trip ελέγχει ότι η αποθυλάκωση ανακτά ακριβώς αυτό που παρήγαγε η ενθυλάκωση.</p><div class="mblock">// ML-KEM-512: ek = 800, ct = 768, κοινό μυστικό = 32</div>`,q:'Συμπλήρωσε το μέγεθος του κοινού μυστικού και τον έλεγχο round-trip:'},
+ {section:'barrett_reduce',theory:`<h3>Αναγωγή Barrett</h3><div class="mblock">// αναγωγή a mod KYBER_Q χωρίς διαίρεση\nint16_t barrett_reduce(int16_t a);</div>`,q:'Συμπλήρωσε το barrett_reduce:'},
+ {section:'montgomery_reduce',theory:`<h3>Αναγωγή Montgomery</h3><div class="mblock">// a*R^{-1} mod q\nQINV = q^{-1} mod 2^16</div>`,q:'Συμπλήρωσε το montgomery_reduce:'},
+ {section:'Δομή poly',theory:`<h3>Δομή πολυωνύμου</h3>`,q:'Συμπλήρωσε τα typedef poly και polyvec:'},
+ {section:'poly_add',theory:`<h3>Πρόσθεση πολυωνύμων</h3>`,q:'Συμπλήρωσε το poly_add:'},
+ {section:'poly_sub',theory:`<h3>Αφαίρεση πολυωνύμων</h3>`,q:'Συμπλήρωσε το poly_sub:'},
+ {section:'Βρόχος zeta NTT',theory:`<h3>NTT με πίνακα zeta</h3><div class="mblock">// zetas[k] = ψ^bitrev(k) mod q\n// Cooley-Tukey επαναληπτικό</div>`,q:'Συμπλήρωσε τον βρόχο zeta NTT:'},
+ {section:'Κλιμάκωση INTT',theory:`<h3>INTT:Gentleman-Sande + κλιμάκωση n⁻¹</h3><div class="mblock">// F=KYBER_N^{-1} mod q σε μορφή Montgomery</div>`,q:'Συμπλήρωσε κλιμάκωση INTT:'},
+ {section:'basemul',theory:`<h3>Basemul:πολλαπλασιασμός poly στο πεδίο NTT</h3><div class="mblock">// r[0]=a[0]*b[0]+a[1]*b[1]*zeta\n// r[1]=a[0]*b[1]+a[1]*b[0]</div>`,q:'Συμπλήρωσε το basemul:'},
+ {section:'Περιτύλιξη poly_ntt',theory:`<h3>Περιτύλιξη poly_ntt</h3>`,q:'Συμπλήρωσε τα poly_ntt και poly_invntt_tomont:'},
+ {section:'polyvec_ntt',theory:`<h3>polyvec_ntt: εφαρμογή NTT σε κάθε στοιχείο</h3>`,q:'Συμπλήρωσε το polyvec_ntt:'},
+ {section:'polyvec_pointwise_acc',theory:`<h3>Εσωτερικό γινόμενο δύο polyvec</h3><div class="mblock">// r = Σ a[i] ⊙ b[i]</div>`,q:'Συμπλήρωσε το polyvec_pointwise_acc_montgomery:'},
+ {section:'poly_reduce',theory:`<h3>poly_reduce: αναγωγή Barrett σε όλους συντελεστές</h3>`,q:'Συμπλήρωσε το poly_reduce:'},
+ {section:'poly_compress',theory:`<h3>poly_compress: Compress(x,d)</h3><div class="mblock">// round(2^d/q * x) mod 2^d</div>`,q:'Συμπλήρωσε το poly_compress (d=4):'},
+ {section:'poly_decompress',theory:`<h3>poly_decompress: Decompress(x,d)</h3><div class="mblock">// round(q/2^d * x)</div>`,q:'Συμπλήρωσε το poly_decompress (d=4):'},
+ {section:'cbd_eta2',theory:`<h3>CBD η=2 σε C (τέχνασμα popcount)</h3><div class="mblock">// d=t&0x55... + (t>>1)&0x55...\n// a=(d>>(4j))&3  b=(d>>(4j+2))&3</div>`,q:'Συμπλήρωσε το cbd_eta2:'},
+ {section:'gen_matrix',theory:`<h3>Πίνακας A από σπόρο</h3>`,q:'Συμπλήρωσε το gen_matrix:'},
+ {section:'indcpa_keypair',theory:`<h3>Δημιουργία κλειδιών IND-CPA</h3>`,q:'Συμπλήρωσε το indcpa_keypair:'},
+ {section:'indcpa_enc u',theory:`<h3>Κρυπτογράφηση IND-CPA:u</h3><div class="mblock">// u = A^T*r + e1</div>`,q:'Συμπλήρωσε τον υπολογισμό u:'},
+ {section:'indcpa_dec',theory:`<h3>Αποκρυπτογράφηση IND-CPA</h3><div class="mblock">// w = v - s^T*u</div>`,q:'Συμπλήρωσε το indcpa_dec:'},
+ {section:'poly_tomsg',theory:`<h3>poly_tomsg: ανάκτηση bits μηνύματος</h3><div class="mblock">// bit=(coeff+q/4)/(q/2) mod 2</div>`,q:'Συμπλήρωσε το poly_tomsg:'},
+ {section:'poly_frommsg',theory:`<h3>poly_frommsg: κωδικοποίηση μηνύματος σε poly</h3><div class="mblock">// bit=1→coeff=q/2  bit=0→coeff=0</div>`,q:'Συμπλήρωσε το poly_frommsg:'},
+ {section:'crypto_kem_keypair',theory:`<h3>Περιτύλιξη ζεύγους κλειδιών KEM</h3>`,q:'Συμπλήρωσε το crypto_kem_keypair:'},
+ {section:'crypto_kem_enc',theory:`<h3>Ενθυλάκωση KEM</h3>`,q:'Συμπλήρωσε το crypto_kem_enc:'},
+ {section:'crypto_kem_dec',theory:`<h3>Αποθυλάκωση KEM (υπονοούμενη απόρριψη FO)</h3>`,q:'Συμπλήρωσε το crypto_kem_dec:'},
+ {section:'verify + cmov',theory:`<h3>Σταθερού χρόνου verify και conditional move</h3>`,q:'Συμπλήρωσε τα verify και cmov:'},
+ {section:'polyvec_add',theory:`<h3>polyvec_add: πρόσθεση poly κατά στοιχείο</h3>`,q:'Συμπλήρωσε το polyvec_add:'},
+ {section:'polyvec_reduce',theory:`<h3>polyvec_reduce: αναγωγή όλων poly</h3>`,q:'Συμπλήρωσε το polyvec_reduce:'},
+ {section:'poly_csubq',theory:`<h3>poly_csubq: υπό συνθήκη αφαίρεση q</h3><div class="mblock">// Μεταφορά [0,2q) → [0,q)</div>`,q:'Συμπλήρωσε το poly_csubq:'},
+ {section:'pack_pk',theory:`<h3>pack_pk: σειριοποίηση δημόσιου κλειδιού</h3><div class="mblock">// pk = compress(t) || rho</div>`,q:'Συμπλήρωσε το pack_pk:'},
+ {section:'pack_ciphertext',theory:`<h3>pack_ciphertext: σειριοποίηση (u,v)</h3>`,q:'Συμπλήρωσε το pack_ciphertext:'},
+ {section:'polyvec_invntt_tomont',theory:`<h3>polyvec_invntt_tomont: INTT σε κάθε poly</h3>`,q:'Συμπλήρωσε το polyvec_invntt_tomont:'},
+ {section:'poly_getnoise',theory:`<h3>poly_getnoise_eta1: θόρυβος από PRF</h3>`,q:'Συμπλήρωσε το poly_getnoise_eta1:'},
 ];
 const INS_EL=INS.map((ch,i)=>({...ch,...INS_EL_META[i]}));
 
@@ -1465,25 +1514,18 @@ function _setModeCompleted(mode) {
   localStorage.setItem('kyber_completed_modes', JSON.stringify(_completedModes));
 }
 
-// Levels unlock in order: a level is locked until the previous one is
-// completed (also enforced server-side in /api/challenges/submit).
-const MODE_KEYS=['veryeasy','easy','medium','hard','veryhard','insane'];
-function _isLocked(i){return i>0&&!_completedModes[MODE_KEYS[i-1]];}
-
 function buildDiffGrid(){
   const grid=document.getElementById('diffGrid');
   if(!grid)return;
-  const t=T[LANG];
-  grid.innerHTML=t.levels.map((lv,i)=>{
-    const locked=_isLocked(i);
-    return `
-    <div class="diff-card${_completedModes[lv.key]?' done':''}${locked?' locked':''}"${locked?'':` onclick="startMode('${lv.key}')"`}>
+  const lvls=T[LANG].levels;
+  grid.innerHTML=lvls.map((lv,i)=>`
+    <div class="diff-card${_completedModes[lv.key]?' done':''}" onclick="startMode('${lv.key}')">
       <div class="diff-lvl">${lv.label}</div>
       <div class="diff-name">${lv.name}</div>
       <div class="diff-desc">${lv.desc}</div>
       <div class="diff-meta">${lv.meta.map(m=>`<span>${m}</span>`).join('')}</div>
-      <button class="btn-go"${locked?' disabled':''}>${locked?t.btnLocked:t.btnStart}</button>
-    </div>`;}).join('');
+      <button class="btn-go">${T[LANG].btnStart}</button>
+    </div>`).join('');
 }
 
 function showLevelComplete(modeName) {
@@ -1524,7 +1566,7 @@ const LIVES_MAP={veryeasy:5,easy:5,medium:5,hard:3,veryhard:3,insane:3};
 const COLORS={veryeasy:'var(--c0)',easy:'var(--c1)',medium:'var(--c2)',hard:'var(--c3)',veryhard:'var(--c4)',insane:'var(--c5)'};
 const LABELS={veryeasy:'VERY EASY',easy:'EASY',medium:'MEDIUM',hard:'HARD',veryhard:'VERY HARD',insane:'INSANE'};
 
-let S={mode:null,idx:0,score:0,streak:0,correct:0,lives:5,answered:false,checking:false};
+let S={mode:null,idx:0,score:0,streak:0,correct:0,lives:5,answered:false};
 
 // Cookie helper
 function getCookie(name) {
@@ -1553,8 +1595,7 @@ function show(id){
 }
 function goBack(){show('select');S.mode=null;document.getElementById('livesRow').innerHTML='';refreshSelectLeaderboard();}
 function startMode(mode){
-  if(_isLocked(MODE_KEYS.indexOf(mode)))return; // locked until previous level done
-  S={mode,idx:0,score:0,streak:0,correct:0,lives:LIVES_MAP[mode],answered:false,checking:false,selectedOpt:null};
+  S={mode,idx:0,score:0,streak:0,correct:0,lives:LIVES_MAP[mode],answered:false,selectedOpt:null};
   updateHeader();show('challenge');render();
 }
 
@@ -1612,19 +1653,17 @@ function renderBtns(ch){
     ch.opts.map((o,i)=>`<button class="opt-btn" onclick="pickOpt(${i})">${o}</button>`).join('')
   }</div>`;
 }
-async function pickOpt(idx){
-  if(S.answered||S.checking)return;
+function pickOpt(idx){
+  if(S.answered)return;
   S.selectedOpt=idx;
+  S.answered=true;
+  const ch=getChallenges()[S.mode][S.idx];
   const btns=document.querySelectorAll('.opt-btn');
   btns.forEach(b=>b.disabled=true);
-  const d=await submitToServer(String(idx));
-  if(!d){btns.forEach(b=>b.disabled=false);return;} // server unreachable: retry allowed
-  S.answered=true;
-  btns[idx].classList.add(d.correct?'correct':'wrong');
-  // The correct option index is only revealed by the server after a miss.
-  if(!d.correct&&Number.isInteger(d.correct_answer)&&btns[d.correct_answer])
-    btns[d.correct_answer].classList.add('correct');
-  applyVerdict(d,d.correct?T[LANG].fbCorrect:T[LANG].fbWrong);
+  const ok=idx===ch.cor;
+  btns[idx].classList.add(ok?'correct':'wrong');
+  if(!ok)btns[ch.cor].classList.add('correct');
+  showFeedback(ok,ok?T[LANG].fbCorrect:T[LANG].fbWrong);
 }
 
 // GAPS
@@ -1677,102 +1716,59 @@ function hl(code,isC){
 }
 
 // SUBMIT
-// All grading happens on the server: the browser holds no correct answers.
-// submitToServer() returns the SubmitResponse data, or null when the
-// submission could not be checked (network error / rejected request).
-async function submitToServer(payload){
-  const t=T[LANG];
-  S.checking=true;
-  const sb=document.getElementById('submitBtn');
-  if(sb)sb.disabled=true;
-  setFb(t.fbChecking,'neutral');
-  const r=await API.submitAnswer(S.mode,S.idx,payload,S.streak);
-  S.checking=false;
-  if(sb)sb.disabled=false;
-  if(!r||!r.ok||typeof r.data.correct!=='boolean'){
-    // Show the server's reason when it gave one (e.g. locked level,
-    // expired session); otherwise a generic network message.
-    setFb((r&&r.data&&r.data.detail)?('✗ '+r.data.detail):t.fbNetErr,'bad');
-    return null;
-  }
-  return r.data;
-}
-
-async function submitAnswer(){
+const normAns=s=>s.replace(/\s+/g,'');
+function submitAnswer(){
   if(S.answered){nextQ();return;}
-  if(S.checking)return;
   const ch=getChallenges()[S.mode][S.idx];
   const t=T[LANG];
   if(ch.type==='duo'){
     const inp=document.getElementById('duoIn');
     const val=(inp?.value||'').trim();
-    if(!val){setFb(t.fbStart.duo,'neutral');return;}
-    const d=await submitToServer(val);
-    if(!d)return;
+    const ok=normAns(val)===normAns(ch.ans);
+    inp.classList.add(ok?'correct':'wrong');
     S.answered=true;
-    inp.classList.add(d.correct?'correct':'wrong');
-    if(!d.correct)setTimeout(()=>{inp.classList.remove('wrong');inp.value='';},600);
-    applyVerdict(d,d.correct?t.fbCorrectDuo(val):t.fbWrongDuo(d.correct_answer??'?',ch.hint));
+    if(!ok)setTimeout(()=>{inp.classList.remove('wrong');inp.value='';},600);
+    showFeedback(ok,ok?t.fbCorrectDuo(ch.ans):t.fbWrongDuo(ch.ans,ch.hint));
     return;
   }
   if(ch.type==='gaps'){
     const gaps=(ch.tmpl||[]).filter(l=>l&&l.t==='gap');
-    const vals=gaps.map((_,i)=>{const el=document.getElementById('g'+i);return el?el.value.trim():'';});
-    if(vals.some(v=>!v)){setFb(t.fbFillFirst,'neutral');return;}
-    const d=await submitToServer(JSON.stringify(vals));
-    if(!d)return;
-    S.answered=true;
-    const res=Array.isArray(d.gap_results)?d.gap_results:gaps.map(()=>d.correct);
-    gaps.forEach((_,i)=>{
+    let allOk=true,anyEmpty=false;
+    gaps.forEach((line,i)=>{
       const inp=document.getElementById('g'+i);
       if(!inp)return;
+      const val=inp.value.trim();
+      if(!val){anyEmpty=true;return;}
+      const ok=normAns(val)===normAns(line.ans);
       inp.classList.remove('correct','wrong');
-      inp.classList.add(res[i]?'correct':'wrong');
+      inp.classList.add(ok?'correct':'wrong');
+      if(!ok)allOk=false;
     });
-    // On a miss the server reveals the expected gap values so the
-    // student can study them before moving on.
-    if(!d.correct&&Array.isArray(d.correct_answer)){
-      gaps.forEach((_,i)=>{
+    if(anyEmpty){setFb(t.fbFillFirst,'neutral');return;}
+    S.answered=true;
+    if(!allOk){
+      gaps.forEach((line,i)=>{
         const inp=document.getElementById('g'+i);
-        if(inp&&!res[i])
-          setTimeout(()=>{inp.value=d.correct_answer[i];inp.classList.remove('wrong');inp.classList.add('correct');},400);
+        if(inp&&inp.classList.contains('wrong'))
+          setTimeout(()=>{inp.value=line.ans;inp.classList.remove('wrong');inp.classList.add('correct');},400);
       });
     }
-    applyVerdict(d,d.correct?t.fbAllOk:t.fbSomeWrong);
+    showFeedback(allOk,allOk?t.fbAllOk:t.fbSomeWrong);
   }
 }
 
 // FEEDBACK & SCORING
-// Applies the server's verdict: streak and total score come from the
-// backend response; only lives and the session-accuracy counter are local.
-function applyVerdict(d,msg){
-  const t=T[LANG];
-  if(d.correct)S.correct++;
-  S.streak=d.streak||0;
-  if(!d.correct)S.lives=Math.max(0,S.lives-1);
-  if(typeof d.total_score==='number'){
-    _baseScore=d.total_score;
-    S.score=0;
-    localStorage.setItem('kyber_total_score',_baseScore);
+function showFeedback(ok,msg){
+  if(ok){
+    S.correct++;S.streak++;
+    S.score+=10+(S.streak>1?(S.streak-1)*2:0);
+  }else{
+    S.streak=0;S.lives=Math.max(0,S.lives-1);
   }
-  if(d.already_correct&&d.correct)msg=t.fbAlreadyCorrect;
-  setFb(msg,d.correct?'ok':'bad');
+  setFb(msg,ok?'ok':'bad');
   document.getElementById('submitBtn').style.display='none';
   document.getElementById('nextBtn').style.display='inline-block';
   updateHeader();
-  if(d.completed){
-    _setModeCompleted(S.mode);
-    buildDiffGrid(); // refresh cards: ✓ badge + unlock the next level
-    if(d.correct)setTimeout(()=>showLevelComplete(getLabels()[S.mode]),800);
-  }
-  if(Array.isArray(d.leaderboard)){
-    _renderSelectLeaderboard(d.leaderboard);
-    const overlay=document.getElementById('lbOverlay');
-    if(overlay&&overlay.classList.contains('open')){
-      const content=document.getElementById('lbOverlayContent');
-      if(content)content.innerHTML=_buildLbTable(d.leaderboard);
-    }
-  }
   if(S.lives===0)setTimeout(()=>showResults(true),1200);
 }
 function setFb(msg,cls){
@@ -1810,13 +1806,11 @@ function showResults(gameOver){
   setTimeout(syncScoreFromBackend, 600);
 }
 // API LAYER:connects to FastAPI backend
-// The backend is the single source of truth: it validates every answer
-// (the correct answers are never shipped to the browser), derives the
-// streak, awards points and enforces level gating. This layer provides:
+// All client-side logic above still runs; this layer adds:
 //   - User auth (login / register modal)
-//   - Answer submission + verdict retrieval (POST /api/challenges/submit)
+//   - Server-side submission recording
 //   - Leaderboard display
-// If the API is unreachable, answers CANNOT be checked (no offline mode).
+// If the API is unreachable the app works offline (no score persistence).
 
 const API = {
   base: '/api',
@@ -2105,6 +2099,71 @@ async function refreshSelectLeaderboard() {
   const rows = await API.fetchGlobalLeaderboard();
   _renderSelectLeaderboard(rows);
 }
+
+// HOOK INTO showFeedback
+// Wrap showFeedback: post answer to backend, update score + leaderboard from response
+const _origShowFeedback = showFeedback;
+showFeedback = async function(ok, msg) {
+  _origShowFeedback(ok, msg);
+  if (!API.isLoggedIn() || !S.mode) return;
+  const ch = getChallenges()[S.mode][S.idx];
+  if (!ch) return;
+  let answerPayload = '';
+  if (ch.type === 'btns') {
+    answerPayload = String(S.selectedOpt ?? ch.cor);
+  } else if (ch.type === 'duo') {
+    const inp = document.getElementById('duoIn');
+    answerPayload = inp ? inp.value.trim() : ch.ans;
+  } else if (ch.type === 'gaps') {
+    const gaps = (ch.tmpl||[]).filter(l=>l&&l.t==='gap');
+    answerPayload = JSON.stringify(gaps.map((_,i) => {
+      const el = document.getElementById('g'+i);
+      return el ? el.value.trim() : '';
+    }));
+  }
+  try {
+    const result = await API.submitAnswer(S.mode, S.idx, answerPayload, S.streak);
+    if (result && result.ok) {
+      const d = result.data;
+
+      // If this question was already answered correctly, the backend awards 0 pts.
+      // Override the local feedback message so the user knows why.
+      if (d.already_correct && d.correct) {
+        setFb('✓ Already answered correctly — 0 pts awarded.', 'ok');
+        // Also undo the local score increment for this answer (backend is authoritative)
+        S.score -= (10 + (S.streak > 1 ? (S.streak - 1) * 2 : 0));
+      }
+
+      if (d.correct) {
+        // Backend score is authoritative — sync it
+        _baseScore = d.total_score || _baseScore;
+        S.score = 0;
+        localStorage.setItem('kyber_total_score', _baseScore);
+        updateHeader();
+      }
+
+      // Level completed for the first time (or repeated)
+      if (d.completed) {
+        _setModeCompleted(S.mode);
+        buildDiffGrid(); // refresh cards to show ✓ badge
+        if (d.correct) {
+          // Brief delay so the answer feedback is visible first
+          setTimeout(() => showLevelComplete(getLabels()[S.mode]), 800);
+        }
+      }
+
+      // Refresh leaderboard from response (no extra API call)
+      if (Array.isArray(d.leaderboard)) {
+        _renderSelectLeaderboard(d.leaderboard);
+        const overlay = document.getElementById('lbOverlay');
+        if (overlay && overlay.classList.contains('open')) {
+          const content = document.getElementById('lbOverlayContent');
+          if (content) content.innerHTML = _buildLbTable(d.leaderboard);
+        }
+      }
+    }
+  } catch(e) {}
+};
 
 // SCORE SYNC
 // Fetch authoritative score from /users/me (works even on fresh DB after volume wipe)

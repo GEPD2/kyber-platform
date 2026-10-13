@@ -1,65 +1,76 @@
 """
-Server-side answer validator.
-The correct answers for every question live only here, never sent to the browser.
-The frontend sends the user's answer to POST /api/challenges/submit,
-and this module does the comparison.
+Server-side answer validator. Correct answers never leave the server.
 
-For 'buttons' type  → answer is the string of the correct option index ("0","1","2","3")
-For 'duo' type      → answer is a stripped string compared to the expected value
-For 'gaps' type     → answer is a JSON array of strings, one per gap
+Answer payloads from the client:
+  btns  -> option index as a string ("0".."3")
+  duo   -> the typed value
+  gaps  -> JSON array, one entry per gap: option index for choice gaps,
+           typed text for text gaps
+  term  -> the shell command typed in the Lab terminal
+
+normalize_code() is the single equivalence rule (whitespace and quote style
+are ignored). Anything beyond that must be listed explicitly in a gap's
+accept list, so equivalence is a content decision, not a parser guess.
 """
 
 import json
-from typing import Any
+import re
+
+from app.services.lab_runner import matches as term_matches
+
+_WS = re.compile(r"\s+")
+_UNICODE_MINUS = str.maketrans({"−": "-", "–": "-", "×": "*"})
 
 
-def _norm(s: Any) -> str:
-    """Remove ALL whitespace, mirroring the frontend's normAns().
-    Several gap answers contain internal spaces ("a, b", "q - c", "<<= 1");
-    a user typing "a,b" must be judged the same way on both sides."""
-    return "".join(str(s).split())
+def normalize_code(value: str) -> str:
+    s = str(value).translate(_UNICODE_MINUS)
+    s = _WS.sub("", s)
+    return s.replace("'", '"')
 
 
-def validate_answer(challenge: dict, raw_answer: str) -> bool:
-    """
-    Returns True if raw_answer matches the correct answer for this challenge.
-    challenge, dict from CHALLENGE_DATA (includes correct answer fields)
-    raw_answer, sanitised string from the client
-    """
+def _matches(submitted: str, accept: list[str]) -> bool:
+    n = normalize_code(submitted)
+    return n != "" and any(n == normalize_code(a) for a in accept)
+
+
+def _index(raw) -> int | None:
+    try:
+        return int(str(raw).strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def validate_answer(challenge: dict, raw_answer: str) -> dict:
+    """Return {"correct": bool, "per_gap": [bool, ...]}. per_gap never reveals the answer."""
     qtype = challenge.get("type")
 
     if qtype == "btns":
-        # correct field is the integer index of the correct option
+        ok = _index(raw_answer) == challenge.get("correct")
+        return {"correct": ok, "per_gap": [ok]}
+
+    if qtype == "duo":
+        ok = _matches(raw_answer, challenge.get("accept", []))
+        return {"correct": ok, "per_gap": [ok]}
+
+    if qtype == "term":
+        ok = term_matches(challenge, raw_answer)
+        return {"correct": ok, "per_gap": [ok]}
+
+    if qtype == "gaps":
+        gaps = challenge.get("gaps", [])
         try:
-            submitted = int(raw_answer.strip())
-        except (ValueError, TypeError):
-            return False
-        return submitted == challenge.get("correct")
+            submitted = json.loads(raw_answer)
+        except (json.JSONDecodeError, ValueError, TypeError):
+            return {"correct": False, "per_gap": [False] * len(gaps)}
+        if not isinstance(submitted, list) or len(submitted) != len(gaps):
+            return {"correct": False, "per_gap": [False] * len(gaps)}
 
-    elif qtype == "duo":
-        # ans field is the expected string (number or short expression)
-        return _norm(raw_answer) == _norm(challenge.get("ans", ""))
+        per_gap = []
+        for gap, value in zip(gaps, submitted):
+            if gap["mode"] == "choice":
+                per_gap.append(_index(value) == gap["correct"])
+            else:
+                per_gap.append(_matches(value, gap["accept"]))
+        return {"correct": all(per_gap), "per_gap": per_gap}
 
-    elif qtype == "gaps":
-        results = grade_gaps(challenge, raw_answer)
-        return results is not None and all(results)
-
-    return False
-
-
-def grade_gaps(challenge: dict, raw_answer: str) -> list[bool] | None:
-    """Per-gap grading for 'gaps' questions.
-    raw_answer is a JSON-encoded list of strings, one per gap.
-    Returns one bool per expected gap, or None if the payload is malformed."""
-    try:
-        submitted = json.loads(raw_answer)
-        if not isinstance(submitted, list):
-            return None
-    except (json.JSONDecodeError, ValueError):
-        return None
-
-    expected_gaps: list = challenge.get("gaps", [])
-    if len(submitted) != len(expected_gaps):
-        return None
-
-    return [_norm(s) == _norm(e) for s, e in zip(submitted, expected_gaps)]
+    return {"correct": False, "per_gap": []}

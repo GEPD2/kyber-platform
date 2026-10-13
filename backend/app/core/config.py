@@ -1,7 +1,7 @@
 """
 Application settings loaded from environment variables via pydantic-settings.
 
-ALLOWED_ORIGINS is declared as a plain str and split manually, pydantic-settings
+ALLOWED_ORIGINS is declared as a plain str and split manually — pydantic-settings
 tries to JSON-parse List[str] fields, which breaks comma-separated env values.
 """
 import secrets
@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     # CORS
     # Declared as str, split in property below.
     # pydantic-settings JSON-parses List[str] fields, breaking comma-separated values.
-    ALLOWED_ORIGINS_RAW: str = "http://localhost,http://localhost:80,http://127.0.0.1,http://127.0.0.1:80"
+    ALLOWED_ORIGINS_RAW: str = "https://localhost,https://127.0.0.1"
 
     @property
     def ALLOWED_ORIGINS(self) -> list[str]:
@@ -84,7 +84,7 @@ class Settings(BaseSettings):
     ANSWER_SUBMIT_LIMIT: int = 30
 
     # TLS
-    TLS_ENABLED: bool = False
+    TLS_ENABLED: bool = True   # the site is HTTPS-only; keeps auth cookies Secure
 
 
 @lru_cache

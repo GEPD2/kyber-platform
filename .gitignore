@@ -1,11 +1,52 @@
-# Environment, NEVER commit secrets
+# Secrets: the real environment. Only the template with placeholders is tracked.
 .env
+.env.*
+!.env.example
+*.env
+secrets/
+*.secret
+*.secrets
 
-# TLS certificates, NEVER commit private keys
-nginx/certs/*.pem
-nginx/certs/*.key
-nginx/certs/*.crt
-nginx/certs/*.p12
+# TLS material: never commit private keys or certificates.
+nginx/certs/*
+!nginx/certs/README.md
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.jks
+
+# SSH keys and credential stores that can end up in a working tree.
+id_rsa*
+id_ed25519*
+id_ecdsa*
+.netrc
+.npmrc
+.pypirc
+.git-credentials
+credentials.json
+*.kdbx
+
+# Claude Code: per-project settings, memory and local notes.
+.claude/
+**/.claude/
+CLAUDE.local.md
+
+# Database dumps and backups (contain user data and password hashes).
+backups/
+*.sql.gz
+*.dump
+# The schema is the only SQL file meant to be tracked.
+*.sql
+!mysql/init/*.sql
+
+# Logs and runtime data.
+*.log
+logs/
+mysql_data/
+redis_data/
 
 # Python
 __pycache__/
@@ -14,10 +55,16 @@ __pycache__/
 .venv/
 venv/
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
 
-# Docker volumes (local dev)
-mysql_data/
-redis_data/
+# Frontend build
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
+frontend/tsconfig.tsbuildinfo
 
 # OS
 .DS_Store

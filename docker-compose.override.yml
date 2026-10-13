@@ -1,6 +1,6 @@
-#  docker-compose.override.yml, development overrides
+#  docker-compose.override.yml — development overrides
 #  This file is loaded automatically alongside docker-compose.yml in dev.
-#  Do NOT use in production, it removes :ro mounts and enables hot-reload.
+#  Do NOT use in production — it removes :ro mounts and enables hot-reload.
 #  In production: docker compose -f docker-compose.yml up -d
 services:
   backend:
@@ -19,8 +19,10 @@ services:
 
   mysql:
     ports:
-      - "3306:3306"   # expose MySQL to host for local clients (dev only)
+      # loopback only; host port 3307 so a local MySQL on 3306 does not clash
+      - "127.0.0.1:${MYSQL_HOST_PORT:-3307}:3306"
 
   redis:
     ports:
-      - "6379:6379"   # expose Redis to host for local inspection (dev only)
+      # loopback only; host port 6380 so a local Redis on 6379 does not clash
+      - "127.0.0.1:${REDIS_HOST_PORT:-6380}:6379"

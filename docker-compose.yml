@@ -5,30 +5,30 @@ services:
 
   # NGINX
   nginx:
-    image: nginx:1.25-alpine
-    container_name: kyber_https_nginx
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kyber_nginx
     restart: unless-stopped
     ports:
-      - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./frontend:/usr/share/nginx/html:ro
       - ./nginx/certs:/etc/nginx/certs:ro
       - nginx_logs:/var/log/nginx
     depends_on:
       backend:
         condition: service_healthy
     networks:
-      - kyber_https_net
+      - kyber_net
 
   # BACKEND
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: kyber_https_backend
+    container_name: kyber_backend
     restart: unless-stopped
     expose:
       - "8000"
@@ -45,7 +45,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - kyber_https_net
+      - kyber_net
     # healthcheck mirrors the one in Dockerfile but can be overridden here
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -57,7 +57,7 @@ services:
   # MYSQL
   mysql:
     image: mysql:8.0
-    container_name: kyber_https_mysql
+    container_name: kyber_mysql
     restart: unless-stopped
     expose:
       - "3306"
@@ -73,7 +73,7 @@ services:
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
       - ./mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
     networks:
-      - kyber_https_net
+      - kyber_net
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1",
              "-u", "root", "--password=${MYSQL_ROOT_PASSWORD}",
@@ -92,7 +92,7 @@ services:
   # REDIS
   redis:
     image: redis:7-alpine
-    container_name: kyber_https_redis
+    container_name: kyber_redis
     restart: unless-stopped
     expose:
       - "6379"
@@ -105,7 +105,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - kyber_https_net
+      - kyber_net
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
@@ -121,8 +121,8 @@ volumes:
 
 # NETWORKS
 networks:
-  kyber_https_net:
+  kyber_net:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.21.0.0/16
+        - subnet: 172.20.0.0/16
